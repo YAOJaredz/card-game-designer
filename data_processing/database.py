@@ -1,4 +1,4 @@
-class Card:
+class Card():
     """
     The object that stores the data of a card.
 
@@ -33,7 +33,7 @@ class Card:
     
 
 
-class CardDatabase:
+class CardDatabase():
     """
     The object that stores all the data of cards and players and coordinates the flow for each action.
 
@@ -56,3 +56,9 @@ class CardDatabase:
             return (self.deck, self.discard, self.community, self.hands, self.players) == (other.deck, other.discard, other.community, other.hands, other.players)
         else:
             raise TypeError("Cannot compare CardDatabase with non-CardDatabase object.")
+        
+    def __str__(self) -> str:
+        return str(self.__dict__)
+    
+if __name__ == '__main__':
+    print(CardDatabase())
