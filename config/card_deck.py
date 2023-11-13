@@ -1,5 +1,7 @@
 from  data_processing.database import Card, CardDatabase
 from  config.config import Config
+import json
+import unit_test as ut
 
 def initialization(config: Config) -> CardDatabase:
     """Initialize the card deck and initial hand
@@ -11,4 +13,8 @@ def initialization(config: Config) -> CardDatabase:
     """
     database=CardDatabase()
     return database
+
+if __name__=='__main__':
+    empty_config=json.load(open('save/empty_config.json'))
+    ut.unit_test(initialization, (empty_config), CardDatabase(), 'Initialization')
 
