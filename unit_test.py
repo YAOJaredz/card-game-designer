@@ -46,4 +46,3 @@ def sample_func() -> CardDatabase:
 
 if __name__=='__main__':
     unit_test(sample_func, (), (CardDatabase()))
-    unit_test()
