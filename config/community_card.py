@@ -1,5 +1,5 @@
 from data_processing.database import Card, CardDatabase
-from config.config import Config
+from config import Config
 
 def update_community(database: CardDatabase, round: int, config: Config) -> CardDatabase:
     """

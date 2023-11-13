@@ -1,7 +1,11 @@
-from  data_processing.database import Card, CardDatabase
-from  config.config import Config
+import os, sys
 import json
+sys.path.append('.')
+
 import unit_test as ut
+from  data_processing.database import Card, CardDatabase
+from  config import Config
+
 
 def initialization(config: Config) -> CardDatabase:
     """Initialize the card deck and initial hand
