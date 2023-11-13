@@ -1,3 +1,5 @@
+import json
+
 class Config():
     def __init__(self, **kwargs) -> None:
         self.num_rounds: int = kwargs['num_rounds']
@@ -28,3 +30,10 @@ class Config():
 
         # Bid
         self.bidding_flag: bool = False
+
+if __name__ == '__main__':
+    with open('save/test_config.json','r') as file:
+        config = json.load(file)
+
+    config_obj = Config(**config)
+    print(config)
