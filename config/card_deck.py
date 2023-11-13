@@ -1,13 +1,13 @@
 from  data_processing.database import Card, CardDatabase
-def create_card_deck(decks:int, jokers:bool, order: int) -> CardDatabase:
-    """Initialize the card deck
+from  config.config import Config
+
+def initialization(config: Config) -> CardDatabase:
+    """Initialize the card deck and initial hand
     The users are able to specify the number of decks, whether or not to include jokers, and the order of the cards.
     Args:
-        decks (int): The number of decks to use.
-        jokers (bool): Whether or not to include jokers.
-        order (int): The order of the cards. eg. 0 = A is the smallest; 1 = 3 is the smallest...
+        config (Config): The configuration of the game, which contains all of the configurations for the game.
     Return:
-        CardDatabase: The card deck.
+        CardDatabase: The card deck, and users will have their initial hands.
     """
     database=CardDatabase()
     return database
