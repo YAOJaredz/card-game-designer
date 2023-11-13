@@ -31,9 +31,13 @@ class Config():
         # Bid
         self.bidding_flag: bool = False
 
+    def __str__(self) -> str:
+        return str(self.__dict__)
+
 if __name__ == '__main__':
     with open('save/test_config.json','r') as file:
         config = json.load(file)
 
     config_obj = Config(**config)
     print(config)
+    print(config_obj)
