@@ -6,9 +6,9 @@ class Config():
         self.num_decks = kwargs['num_decks']
         self.joker = kwargs['joker']
         self.order = kwargs['order']
-        self.initial_hand = kwargs['initial_hand']
 
         # Card deal
+        self.initial_hand = kwargs['initial_hand']
         self.num_cards_per_round = kwargs['num_cards_per_round']
         self.draw_flag = kwargs['draw_flag']
         self.num_draw = kwargs['num_draw']
