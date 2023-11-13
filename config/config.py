@@ -1,4 +1,4 @@
-class config():
+class Config():
     def __init__(self, **kwargs) -> None:
         self.num_rounds = kwargs['num_rounds']
 
