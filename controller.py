@@ -1,5 +1,5 @@
 from data_processing.database import Card, CardDatabase
-from config.config import Config
+from operations.config import Config
 
 def main_loop():
     """

@@ -1,6 +1,9 @@
 import json
 
 class Config():
+    """
+    A class representing the configuration settings for a card game.
+    """
     def __init__(self, **kwargs) -> None:
         self.num_rounds: int = kwargs['num_rounds']
 

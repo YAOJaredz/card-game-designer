@@ -1,6 +1,6 @@
 import gui
 from data_processing.database import Card, CardDatabase
-from config.config import Config
+from operations.config import Config
 
 class GUI():
     def __init__(self):

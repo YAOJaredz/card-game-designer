@@ -1,5 +1,9 @@
+import os, sys
+import json
+sys.path.append('.')
+
 from data_processing.database import Card, CardDatabase
-from config import Config
+from operations.config import Config
 
 def play_cards(player: str, played_cards: list[Card], database: CardDatabase, round: int, config: Config) -> CardDatabase:
     """

@@ -3,8 +3,8 @@ import json
 sys.path.append('.')
 
 import unit_test as ut
-from  data_processing.database import Card, CardDatabase
-from  config import Config
+from data_processing.database import Card, CardDatabase
+from operations.config import Config
 
 
 def initialization(config: Config) -> CardDatabase:
