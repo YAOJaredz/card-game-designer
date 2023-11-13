@@ -11,4 +11,4 @@ def initialization(config: Config) -> CardDatabase:
     """
     database=CardDatabase()
     return database
-    
+
