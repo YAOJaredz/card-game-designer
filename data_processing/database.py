@@ -6,11 +6,32 @@ class Card:
         suit (str): The suit of the card.
         rank (str): The rank of the card.
         index (int): The index of the card in the deck for comparison.
+        image (str): The image of the card.
     """
-    def __init__(self, suit: str, rank: str, index: int) -> None:
+    def __init__(self, suit: str, rank: str, index: int, image) -> None:
         self.suit = suit
         self.rank = rank
         self.index = index
+        self.image = image
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Card):
+            return (self.suit, self.rank, self.index) == (other.suit, other.rank, other.index)
+        else:
+            raise TypeError("Cannot compare Card with non-Card object.")
+        
+    def compare(self, other: object) -> int:
+        if isinstance(other, Card):
+            if self.index > other.index:
+                return 1
+            elif self.index < other.index:
+                return -1
+            else:
+                return 0
+        else:
+            raise TypeError("Cannot compare Card with non-Card object.")
+    
+
 
 class CardDatabase:
     """
@@ -30,5 +51,8 @@ class CardDatabase:
         self.hands: dict[str, list[Card]] = dict()
         self.players: list[str] = list()
     
-    
-    
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, CardDatabase):
+            return (self.deck, self.discard, self.community, self.hands, self.players) == (other.deck, other.discard, other.community, other.hands, other.players)
+        else:
+            raise TypeError("Cannot compare CardDatabase with non-CardDatabase object.")
