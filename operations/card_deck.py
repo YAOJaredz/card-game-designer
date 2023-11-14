@@ -70,7 +70,7 @@ def card_print_all(deck: list[Card]) -> None:
         None
     """
     for card in deck:
-        card.card_print()
+        print(card)
     return None
 
 

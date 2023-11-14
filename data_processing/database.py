@@ -32,17 +32,10 @@ class Card():
                 return 0
         else:
             raise TypeError("Cannot compare Card with non-Card object.")
-    
-    def card_print(self) -> None:
-        """Print the card.
-        This function will print the card's suit, rank and index.
-        Args:
-            card (Card): The card to be printed.
-        Return:
-            None
-        """
-        print("suit = "+self.suit+"; rank = "+self.rank+"; index = "+str(self.index)+"; identifier = "+str(self.identifier)+"\n")
         return None
+    
+    def __str__(self) -> str:
+        return f'suit = {self.suit}\trank = {self.rank}\tindex = {str(self.index)}\tidentifier = {str(self.identifier)}'
     
 
 
