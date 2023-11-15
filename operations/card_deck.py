@@ -64,6 +64,8 @@ def create_multiple_decks(num_decks: int, joker: bool, order: int) -> list[Card]
 
 def card_print_all(deck: list[Card]) -> None:
     """Print all the cards in the deck.
+    This function helps to print all the content of cards in the deck. 
+    Serve as a test function. 
     Args:
         deck (list[Card]): A deck of cards
     Return:
@@ -72,7 +74,6 @@ def card_print_all(deck: list[Card]) -> None:
     for card in deck:
         print(card)
     return None
-
 
 def initialization(config: Config) -> CardDatabase:
     """Initialize the card deck and initial hand
@@ -85,26 +86,20 @@ def initialization(config: Config) -> CardDatabase:
     database=CardDatabase()
     #initialize the deck based on joker and order
     database.deck=create_multiple_decks(config.num_decks, config.joker, config.order)
-    #initalial hands
     return database
 
 if __name__=='__main__':
-    print("------------No joker, A is the smallest------------\n")
-    # card_print_all(create_one_deck(False, 0))
-    # print("------------No joker, 3 is the smallest------------\n")
-    # card_print_all(create_one_deck(False, 1))
-    # print("------------Joker, A is the smallest------------\n")
-    # card_print_all(create_one_deck(True, 0))
-    # print("------------Joker, 3 is the smallest------------\n")
-    # card_print_all(create_one_deck(True, 1))
-    
+    # test of empty config
+    print('Test of empty config (nothing in deck); completed by unit_test function. \n')
     empty_config=json.load(open('save/empty_config.json'))
     empty_config=Config(**empty_config)
-    
+    ut.unit_test(initialization, (empty_config), CardDatabase(), 'Initialization')
+
+    #test config: num_decks=3, joker=true, order=1
+    print('Test of configuration: num_decks=3, joker=true, order=1 (3 has the smallest index)\n')
+    print('Desired output:')
+    print('162 cards in total; with jokers; 3 has the smallest index. \n')
     test_config=json.load(open('save/test_config.json'))
     test_config=Config(**test_config)
     card_print_all(initialization(test_config).deck)
-    # initialization(test_config)
-    # initialization(empty_config)
-    # ut.unit_test(initialization, (empty_config), CardDatabase(), 'Initialization')
-
+    
