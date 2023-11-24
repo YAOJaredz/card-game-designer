@@ -37,6 +37,12 @@ class Card():
     def __str__(self) -> str:
         return f'suit = {self.suit}\trank = {self.rank}\tindex = {str(self.index)}\tidentifier = {str(self.identifier)}'
     
+    def __repr__(self) -> str:
+        return f'Card({self.rank}, {self.suit})'
+    
+    def __hash__(self) -> int:
+        return hash((self.suit, self.rank, self.index, self.identifier))
+    
 
 
 class CardDatabase():
@@ -51,7 +57,7 @@ class CardDatabase():
         players (list): All the players in the game.
     """
     def __init__(self) -> None:
-        self.deck: list[Card] = list()
+        self.deck: set[Card] = set()
         self.discard: set[Card] = set()
         self.community: list[Card] = list()
         self.hands: dict[str, list[Card]] = dict()
@@ -79,7 +85,7 @@ class CardDatabase():
             raise TypeError("Cannot compare CardDatabase with non-CardDatabase object.")
         
     def __str__(self) -> str:
-        return str(self.__dict__)
+        return f'deck = {str(self.deck)}\ndiscard = {str(self.discard)}\ncommunity = {str(self.community)}\nhands = {str(self.hands)}\nplayers = {str(self.players)}'
     
 if __name__ == '__main__':
     print(CardDatabase())

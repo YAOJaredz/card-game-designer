@@ -40,8 +40,26 @@ def draw_card(database: CardDatabase, player: str, config: Config, round: int) -
     Return:
         CardDatabase: The updated card database.
     """
-    if config.draw_flag:
+    if not config.draw_flag:
         return database
     
     database.hands[player].extend(database.pop_from_deck(config.num_draw))
     return database
+
+if __name__ == '__main__':
+    from card_deck import initialization
+
+    test_config_path = 'save/test_config.json'
+    config = Config(**json.load(open(test_config_path, 'r')))
+
+    database = initialization(config)
+    database.players = ['a', 'b', 'c', 'd']
+
+    database = deal_cards(database, 0, config)
+    print(database.hands)
+
+    database = deal_cards(database, 1, config)
+    print(database.hands)
+
+    database = draw_card(database, 'a', config, 0)
+    print(database.hands)
