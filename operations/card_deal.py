@@ -19,6 +19,9 @@ def deal_cards(database: CardDatabase, round: int, config: Config) -> CardDataba
     Return:
         CardDatabase: The updated card database.
     """
+    if database.players == []:
+        raise ValueError('No players in the database.')
+    
     if round == 0:
         for player in database.players:
             database.hands[player] = database.pop_from_deck(config.num_initial_hand)
