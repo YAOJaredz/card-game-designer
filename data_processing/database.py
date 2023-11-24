@@ -22,6 +22,10 @@ class Card():
         else:
             raise TypeError("Cannot compare Card with non-Card object.")
         
+    def __hash__(self):
+        # Hash based on the combination of suit, rank, and index
+        return hash((self.suit, self.rank, self.index, self.identifier))
+        
     def compare(self, other: object) -> int:
         if isinstance(other, Card):
             if self.index > other.index:
@@ -65,6 +69,19 @@ class CardDatabase():
         
     def __str__(self) -> str:
         return str(self.__dict__)
+    
+    def find_card(self, player:str, identifier: int) -> Card:
+        """Find the card according to the identifier.
+        Assumption: The identifier is in hand. 
+        Args:
+            player (str): The player who is playing the cards.
+            identifier (int): The identifier of the card to be found.
+        Return:
+            Card: The card to be found.
+        """
+        for card in self.hands[player]:
+            if card.identifier==identifier:
+                return card
     
 if __name__ == '__main__':
     print(CardDatabase())
