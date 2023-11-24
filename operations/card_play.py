@@ -5,12 +5,12 @@ sys.path.append('.')
 from data_processing.database import Card, CardDatabase
 from operations.config import Config
 
-def get_identifier(play_cards:list[int]) -> list[int]:
+def get_identifier(play_cards:list[int]) -> set[int]:
     """Get the identifiers of cards.
     Args:
         play_cards(list[Card]): The cards to be played.
     Return:
-        list[int]: The identifiers of the cards to play.
+        set[int]: The identifiers of the cards to play.
     """
     identifiers=set()
     for card in play_cards:
@@ -39,7 +39,7 @@ def play_cards(player: str, play_cards: list[int], database: CardDatabase, round
         raise ValueError('Player not in the game.')
     else:
         for card_id in play_cards:
-            card=database.find_card(player, card_id)
+            card=database.find_card(card_id)
             database.discard.add(card)
             database.hands[player].remove(card)
     return database
@@ -54,23 +54,20 @@ if __name__ == "__main__":
     database = initialization(config)
     database.players = ['A']
     
-    #Give a card 1, 2, 3
+    #Give a 3 cards
     database.hands['A']=[]
-    database.hands['A'].append(database.deck[0])
-    database.hands['A'].append(database.deck[1])
-    database.hands['A'].append(database.deck[2])
-    database.deck=database.deck[3:]
-    # a should have card 1, 2, 3
+    database.hands['A'].append(database.deck.pop())
+    database.hands['A'].append(database.deck.pop())
+    database.hands['A'].append(database.deck.pop())
     print("A has cards:")
     card_print_all(database.hands["A"])
-    print("Deck should start from card 4")
-    # deck should start from card 4
+    print("Updated deck: ")
     card_print_all(database.deck)
     print("------ Card Play: A plays card 1 ------")
-    play_cards("A", [1], database, 1, config)
+    play_cards("A", [160], database, 1, config)
     print("After play, A has cards:")
     card_print_all(database.hands["A"])
     print("Deck:")
     card_print_all(database.deck)
-    print("Discard should have card 1")
+    print("Discard should have 1 card:")
     card_print_all(database.discard)
