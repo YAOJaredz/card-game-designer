@@ -22,6 +22,10 @@ class Card():
         else:
             raise TypeError("Cannot compare Card with non-Card object.")
         
+    def __hash__(self):
+        # Hash based on the combination of suit, rank, and index
+        return hash((self.suit, self.rank, self.index, self.identifier))
+        
     def compare(self, other: object) -> int:
         if isinstance(other, Card):
             if self.index > other.index:
@@ -95,6 +99,32 @@ class CardDatabase():
     def __str__(self) -> str:
         return f'deck = {str(self.deck)}\ndiscard = {str(self.discard)}\ncommunity = {str(self.community)}\nhands = {str(self.hands)}\nplayers = {str(self.players)}'
     
+    def find_card(self, identifier: int) -> Card:
+        """Find the card by identifier.
+        This function will search for the card by identifier in the deck, discard, and player hands.
+        Args:
+            identifier (int): The identifier of the card.
+        Return:
+            card (Card): The card with the identifier.
+        """
+        # Search in the deck
+        for card in self.deck:
+            if card.identifier == identifier:
+                return card
+        # Search in the discard
+        for card in self.discard:
+            if card.identifier == identifier:
+                return card
+        # Search in the community
+        for card in self.community:
+            if card.identifier == identifier:
+                return card
+        # Search in player hands
+        for hand in self.hands.values():
+            for card in hand:
+                if card.identifier == identifier:
+                    return card
+    
     def self_check(self) -> bool:
         """
         Check if the database is valid.
@@ -112,7 +142,6 @@ class CardDatabase():
                 return True
             else:
                 return False
-        
         
 if __name__ == '__main__':
     print(CardDatabase())
