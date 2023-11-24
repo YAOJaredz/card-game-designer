@@ -50,6 +50,21 @@ class CardDatabase():
         self.community: list[Card] = list()
         self.hands: dict[str, list[Card]] = dict()
         self.players: list[str] = list()
+
+    def pop_from_deck(self, num_pop: int) -> list[Card]:
+        """
+        Pop specified number of cards from the deck.
+        
+        Args:
+            num_pop (int): The number of cards to pop from the deck.
+
+        Return:
+            list[Card]: The popped cards.        
+        """
+        popped_cards = []
+        for i in range(num_pop):
+            popped_cards.append(self.deck.pop())
+        return popped_cards
     
     def __eq__(self, other: object) -> bool:
         if isinstance(other, CardDatabase):
