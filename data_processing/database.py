@@ -42,6 +42,13 @@ class Card():
     
     def __hash__(self) -> int:
         return hash((self.suit, self.rank, self.index, self.identifier))
+    
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Card):
+            return self.index < other.index
+        else:
+            raise TypeError("Cannot compare Card with non-Card object.")
+    
 
 
 class CardDatabase():
@@ -61,8 +68,23 @@ class CardDatabase():
         self.community: list[Card] = list()
         self.hands: dict[str, list[Card]] = dict()
         self.players: list[str] = list()
-
         self.snapshots: list[set] = list()
+
+    def pop_from_deck(self, num_pop: int) -> list[Card]:
+        """
+        Pop specified number of cards from the deck.
+        
+        Args:
+            num_pop (int): The number of cards to pop from the deck.
+
+        Return:
+            list[Card]: The popped cards.        
+        """
+        popped_cards = []
+        for i in range(num_pop):
+            popped_cards.append(self.deck.pop())
+        return popped_cards
+
     
     def __eq__(self, other: object) -> bool:
         if isinstance(other, CardDatabase):
@@ -71,19 +93,22 @@ class CardDatabase():
             raise TypeError("Cannot compare CardDatabase with non-CardDatabase object.")
         
     def __str__(self) -> str:
-        return str(self.__dict__)
+        return f'deck = {str(self.deck)}\ndiscard = {str(self.discard)}\ncommunity = {str(self.community)}\nhands = {str(self.hands)}\nplayers = {str(self.players)}'
     
     def self_check(self) -> bool:
         """
         Check if the database is valid.
         """
-        snapshot = self.deck.union(self.discard).union(set(self.community)).union(set(self.hands))
+        hands_set: set[Card] = set()
+        for hand in self.hands.values():
+            hands_set = hands_set.union(set(hand))
+        snapshot = self.deck.union(self.discard).union(set(self.community)).union(hands_set)
         if self.snapshots == []:
             self.snapshots.append(snapshot)
             return True
         else:
-            if self.snapshots[-1] == snapshot:
-                self.snapshots.append(snapshot)
+            self.snapshots.append(snapshot)
+            if self.snapshots[-2] == snapshot:
                 return True
             else:
                 return False
