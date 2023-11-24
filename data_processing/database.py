@@ -70,18 +70,31 @@ class CardDatabase():
     def __str__(self) -> str:
         return str(self.__dict__)
     
-    def find_card(self, player:str, identifier: int) -> Card:
-        """Find the card according to the identifier.
-        Assumption: The identifier is in hand. 
+    def find_card(self, identifier: int) -> Card:
+        """Find the card by identifier.
+        This function will search for the card by identifier in the deck, discard, and player hands.
         Args:
-            player (str): The player who is playing the cards.
-            identifier (int): The identifier of the card to be found.
+            identifier (int): The identifier of the card.
         Return:
-            Card: The card to be found.
+            card (Card): The card with the identifier.
         """
-        for card in self.hands[player]:
-            if card.identifier==identifier:
+        # Search in the deck
+        for card in self.deck:
+            if card.identifier == identifier:
                 return card
+        # Search in the discard
+        for card in self.discard:
+            if card.identifier == identifier:
+                return card
+        # Search in the community
+        for card in self.community:
+            if card.identifier == identifier:
+                return card
+        # Search in player hands
+        for hand in self.hands.values():
+            for card in hand:
+                if card.identifier == identifier:
+                    return card
     
 if __name__ == '__main__':
     print(CardDatabase())
