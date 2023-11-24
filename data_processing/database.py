@@ -37,6 +37,11 @@ class Card():
     def __str__(self) -> str:
         return f'suit = {self.suit}\trank = {self.rank}\tindex = {str(self.index)}\tidentifier = {str(self.identifier)}'
     
+    def __repr__(self) -> str:
+        return f'Card({self.rank}, {self.suit})'
+    
+    def __hash__(self) -> int:
+        return hash((self.suit, self.rank, self.index, self.identifier))
 
 
 class CardDatabase():
