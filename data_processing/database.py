@@ -51,11 +51,13 @@ class CardDatabase():
         players (list): All the players in the game.
     """
     def __init__(self) -> None:
-        self.deck: list[Card] = list()
+        self.deck: set[Card] = set()
         self.discard: set[Card] = set()
         self.community: list[Card] = list()
         self.hands: dict[str, list[Card]] = dict()
         self.players: list[str] = list()
+
+        self.snapshots: list[set] = list()
     
     def __eq__(self, other: object) -> bool:
         if isinstance(other, CardDatabase):
@@ -66,5 +68,24 @@ class CardDatabase():
     def __str__(self) -> str:
         return str(self.__dict__)
     
+    def self_check(self) -> bool:
+        """
+        Check if the database is valid.
+        """
+        snapshot = self.deck.union(self.discard).union(set(self.community)).union(set(self.hands))
+        if self.snapshots == []:
+            self.snapshots.append(snapshot)
+            return True
+        else:
+            if self.snapshots[-1] == snapshot:
+                self.snapshots.append(snapshot)
+                return True
+            else:
+                return False
+        
+        
 if __name__ == '__main__':
     print(CardDatabase())
+    database = CardDatabase()
+    database.self_check()
+    print(database.snapshots)

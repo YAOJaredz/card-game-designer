@@ -43,7 +43,7 @@ def create_one_deck(joker: bool, order: int) -> list[Card]:
         index+=1
     return deck
 
-def create_multiple_decks(num_decks: int, joker: bool, order: int) -> list[Card]:
+def create_multiple_decks(num_decks: int, joker: bool, order: int) -> set[Card]:
     """Create multiple decks of cards.
     This function will create multiple decks of cards based on the input. 
     Args:
@@ -60,7 +60,7 @@ def create_multiple_decks(num_decks: int, joker: bool, order: int) -> list[Card]
         deck+=create_one_deck(joker, order)
     for i in range(len(deck)):
         deck[i].identifier=i+1
-    return deck
+    return set(deck)
 
 def card_print_all(deck: list[Card]) -> None:
     """Print all the cards in the deck.
