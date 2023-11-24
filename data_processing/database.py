@@ -43,6 +43,12 @@ class Card():
     def __hash__(self) -> int:
         return hash((self.suit, self.rank, self.index, self.identifier))
     
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Card):
+            return self.index < other.index
+        else:
+            raise TypeError("Cannot compare Card with non-Card object.")
+    
 
 
 class CardDatabase():
@@ -93,13 +99,16 @@ class CardDatabase():
         """
         Check if the database is valid.
         """
-        snapshot = self.deck.union(self.discard).union(set(self.community)).union(set(self.hands))
+        hands_set: set[Card] = set()
+        for hand in self.hands.values():
+            hands_set = hands_set.union(set(hand))
+        snapshot = self.deck.union(self.discard).union(set(self.community)).union(hands_set)
         if self.snapshots == []:
             self.snapshots.append(snapshot)
             return True
         else:
-            if self.snapshots[-1] == snapshot:
-                self.snapshots.append(snapshot)
+            self.snapshots.append(snapshot)
+            if self.snapshots[-2] == snapshot:
                 return True
             else:
                 return False

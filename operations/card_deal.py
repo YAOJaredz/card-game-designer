@@ -57,6 +57,8 @@ if __name__ == '__main__':
 
     database = initialization(config)
     database.players = ['a', 'b', 'c', 'd']
+    database.self_check()
+    s1 = database.snapshots
 
     database = deal_cards(database, 0, config)
     print(database.hands)
@@ -66,3 +68,5 @@ if __name__ == '__main__':
 
     database = draw_card(database, 'a', config, 0)
     print(database.hands)
+
+    print(database.self_check())
