@@ -7,12 +7,14 @@ class Card():
         rank (str): The rank of the card.
         index (int): The index of the card in the deck for comparison.
         image (str): The image of the card.
+        identifier (int): The unique identifier of the card.
     """
-    def __init__(self, suit: str, rank: str, index: int, image) -> None:
+    def __init__(self, suit: str, rank: str, index: int, image:str, identifier:int) -> None:
         self.suit = suit
         self.rank = rank
         self.index = index
         self.image = image
+        self.identifier = identifier
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Card):
@@ -30,6 +32,10 @@ class Card():
                 return 0
         else:
             raise TypeError("Cannot compare Card with non-Card object.")
+        return None
+    
+    def __str__(self) -> str:
+        return f'suit = {self.suit}\trank = {self.rank}\tindex = {str(self.index)}\tidentifier = {str(self.identifier)}'
     
 
 
@@ -45,7 +51,7 @@ class CardDatabase():
         players (list): All the players in the game.
     """
     def __init__(self) -> None:
-        self.deck: set[Card] = set()
+        self.deck: list[Card] = list()
         self.discard: set[Card] = set()
         self.community: list[Card] = list()
         self.hands: dict[str, list[Card]] = dict()
