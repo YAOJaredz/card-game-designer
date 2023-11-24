@@ -62,6 +62,7 @@ class CardDatabase():
         self.community: list[Card] = list()
         self.hands: dict[str, list[Card]] = dict()
         self.players: list[str] = list()
+        self.snapshots: list[set] = list()
 
     def pop_from_deck(self, num_pop: int) -> list[Card]:
         """
@@ -77,6 +78,7 @@ class CardDatabase():
         for i in range(num_pop):
             popped_cards.append(self.deck.pop())
         return popped_cards
+
     
     def __eq__(self, other: object) -> bool:
         if isinstance(other, CardDatabase):
@@ -87,5 +89,24 @@ class CardDatabase():
     def __str__(self) -> str:
         return f'deck = {str(self.deck)}\ndiscard = {str(self.discard)}\ncommunity = {str(self.community)}\nhands = {str(self.hands)}\nplayers = {str(self.players)}'
     
+    def self_check(self) -> bool:
+        """
+        Check if the database is valid.
+        """
+        snapshot = self.deck.union(self.discard).union(set(self.community)).union(set(self.hands))
+        if self.snapshots == []:
+            self.snapshots.append(snapshot)
+            return True
+        else:
+            if self.snapshots[-1] == snapshot:
+                self.snapshots.append(snapshot)
+                return True
+            else:
+                return False
+        
+        
 if __name__ == '__main__':
     print(CardDatabase())
+    database = CardDatabase()
+    database.self_check()
+    print(database.snapshots)
