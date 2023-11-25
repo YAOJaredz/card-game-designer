@@ -23,6 +23,10 @@ class GUI():
         self.all_sprites = pygame.sprite.Group()
         self.quit=Button(370, 530, 260, 60, "Quit")
         self.all_sprites.add(self.quit)
+        self.create_new = Button(370, 350, 260, 60, "Create new templates")
+        self.load = Button(370, 440, 260, 60, "Load templates")
+        self.all_sprites.add(self.create_new)
+        self.all_sprites.add(self.load)
     
     
     def run(self):
@@ -41,6 +45,16 @@ class GUI():
                 if self.quit.rect.collidepoint(event.pos):
                     print("Quit Clicked!")
                     self.running = False
+                elif self.create_new.rect.collidepoint(event.pos):
+                    print("Create new Clicked!")
+                    self.create_new.kill()
+                    self.load.kill()
+                    self.stage=1
+                elif self.load.rect.collidepoint(event.pos):
+                    print("Load Clicked!")
+                    self.create_new.kill()
+                    self.load.kill()
+                    self.stage=2
         return True
     
     def draw(self):
@@ -55,13 +69,13 @@ class GUI():
         Create new templates: users can create new templates for the game.
         Load templates: users can load the templates they have created before.
         """
-        self.create_new = Button(370, 350, 260, 60, "Create new templates")
-        self.load = Button(370, 440, 260, 60, "Load templates")
-        self.all_sprites.add(self.create_new)
-        self.all_sprites.add(self.load)
+        self.screen.fill((255, 255, 255))
+        self.all_sprites.draw(self.screen)
+        self.all_sprites.update()
+        self.quit.draw_text(self.screen)
         self.create_new.draw_text(self.screen)
         self.load.draw_text(self.screen)
-        self.quit.draw_text(self.screen)
+        pygame.display.flip()
         return True
 
     def setting(self)->dict:
@@ -85,14 +99,14 @@ class GUI():
         """
         Display the current stage of the game.
         """
-        stage = self.stage
-        if stage == 0:
-            self.screen.fill((255, 255, 255))
+        if self.stage == 0:
+            self.openning()
+        elif self.stage == 1:
+            self.screen.fill((0, 255, 255))
             self.all_sprites.draw(self.screen)
             self.all_sprites.update()
-            self.openning()
+            self.quit.draw_text(self.screen)
             pygame.display.flip()
-        
 class Button(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, text):
         super().__init__()
