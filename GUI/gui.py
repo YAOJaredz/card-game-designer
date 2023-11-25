@@ -1,4 +1,5 @@
-import gui
+import pygame
+
 from data_processing.database import Card, CardDatabase
 from operations.config import Config
 
@@ -12,7 +13,7 @@ class GUI():
         """
         self.stage = 0
 
-    def initialize_gui(self):
+    def openning(self):
         """
         Display the GUI for the game at the initial state. (title, start a new game, play an old game, quit...)
         """
