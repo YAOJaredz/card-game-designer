@@ -22,10 +22,6 @@ class Card():
         else:
             raise TypeError("Cannot compare Card with non-Card object.")
         
-    def __hash__(self):
-        # Hash based on the combination of suit, rank, and index
-        return hash((self.suit, self.rank, self.index, self.identifier))
-        
     def compare(self, other: object) -> int:
         if isinstance(other, Card):
             if self.index > other.index:
@@ -124,6 +120,7 @@ class CardDatabase():
             for card in hand:
                 if card.identifier == identifier:
                     return card
+        raise ValueError(f'Cannot find the card with identifier {identifier}.')
     
     def self_check(self) -> bool:
         """
