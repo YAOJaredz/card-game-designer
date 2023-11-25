@@ -43,12 +43,12 @@ class Card():
     def __hash__(self) -> int:
         return hash((self.suit, self.rank, self.index, self.identifier))
     
+
     def __lt__(self, other: object) -> bool:
         if isinstance(other, Card):
             return self.index < other.index
         else:
             raise TypeError("Cannot compare Card with non-Card object.")
-    
 
 
 class CardDatabase():
@@ -85,7 +85,6 @@ class CardDatabase():
             popped_cards.append(self.deck.pop())
         return popped_cards
 
-    
     def __eq__(self, other: object) -> bool:
         if isinstance(other, CardDatabase):
             return (self.deck, self.discard, self.community, self.hands, self.players) == (other.deck, other.discard, other.community, other.hands, other.players)
@@ -94,7 +93,7 @@ class CardDatabase():
         
     def __str__(self) -> str:
         return f'deck = {str(self.deck)}\ndiscard = {str(self.discard)}\ncommunity = {str(self.community)}\nhands = {str(self.hands)}\nplayers = {str(self.players)}'
-    
+
     def find_card(self, identifier: int) -> Card:
         """Find the card by identifier.
         This function will search for the card by identifier in the deck, discard, and player hands.
