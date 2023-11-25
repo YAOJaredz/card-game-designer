@@ -14,36 +14,35 @@ class GUI():
             3. game page
         """
         self.stage = 0
-        
         pygame.init()
-        self.width, self.height = 600, 400
+        self.width, self.height = 1000, 700
         self.screen = pygame.display.set_mode((self.width, self.height))
-        pygame.display.set_caption("Pygame Template")
+        pygame.display.set_caption("Card Game Designer")
         self.clock = pygame.time.Clock()
         self.running = True
         self.all_sprites = pygame.sprite.Group()
-        self.button = Button(50, 50, 200, 50, "Click Me")
-        self.all_sprites.add(self.button)
+        self.quit=Button(370, 530, 260, 60, "Quit")
+        self.all_sprites.add(self.quit)
+    
     
     def run(self):
         while self.running:
             self.clock.tick(60)
             self.events()
-            self.update()
-            self.draw()
-
+            self.display_stage()
         pygame.quit()
         sys.exit()
-
+        
     def events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return False
+                self.running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if self.button.rect.collidepoint(event.pos):
-                    print("Button Clicked!")
+                if self.quit.rect.collidepoint(event.pos):
+                    print("Quit Clicked!")
+                    self.running = False
         return True
-
+    
     def draw(self):
         self.screen.fill((255, 255, 255))
         self.all_sprites.draw(self.screen)
@@ -51,9 +50,19 @@ class GUI():
 
     def openning(self):
         """
-        Display the GUI for the game at the initial state. (title, start a new game, play an old game, quit...)
+        Display the GUI for the game at the initial state. (Stage 0)
+        It will display 3 buttons: create new templates, load templates, quit.
+        Create new templates: users can create new templates for the game.
+        Load templates: users can load the templates they have created before.
         """
-        pass
+        self.create_new = Button(370, 350, 260, 60, "Create new templates")
+        self.load = Button(370, 440, 260, 60, "Load templates")
+        self.all_sprites.add(self.create_new)
+        self.all_sprites.add(self.load)
+        self.create_new.draw_text(self.screen)
+        self.load.draw_text(self.screen)
+        self.quit.draw_text(self.screen)
+        return True
 
     def setting(self)->dict:
         """ 
@@ -76,12 +85,14 @@ class GUI():
         """
         Display the current stage of the game.
         """
-        self.screen.fill((255, 255, 255))
-        self.all_sprites.draw(self.screen)
-        self.button.draw_text(self.screen)
-        self.all_sprites.update()
-        pygame.display.flip()
-
+        stage = self.stage
+        if stage == 0:
+            self.screen.fill((255, 255, 255))
+            self.all_sprites.draw(self.screen)
+            self.all_sprites.update()
+            self.openning()
+            pygame.display.flip()
+        
 class Button(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, text):
         super().__init__()
@@ -99,7 +110,4 @@ class Button(pygame.sprite.Sprite):
 
 if __name__ == '__main__':
     gui = GUI()
-    while True:
-        gui.clock.tick(60)
-        if not gui.events(): break
-        gui.display_stage()
+    gui.run()
