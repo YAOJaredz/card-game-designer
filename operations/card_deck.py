@@ -43,7 +43,7 @@ def create_one_deck(joker: bool, order: int) -> list[Card]:
         index+=1
     return deck
 
-def create_multiple_decks(num_decks: int, joker: bool, order: int) -> list[Card]:
+def create_multiple_decks(num_decks: int, joker: bool, order: int) -> set[Card]:
     """Create multiple decks of cards.
     This function will create multiple decks of cards based on the input. 
     Args:
@@ -60,9 +60,9 @@ def create_multiple_decks(num_decks: int, joker: bool, order: int) -> list[Card]
         deck+=create_one_deck(joker, order)
     for i in range(len(deck)):
         deck[i].identifier=i+1
-    return deck
+    return set(deck)
 
-def card_print_all(deck: list[Card]) -> None:
+def card_print_all(deck: set[Card]) -> None:
     """Print all the cards in the deck.
     This function helps to print all the content of cards in the deck. 
     Serve as a test function. 
@@ -101,5 +101,5 @@ if __name__=='__main__':
     print('162 cards in total; with jokers; 3 has the smallest index. \n')
     test_config=json.load(open('save/test_config.json'))
     test_config=Config(**test_config)
-    card_print_all(initialization(test_config).deck)
-    
+    database = initialization(test_config)
+    card_print_all(database.deck)

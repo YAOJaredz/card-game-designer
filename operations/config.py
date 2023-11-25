@@ -36,6 +36,9 @@ class Config():
 
     def __str__(self) -> str:
         return str(self.__dict__)
+    
+    def save(self, path: str):
+        json.dump(self.__dict__, open(path, 'w'))
 
 if __name__ == '__main__':
     with open('save/test_config.json','r') as file:

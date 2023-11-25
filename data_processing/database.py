@@ -44,6 +44,12 @@ class Card():
         return hash((self.suit, self.rank, self.index, self.identifier))
     
 
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Card):
+            return self.index < other.index
+        else:
+            raise TypeError("Cannot compare Card with non-Card object.")
+
 
 class CardDatabase():
     """
@@ -62,6 +68,7 @@ class CardDatabase():
         self.community: list[Card] = list()
         self.hands: dict[str, list[Card]] = dict()
         self.players: list[str] = list()
+        self.snapshots: list[set] = list()
 
     def pop_from_deck(self, num_pop: int) -> list[Card]:
         """
@@ -77,7 +84,7 @@ class CardDatabase():
         for i in range(num_pop):
             popped_cards.append(self.deck.pop())
         return popped_cards
-    
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, CardDatabase):
             return (self.deck, self.discard, self.community, self.hands, self.players) == (other.deck, other.discard, other.community, other.hands, other.players)
@@ -86,6 +93,54 @@ class CardDatabase():
         
     def __str__(self) -> str:
         return f'deck = {str(self.deck)}\ndiscard = {str(self.discard)}\ncommunity = {str(self.community)}\nhands = {str(self.hands)}\nplayers = {str(self.players)}'
+
+    def find_card(self, identifier: int) -> Card:
+        """Find the card by identifier.
+        This function will search for the card by identifier in the deck, discard, and player hands.
+        Args:
+            identifier (int): The identifier of the card.
+        Return:
+            card (Card): The card with the identifier.
+        """
+        # Search in the deck
+        for card in self.deck:
+            if card.identifier == identifier:
+                return card
+        # Search in the discard
+        for card in self.discard:
+            if card.identifier == identifier:
+                return card
+        # Search in the community
+        for card in self.community:
+            if card.identifier == identifier:
+                return card
+        # Search in player hands
+        for hand in self.hands.values():
+            for card in hand:
+                if card.identifier == identifier:
+                    return card
+        raise ValueError(f'Cannot find the card with identifier {identifier}.')
     
+    def self_check(self) -> bool:
+        """
+        Check if the database is valid.
+        """
+        hands_set: set[Card] = set()
+        for hand in self.hands.values():
+            hands_set = hands_set.union(set(hand))
+        snapshot = self.deck.union(self.discard).union(set(self.community)).union(hands_set)
+        if self.snapshots == []:
+            self.snapshots.append(snapshot)
+            return True
+        else:
+            self.snapshots.append(snapshot)
+            if self.snapshots[-2] == snapshot:
+                return True
+            else:
+                return False
+        
 if __name__ == '__main__':
     print(CardDatabase())
+    database = CardDatabase()
+    database.self_check()
+    print(database.snapshots)
