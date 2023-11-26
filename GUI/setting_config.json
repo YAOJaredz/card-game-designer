@@ -6,7 +6,7 @@
         "comm_flag": [700, 100, 150, 40, ["Yes", "No"]],
         "play_flag": [100, 200, 150, 40, ["Yes", "No"]],
         "multiuser_flag": [300, 200, 150, 40, ["Yes", "No"]],
-        "bidding_flag": [300, 200, 150, 40, ["Yes", "No"]]
+        "bidding_flag": [500, 200, 150, 40, ["Yes", "No"]]
     },
     "TextBox": {
         "num_rounds": [[100, 300, 150, 40],-1],
@@ -18,5 +18,23 @@
         "first_round_num_comm": [[500, 400, 150, 40],0],
         "num_added_comm_per_round": [[700, 400, 150, 40],0],
         "num_cards_played_per_round": [[100, 500, 150, 40],0]
+    },
+    "Labels":{
+        "joker": [100, 70, 150, 40, "Joker"],
+        "order": [300, 70, 150, 40, "Order"],
+        "draw_flag": [500, 70, 150, 40, "Draw"],
+        "comm_flag": [700, 70, 150, 40, "Comm"],
+        "play_flag": [100, 170, 150, 40, "Play"],
+        "multiuser_flag": [270, 170, 200, 40, "Multi-User Flag"],
+        "bidding_flag": [500, 170, 150, 40, "Bidding Flag"],
+        "num_rounds": [100, 270, 150, 40, "Num Rounds"],
+        "num_decks": [300, 270, 150, 40, "Num Decks"],
+        "num_initial_hand": [480, 270, 200, 40, "Num Initial Hand"],
+        "num_cards_dealt_per_round": [660, 270, 250, 40, "Num Cards Dealt Per Round"],
+        "num_draw": [100, 370, 150, 40, "Num Draw"],
+        "first_round_of_comm": [280, 370, 200, 40, "First Round of Comm"],
+        "first_round_num_comm": [460, 370, 200, 40, "First Round Num Comm"],
+        "num_added_comm_per_round": [670, 370, 200, 40, "Num Added Comm Per Round"],
+        "num_cards_played_per_round": [80, 470, 210, 40, "Num Cards Played Per Round"]
     }
 }

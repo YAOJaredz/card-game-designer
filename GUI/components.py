@@ -65,3 +65,20 @@ class TextBox(pygame_gui.elements.UITextEntryLine):
             manager=ui_manager,
             object_id=uid,
         )
+        
+class Label_UI(pygame_gui.elements.UILabel):
+    def __init__(self, 
+                 x: int, 
+                 y: int, 
+                 width: int, 
+                 height: int,
+                 text: str, 
+                 ui_manager: pygame_gui.UIManager, 
+                 uid: str
+                 ) -> None:
+        label_rect = pygame.Rect(x, y, width, height)
+        super(). __init__(relative_rect=label_rect, 
+                          text=text, 
+                          manager=ui_manager, 
+                          object_id=uid
+                          )

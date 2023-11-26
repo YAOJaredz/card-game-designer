@@ -78,12 +78,16 @@ class Setting:
         for i in self.ui_config['DropDown']:
             # self.new_config[i] = 
             self.dropdown[i] = DropDown(*self.ui_config['DropDown'][i], ui_manager=self.ui,uid=i)
-        
+       
         self.textbox = dict()
         for i in self.ui_config['TextBox']:
             self.textbox[i] = TextBox(*self.ui_config['TextBox'][i][0], ui_manager=self.ui,uid=i)
             self.textbox[i].set_text(str(self.ui_config['TextBox'][i][1]))
-
+            
+        self.labels = dict()
+        for i in self.ui_config['Labels']:
+            self.labels[i] = Label_UI(*self.ui_config['Labels'][i], ui_manager=self.ui,uid=i)
+            
         self.all_sprites = pygame.sprite.Group()
         self.quit_button = Button(290, 600, 200, 40, "Quit")
         self.save_button = Button(510, 600, 200, 40, "Save")
@@ -110,7 +114,7 @@ class Setting:
         return 1
 
     def update(self):
-        self.screen.fill((0, 0, 0))
+        self.screen.fill((255, 255, 255))
         self.all_sprites.draw(self.screen)
         self.all_sprites.update(self.screen)
 
