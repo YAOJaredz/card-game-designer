@@ -57,6 +57,7 @@ class GUI():
         """
         Display the current stage of the game.
         """
+        self.clock.tick(self.fps)
         self.stages[self.current_stage].update()
         pygame.display.flip()
 
@@ -65,7 +66,6 @@ class GUI():
 if __name__ == '__main__':
     gui = GUI()
     while gui.running:
-        gui.clock.tick(gui.fps)
         gui.events()
         gui.display_stage()
     pygame.quit()

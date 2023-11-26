@@ -1,7 +1,9 @@
 import pygame
-import pygame_menu as pm
 import sys
 import json
+import tkinter as tk
+from tkinter import filedialog
+tk.Tk().withdraw()
 
 sys.path.append('.')
 from GUI.components import *
@@ -35,7 +37,15 @@ class Openning:
                 return 1
             elif self.load_button.rect.collidepoint(event.pos):
                 print("Load Clicked!")
+                file_path = filedialog.askopenfilename(initialdir = "save",
+                                          title = "Select a File",
+                                          filetypes = (("Text files",
+                                                        "*.json"),
+                                                       ("all files",
+                                                        "*.*")))
+                print(json.load(open(file_path,'r')))
                 return 2
+                
         return 0
     
     def update(self):
