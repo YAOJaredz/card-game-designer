@@ -4,6 +4,7 @@ import sys
 sys.path.append('.')
 from data_processing.database import Card, CardDatabase
 from operations.config import Config
+from GUI.components import *
 
 class GUI():
     def __init__(self):
@@ -16,18 +17,12 @@ class GUI():
         self.stage = 0
         pygame.init()
         self.width, self.height = 1000, 700
+        self.fps = 60
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Card Game Designer")
         self.clock = pygame.time.Clock()
         self.running = True
-        self.all_sprites = pygame.sprite.Group()
-        self.quit=Button(370, 530, 260, 60, "Quit")
-        self.all_sprites.add(self.quit)
-        self.create_new = Button(370, 350, 260, 60, "Create new templates")
-        self.load = Button(370, 440, 260, 60, "Load templates")
-        self.all_sprites.add(self.create_new)
-        self.all_sprites.add(self.load)
-    
+        self.openning()
     
     def run(self):
         while self.running:
@@ -42,19 +37,15 @@ class GUI():
             if event.type == pygame.QUIT:
                 self.running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if self.quit.rect.collidepoint(event.pos):
+                if self.quit_button.rect.collidepoint(event.pos):
                     print("Quit Clicked!")
                     self.running = False
-                elif self.create_new.rect.collidepoint(event.pos):
+                elif self.new_button.rect.collidepoint(event.pos):
                     print("Create new Clicked!")
-                    self.create_new.kill()
-                    self.load.kill()
-                    self.stage=1
-                elif self.load.rect.collidepoint(event.pos):
+                    self.update_stage(1)
+                elif self.load_button.rect.collidepoint(event.pos):
                     print("Load Clicked!")
-                    self.create_new.kill()
-                    self.load.kill()
-                    self.stage=2
+                    self.update_stage(2)
         return True
     
     def draw(self):
@@ -69,24 +60,28 @@ class GUI():
         Create new templates: users can create new templates for the game.
         Load templates: users can load the templates they have created before.
         """
-        self.screen.fill((255, 255, 255))
-        self.all_sprites.draw(self.screen)
-        self.all_sprites.update()
-        self.quit.draw_text(self.screen)
-        self.create_new.draw_text(self.screen)
-        self.load.draw_text(self.screen)
-        pygame.display.flip()
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        self.all_sprites = pygame.sprite.Group()
+        self.open_label = Label(240, 140, "Card Game Designer", 80)
+        self.quit_button = Button(370, 530, 260, 60, "Quit")
+        self.new_button = Button(370, 350, 260, 60, "Create New")
+        self.load_button = Button(370, 440, 260, 60, "Load Templates")
+        self.all_sprites.add(self.quit_button,self.new_button,self.load_button,self.open_label)
         return True
 
-    def setting(self)->dict:
+    def setting(self):
         """ 
         Take the user input and set up the game configuration.
         At the page of starting a new game, users have the option to save this configuration and start playing. 
         Return: 
             config (dict): all configurations for the game. (Detail in config/config.py)
         """
-        config={}
-        return config
+        self.new_config = dict()
+
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        self.all_sprites = pygame.sprite.Group()
+        self.quit_button = Button(370, 530, 260, 60, "Quit")
+        self.all_sprites.add(self.quit_button)
 
     def update_stage(self, stage: int):
         """
@@ -99,29 +94,18 @@ class GUI():
         """
         Display the current stage of the game.
         """
-        if self.stage == 0:
-            self.openning()
-        elif self.stage == 1:
-            self.screen.fill((0, 255, 255))
-            self.all_sprites.draw(self.screen)
-            self.all_sprites.update()
-            self.quit.draw_text(self.screen)
-            pygame.display.flip()
-class Button(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height, text):
-        super().__init__()
-        self.image = pygame.Surface((width, height))
-        self.image.fill((0, 255, 0))
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-        self.text = text
-        self.font = pygame.font.Font(None, 36)
-        self.rendered_text = self.font.render(text, True, (0, 0, 0))
-        self.text_rect = self.rendered_text.get_rect(center=self.rect.center)
+        self.screen.fill((0, 255, 255))
+        self.all_sprites.draw(self.screen)
+        self.all_sprites.update(self.screen)
+        pygame.display.flip()
 
-    def draw_text(self, surface):
-        surface.blit(self.rendered_text, self.text_rect)
+
 
 if __name__ == '__main__':
     gui = GUI()
-    gui.run()
+    while gui.running:
+        gui.clock.tick(gui.fps)
+        gui.events()
+        gui.display_stage()
+    pygame.quit()
+    sys.exit()
