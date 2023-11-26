@@ -1,5 +1,7 @@
 import pygame
+import pygame_menu as pm
 import sys
+import json
 
 sys.path.append('.')
 from GUI.components import *
@@ -52,26 +54,70 @@ class Setting:
             config (dict): all configurations for the game. (Detail in config/config.py)
         """
         self.width, self.height = WIDTH, HEIGHT
-        self.new_config = dict()
+        try: 
+            self.new_config = json.load(open('save/empty_config.json','r'))
+        except FileNotFoundError:
+            self.new_config = dict()
 
         self.screen = pygame.display.set_mode((self.width, self.height))
+        self.ui = pygame_gui.UIManager((self.width, self.height))
+        
+        self.ui_config = json.load(open('GUI/setting_config.json', 'r'))
+
+        self.dropdown = dict()
+        for i in self.ui_config['DropDown']:
+            # self.new_config[i] = 
+            self.dropdown[i] = DropDown(*self.ui_config['DropDown'][i], ui_manager=self.ui,uid=i)
+        
+        self.textbox = dict()
+        for i in self.ui_config['TextBox']:
+            self.textbox[i] = TextBox(*self.ui_config['TextBox'][i][0], ui_manager=self.ui,uid=i)
+            self.textbox[i].set_text(str(self.ui_config['TextBox'][i][1]))
+
         self.all_sprites = pygame.sprite.Group()
-        self.quit_button = Button(370, 530, 260, 60, "Quit")
-        self.all_sprites.add(self.quit_button)
+        self.quit_button = Button(290, 600, 200, 40, "Quit")
+        self.save_button = Button(510, 600, 200, 40, "Save")
+        self.all_sprites.add(self.quit_button, self.save_button)
     
     def handle_events(self, event):
+        self.ui.process_events(event)
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.quit_button.rect.collidepoint(event.pos):
                 print("Quit Clicked!")
                 return -1
+            elif self.save_button.rect.collidepoint(event.pos):
+                for key in self.dropdown.keys():
+                    self.new_config[key] = self.dropdown[key].selected_option
+                for key in self.textbox.keys():
+                    self.new_config[key] = self.textbox[key].get_text()
+                print(self.new_config)
+        elif event.type == pygame.USEREVENT: 
+            if event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED or \
+            event.user_type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
+                self.new_config[event.ui_object_id] = event.text
+
         return 1
 
     def update(self):
         self.screen.fill((0, 0, 0))
         self.all_sprites.draw(self.screen)
         self.all_sprites.update(self.screen)
+
+        self.ui.update(6e-2)
+        self.ui.draw_ui(self.screen) 
         pygame.display.flip()
 
 class Game:
     def __init__(self):
         pass
+
+if __name__ == '__main__':
+    from gui import GUI
+    gui = GUI()
+    while gui.running:
+        gui.clock.tick(gui.fps)
+        gui.events()
+        gui.display_stage()
+    pygame.quit()
+    sys.exit()

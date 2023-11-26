@@ -21,6 +21,7 @@ class GUI():
         self.fps = 60
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Card Game Designer")
+        self.font = pygame.font.Font(None, 30)
         self.clock = pygame.time.Clock()
         self.running = True
         self.stages = [Openning(), Setting(), Game()]

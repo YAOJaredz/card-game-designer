@@ -1,0 +1,22 @@
+{
+    "DropDown": {
+        "joker": [100, 100, 150, 40, ["Yes", "No"]],
+        "order": [300, 100, 150, 40, ["1", "2"]],
+        "draw_flag": [500, 100, 150, 40, ["Yes", "No"]],
+        "comm_flag": [700, 100, 150, 40, ["Yes", "No"]],
+        "play_flag": [100, 200, 150, 40, ["Yes", "No"]],
+        "multiuser_flag": [300, 200, 150, 40, ["Yes", "No"]],
+        "bidding_flag": [300, 200, 150, 40, ["Yes", "No"]]
+    },
+    "TextBox": {
+        "num_rounds": [[100, 300, 150, 40],-1],
+        "num_decks": [[300, 300, 150, 40],0],
+        "num_initial_hand": [[500, 300, 150, 40],0],
+        "num_cards_dealt_per_round": [[700, 300, 150, 40],0],
+        "num_draw": [[100, 400, 150, 40],1],
+        "first_round_of_comm": [[300, 400, 150, 40],0],
+        "first_round_num_comm": [[500, 400, 150, 40],0],
+        "num_added_comm_per_round": [[700, 400, 150, 40],0],
+        "num_cards_played_per_round": [[100, 500, 150, 40],0]
+    }
+}
