@@ -98,7 +98,12 @@ class Setting:
                 return -1
             elif self.save_button.rect.collidepoint(event.pos):
                 for key in self.dropdown.keys():
-                    self.new_config[key] = self.dropdown[key].selected_option
+                    if self.dropdown[key].selected_option == 'Yes':
+                        self.new_config[key] = True
+                    elif self.dropdown[key].selected_option == 'No':
+                        self.new_config[key] = False
+                    else:
+                        self.new_config[key] = self.dropdown[key].selected_option
                 for key in self.textbox.keys():
                     self.new_config[key] = self.textbox[key].get_text()
                 print(self.new_config)
