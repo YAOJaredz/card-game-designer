@@ -104,32 +104,25 @@ class Setting:
         self.all_sprites = pygame.sprite.Group()
         self.setting_title = Label(420, 30, "Setting", 60)
         self.back_button = Button(170, 600, 200, 40, "Back")
-        self.quit_button = Button(630, 600, 200, 40, "Quit")
+        self.continue_button = Button(630, 600, 200, 40, "Continue")
         self.save_button = Button(400, 600, 200, 40, "Save")
         self.all_sprites.add(
-            self.quit_button, self.save_button, self.setting_title, self.back_button
+            self.continue_button, self.save_button, self.setting_title, self.back_button
         )
 
     def handle_events(self, event):
         self.ui.process_events(event)
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.quit_button.rect.collidepoint(event.pos):
-                print("Quit Clicked!")
-                return -1
+            if self.continue_button.rect.collidepoint(event.pos):
+                print("Continue Clicked!")
+                return 2
             elif self.back_button.rect.collidepoint(event.pos):
                 print("Back Clicked!")
                 return 0
             elif self.save_button.rect.collidepoint(event.pos):
-                for key in self.dropdown.keys():
-                    if self.dropdown[key].selected_option == "Yes":
-                        self.new_config[key] = True
-                    elif self.dropdown[key].selected_option == "No":
-                        self.new_config[key] = False
-                    else:
-                        self.new_config[key] = self.dropdown[key].selected_option
-                for key in self.textbox.keys():
-                    self.new_config[key] = self.textbox[key].get_text()
+                # Save the config
+                self.get_config()
                 print(self.new_config)
         elif event.type == pygame.USEREVENT:
             if (
@@ -139,6 +132,25 @@ class Setting:
                 self.new_config[event.ui_object_id] = event.text
 
         return 1
+    
+    def get_config(self):
+            """
+            Retrieves the configuration settings from the setting page.
+
+            Returns:
+                dict: A dictionary containing the configuration settings.
+            """
+            for key in self.dropdown.keys():
+                if self.dropdown[key].selected_option == "Yes":
+                    self.new_config[key] = True
+                elif self.dropdown[key].selected_option == "No":
+                    self.new_config[key] = False
+                else:
+                    self.new_config[key] = self.dropdown[key].selected_option
+            for key in self.textbox.keys():
+                self.new_config[key] = self.textbox[key].get_text()
+            return self.new_config
+
 
     def update(self):
         self.screen.fill((255, 255, 255))
@@ -152,8 +164,29 @@ class Setting:
 
 class Game:
     def __init__(self):
-        pass
+        """
+        Display the Card Game playing GUI.
+        """
+        self.width, self.height = WIDTH, HEIGHT
+        self.screen = pygame.display.set_mode((self.width, self.height))
 
+        self.all_sprites = pygame.sprite.Group()
+        self.back_button = Button(170, 600, 200, 40, "Back")
+        self.all_sprites.add(self.back_button)
+
+    def handle_events(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.back_button.rect.collidepoint(event.pos):
+                print("Back Clicked!")
+                return 1
+
+        return 2
+
+    def update(self):
+        self.screen.fill((255, 255, 255))
+        self.all_sprites.draw(self.screen)
+        self.all_sprites.update(self.screen, pygame.mouse.get_pos())
+        pygame.display.flip()
 
 if __name__ == "__main__":
     from gui import GUI
