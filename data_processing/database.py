@@ -70,6 +70,8 @@ class CardDatabase():
         self.players: list[str] = list()
         self.snapshots: list[set] = list()
 
+        self.card_recently_played: list[Card] = []
+
     def pop_from_deck(self, num_pop: int) -> list[Card]:
         """
         Pop specified number of cards from the deck.

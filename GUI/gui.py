@@ -55,6 +55,8 @@ class GUI:
         """
         Update the stage of the gui.
         """
+        if stage == 2:
+            self.config = self.stages[self.current_stage].get_config()
         self.current_stage = stage
         pass
 

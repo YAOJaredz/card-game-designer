@@ -5,7 +5,7 @@ sys.path.append('.')
 from data_processing.database import Card, CardDatabase
 from operations.config import Config
 
-def get_identifier(play_cards:list[int]) -> set[int]:
+def get_identifier(play_cards:list[Card]) -> set[int]:
     """Get the identifiers of cards.
     Args:
         play_cards(list[Card]): The cards to be played.

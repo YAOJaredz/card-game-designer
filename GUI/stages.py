@@ -47,13 +47,15 @@ class Openning:
                     filetypes=(("Text files", "*.json"), ("all files", "*.*")),
                 )
                 try:
-                    loaded = json.load(open(file_path, "r"))
-                    print(loaded)
+                    self.loaded_config = json.load(open(file_path, "r"))
                     return 2
                 except FileNotFoundError:
                     print("No valid file selected.")
 
         return 0
+    
+    def get_config(self):
+        return self.loaded_config
 
     def update(self):
         self.screen.fill((255, 255, 255))
@@ -187,6 +189,25 @@ class Game:
         self.all_sprites.draw(self.screen)
         self.all_sprites.update(self.screen, pygame.mouse.get_pos())
         pygame.display.flip()
+
+    def get_played_cards(self) -> list[int]:
+        """
+        Retrieves the cards played by the user.
+
+        Returns:
+            list: A list of cards played by the user.
+        """
+        pass
+
+    def is_end(self) -> bool:
+        """
+        Checks if the game has ended.
+
+        Returns:
+            bool: True if the game has ended. False otherwise.
+        """
+        return False
+    
 
 if __name__ == "__main__":
     from gui import GUI
