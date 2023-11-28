@@ -6,7 +6,9 @@ class Button(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, text):
         super().__init__()
         self.image = pygame.Surface((width, height))
-        self.image.fill((0, 255, 0))
+        self.color = '#FDD726'
+        self.hover_color = '#ECC615'
+        self.image.fill(self.color)
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.text = text
@@ -16,9 +18,9 @@ class Button(pygame.sprite.Sprite):
 
     def update(self, surface, mouse_pos):
         if self.rect.collidepoint(mouse_pos):
-            self.image.fill((0, 235, 0))
+            self.image.fill(self.hover_color)
         else:
-            self.image.fill((0, 255, 0))
+            self.image.fill(self.color)
         surface.blit(self.rendered_text, self.text_rect)
     
 
