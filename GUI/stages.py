@@ -43,15 +43,19 @@ class Openning:
                                                         "*.json"),
                                                        ("all files",
                                                         "*.*")))
-                print(json.load(open(file_path,'r')))
-                return 2
+                try:
+                    loaded = json.load(open(file_path,'r'))
+                    print(loaded)
+                    return 2
+                except FileNotFoundError:
+                    print("No file selected.")
                 
         return 0
     
     def update(self):
         self.screen.fill((255, 255, 255))
         self.all_sprites.draw(self.screen)
-        self.all_sprites.update(self.screen)
+        self.all_sprites.update(self.screen, pygame.mouse.get_pos())
         pygame.display.flip()
 
 
@@ -70,7 +74,7 @@ class Setting:
             self.new_config = dict()
 
         self.screen = pygame.display.set_mode((self.width, self.height))
-        self.ui = pygame_gui.UIManager((self.width, self.height))
+        self.ui = pygame_gui.UIManager((self.width, self.height), 'GUI/themes.json')
         
         self.ui_config = json.load(open('GUI/setting_config.json', 'r'))
 
@@ -89,9 +93,11 @@ class Setting:
             self.labels[i] = Label_UI(*self.ui_config['Labels'][i], ui_manager=self.ui,uid=i)
             
         self.all_sprites = pygame.sprite.Group()
-        self.quit_button = Button(290, 600, 200, 40, "Quit")
-        self.save_button = Button(510, 600, 200, 40, "Save")
-        self.all_sprites.add(self.quit_button, self.save_button)
+        self.setting_title = Label(420, 30, "Setting", 60)
+        self.back_button = Button(170, 600, 200, 40, "Back")
+        self.quit_button = Button(630, 600, 200, 40, "Quit")
+        self.save_button = Button(400, 600, 200, 40, "Save")
+        self.all_sprites.add(self.quit_button, self.save_button, self.setting_title, self.back_button)
     
     def handle_events(self, event):
         self.ui.process_events(event)
@@ -100,6 +106,9 @@ class Setting:
             if self.quit_button.rect.collidepoint(event.pos):
                 print("Quit Clicked!")
                 return -1
+            elif self.back_button.rect.collidepoint(event.pos):
+                print("Back Clicked!")
+                return 0
             elif self.save_button.rect.collidepoint(event.pos):
                 for key in self.dropdown.keys():
                     if self.dropdown[key].selected_option == 'Yes':
@@ -121,7 +130,7 @@ class Setting:
     def update(self):
         self.screen.fill((255, 255, 255))
         self.all_sprites.draw(self.screen)
-        self.all_sprites.update(self.screen)
+        self.all_sprites.update(self.screen, pygame.mouse.get_pos())
 
         self.ui.update(6e-2)
         self.ui.draw_ui(self.screen) 

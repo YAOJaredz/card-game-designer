@@ -14,8 +14,13 @@ class Button(pygame.sprite.Sprite):
         self.rendered_text = self.font.render(text, True, (0, 0, 0))
         self.text_rect = self.rendered_text.get_rect(center=self.rect.center)
 
-    def update(self, surface):
+    def update(self, surface, mouse_pos):
+        if self.rect.collidepoint(mouse_pos):
+            self.image.fill((0, 235, 0))
+        else:
+            self.image.fill((0, 255, 0))
         surface.blit(self.rendered_text, self.text_rect)
+    
 
 
 class Label(pygame.sprite.Sprite):
@@ -27,6 +32,7 @@ class Label(pygame.sprite.Sprite):
         self.image = self.font.render(self.text, True, self.color)
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
+
 
 
 class DropDown(pygame_gui.elements.UIDropDownMenu):
