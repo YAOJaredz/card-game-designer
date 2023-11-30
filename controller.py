@@ -59,7 +59,7 @@ def main_loop():
                         print(card)
                     cards = []
                     while len(cards) < config.num_cards_played_per_round:
-                        ipt = input('Please enter the cards you want to play: ')
+                        ipt = input('Please enter the identifier of the card you want to play: (one at each time)')
                         if ipt == 'q': break
                         cards.append(int(ipt))
                     database.card_recently_played = cards

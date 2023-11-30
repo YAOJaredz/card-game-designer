@@ -173,8 +173,14 @@ class Game:
         self.screen = pygame.display.set_mode((self.width, self.height))
 
         self.all_sprites = pygame.sprite.Group()
-        self.back_button = Button(170, 600, 200, 40, "Back")
+        self.back_button = Button(10, 10, 80, 40, "Back")
         self.all_sprites.add(self.back_button)
+        
+        #display the card table
+        self.bg=pygame.transform.scale(pygame.image.load('card_images/bg.jpg'), (self.width, self.height))
+        
+        #display the computer player
+        self.cp_image=pygame.transform.scale(pygame.image.load('card_images/cp.png'), (200, 200))
 
     def handle_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -185,9 +191,10 @@ class Game:
         return 2
 
     def update(self):
-        self.screen.fill((255, 255, 255))
+        self.screen.blit(self.bg, (0, 0))
         self.all_sprites.draw(self.screen)
         self.all_sprites.update(self.screen, pygame.mouse.get_pos())
+        self.screen.blit(self.cp_image, (30, 70))
         pygame.display.flip()
 
     def get_played_cards(self) -> list[int]:
