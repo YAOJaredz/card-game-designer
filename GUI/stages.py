@@ -175,19 +175,29 @@ class Game:
         self.all_sprites = pygame.sprite.Group()
         self.back_button = Button(10, 10, 80, 40, "Back")
         self.all_sprites.add(self.back_button)
+        self.ui=pygame_gui.UIManager((self.width, self.height), "GUI/themes.json")
         
         #display the card table
         self.bg=pygame.transform.scale(pygame.image.load('card_images/bg.jpg'), (self.width, self.height))
         
         #display the computer player
         self.cp_image=pygame.transform.scale(pygame.image.load('card_images/cp.png'), (200, 200))
-
+        
+        #text box for playing cards
+        self.played_card_text_box=TextBox(400, 400, 200, 40, ui_manager=self.ui, uid="played_card_text_box")
+        
+        #text box label
+        self.played_card_text_box_label=Label_UI(400, 370, 200, 40, "Played Cards:", ui_manager=self.ui, uid="played_card_text_box_label")   
+                                          
     def handle_events(self, event):
+        self.ui.process_events(event)
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.back_button.rect.collidepoint(event.pos):
                 print("Back Clicked!")
                 return 1
-
+        elif event.type == pygame.USEREVENT:
+            if event.user_type == pygame_gui.UI_TEXT_ENTRY_FINISHED : 
+                print(event.text)
         return 2
 
     def update(self):
@@ -195,16 +205,18 @@ class Game:
         self.all_sprites.draw(self.screen)
         self.all_sprites.update(self.screen, pygame.mouse.get_pos())
         self.screen.blit(self.cp_image, (30, 70))
+        self.ui.update(6e-2)
+        self.ui.draw_ui(self.screen)
         pygame.display.flip()
 
     def get_played_cards(self) -> list[int]:
         """
-        Retrieves the cards played by the user.
-
+        Retrieves the cards played by the user by inputing identifiers of the cards in the text box. 
         Returns:
             list: A list of cards played by the user.
         """
-        pass
+        played_cards = self.played_card_text_box.get_text()
+        return played_cards
 
     def is_end(self) -> bool:
         """
