@@ -1,6 +1,6 @@
 {
     "num_rounds": -1,
-    "num_decks": 0,
+    "num_decks": 1,
     "joker": false,
     "order": 1,
     "num_initial_hand": 0,
