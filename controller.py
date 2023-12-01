@@ -63,7 +63,7 @@ def main_loop():
                         if ipt == 'q': break
                         cards.append(int(ipt))
                     database.card_recently_played = cards
-                    player_played_cards = gui.stages[gui.current_stage].get_played_cards()
+                    # player_played_cards = gui.stages[gui.current_stage].get_played_cards()
                     database = play_cards(player, list(cards), database, round_, config)
             
             if not database.self_check():
