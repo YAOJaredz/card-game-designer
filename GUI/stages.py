@@ -187,17 +187,25 @@ class Game:
         self.played_card_text_box=TextBox(400, 400, 200, 40, ui_manager=self.ui, uid="played_card_text_box")
         
         #text box label
-        self.played_card_text_box_label=Label_UI(400, 370, 200, 40, "Played Cards:", ui_manager=self.ui, uid="played_card_text_box_label")   
-                                          
+        self.played_card_text_box_label=Label_UI(350, 370, 300, 40, "Played Cards: (Separated by ,)", ui_manager=self.ui, uid="played_card_text_box_label")
+        
+        #record played card for this round
+        self.played_cards=[]  
+        
+        #add play card button
+        self.play=Button(460, 450, 80, 40, "Play!")  
+        self.all_sprites.add(self.play)  
+        
     def handle_events(self, event):
         self.ui.process_events(event)
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.back_button.rect.collidepoint(event.pos):
                 print("Back Clicked!")
                 return 1
-        elif event.type == pygame.USEREVENT:
-            if event.user_type == pygame_gui.UI_TEXT_ENTRY_FINISHED : 
-                print(event.text)
+            elif self.play.rect.collidepoint(event.pos):
+                print("Play Card Clicked!")
+                self.played_cards=self.get_played_cards()
+                print(self.played_cards)
         return 2
 
     def update(self):
@@ -215,8 +223,9 @@ class Game:
         Returns:
             list: A list of cards played by the user.
         """
-        played_cards = self.played_card_text_box.get_text()
-        return played_cards
+        self.played_cards = self.played_card_text_box.get_text().split(",")
+        self.played_cards = [int(card) for card in self.played_cards]
+        return self.played_cards
 
     def is_end(self) -> bool:
         """
