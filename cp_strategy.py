@@ -28,6 +28,8 @@ class ComputerPlayer:
             list[Card]: The cards to be played.
         """
         self.hand = hand
-        card_to_play = random.sample(self.hand, num_cards_played_per_round)
+        print(hand)
+        card_to_play = random.sample(self.hand, min(num_cards_played_per_round, len(self.hand)))
+        print(card_to_play)
         self.played_cards.extend(card_to_play)
         return card_to_play

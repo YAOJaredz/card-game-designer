@@ -1,3 +1,5 @@
+import random
+
 class Card():
     """
     The object that stores the data of a card.
@@ -82,9 +84,9 @@ class CardDatabase():
         Return:
             list[Card]: The popped cards.        
         """
-        popped_cards = []
-        for i in range(num_pop):
-            popped_cards.append(self.deck.pop())
+        popped_cards = random.sample(sorted(self.deck), num_pop)
+        for card in popped_cards:
+            self.deck.remove(card)
         return popped_cards
 
     def __eq__(self, other: object) -> bool:

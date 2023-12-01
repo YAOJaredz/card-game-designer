@@ -193,8 +193,8 @@ class Game:
         self.played_cards = None
         
         #add play card button
-        self.play=Button(460, 450, 80, 40, "Play!")  
-        self.all_sprites.add(self.play)  
+        self.play_button=Button(460, 450, 80, 40, "Play!")  
+        self.all_sprites.add(self.play_button)  
         
     def handle_events(self, event):
         self.ui.process_events(event)
@@ -202,7 +202,7 @@ class Game:
             if self.back_button.rect.collidepoint(event.pos):
                 print("Back Clicked!")
                 return 1
-            elif self.play.rect.collidepoint(event.pos):
+            elif self.play_button.rect.collidepoint(event.pos):
                 print("Play Card Clicked!")
                 played_cards_str = self.played_card_text_box.get_text().split(",")
                 self.played_cards = [int(card) for card in played_cards_str]
@@ -229,6 +229,7 @@ class Game:
         else:
             played_cards = self.played_cards
             self.played_cards = None
+            self.played_card_text_box.set_text("")
             return played_cards
 
     def is_end(self) -> bool:

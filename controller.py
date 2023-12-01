@@ -66,6 +66,7 @@ def main_loop():
             config = Config(**gui.config)
             print(config)
             database = initialization(config)
+            print('database initialized')
             database.players = ['player1', 'cp']
             controller.init_play(database.players)
             print(database)
@@ -89,11 +90,15 @@ def main_loop():
                 database = draw_card(database, controller.current_player, controller.round, config)
                 controller.draw[controller.current_player] = True
 
+                print(controller.current_player,':')
+                for card in database.hands[controller.current_player]:
+                    print(card.identifier)
+
             match controller.current_player:
                 case 'cp':
                     cp_played_cards = cp.cp_play_card(
                         controller.round,
-                        database.hands[player],
+                        database.hands['cp'],
                         database.community,
                         config.num_cards_played_per_round,
                         database.card_recently_played,
