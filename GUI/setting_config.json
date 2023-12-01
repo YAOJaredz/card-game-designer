@@ -10,14 +10,14 @@
     },
     "TextBox": {
         "num_rounds": [[100, 130, 150, 40],-1],
-        "num_decks": [[300, 130, 150, 40],0],
+        "num_decks": [[300, 130, 150, 40],1],
         "num_initial_hand": [[100, 230, 150, 40],0],
         "num_cards_dealt_per_round": [[300, 230, 150, 40],0],
         "num_draw": [[700, 230, 150, 40],1],
         "first_round_of_comm": [[300, 330, 150, 40],0],
         "first_round_num_comm": [[500, 330, 150, 40],0],
         "num_added_comm_per_round": [[700, 330, 150, 40],0],
-        "num_cards_played_per_round": [[300, 430, 150, 40],0]
+        "num_cards_played_per_round": [[300, 430, 150, 40],1]
     },
     "Labels":{
         "joker": [500, 100, 150, 40, "Include Joker?"],

@@ -190,7 +190,7 @@ class Game:
         self.played_card_text_box_label=Label_UI(350, 370, 300, 40, "Played Cards: (Separated by ,)", ui_manager=self.ui, uid="played_card_text_box_label")
         
         #record played card for this round
-        self.played_cards=[]  
+        self.played_cards = None
         
         #add play card button
         self.play=Button(460, 450, 80, 40, "Play!")  
@@ -204,7 +204,8 @@ class Game:
                 return 1
             elif self.play.rect.collidepoint(event.pos):
                 print("Play Card Clicked!")
-                self.played_cards=self.get_played_cards()
+                played_cards_str = self.played_card_text_box.get_text().split(",")
+                self.played_cards = [int(card) for card in played_cards_str]
                 print(self.played_cards)
         return 2
 
@@ -217,15 +218,18 @@ class Game:
         self.ui.draw_ui(self.screen)
         pygame.display.flip()
 
-    def get_played_cards(self) -> list[int]:
+    def get_played_cards(self) -> list[int] | None:
         """
         Retrieves the cards played by the user by inputing identifiers of the cards in the text box. 
         Returns:
             list: A list of cards played by the user.
         """
-        self.played_cards = self.played_card_text_box.get_text().split(",")
-        self.played_cards = [int(card) for card in self.played_cards]
-        return self.played_cards
+        if self.played_cards is None:
+            return None
+        else:
+            played_cards = self.played_cards
+            self.played_cards = None
+            return played_cards
 
     def is_end(self) -> bool:
         """

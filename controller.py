@@ -6,73 +6,118 @@ from operations import *
 from GUI.gui import GUI
 from cp_strategy import ComputerPlayer
 
+class Controller():
+    def __init__(self) -> None:
+        self.running = True
+        self.playing = False
+
+    def init_play(self, players):
+        self.round = 0
+        self.deal = False
+        self.community = False
+        self.play = dict()
+        self.draw = dict()
+        self.players = players
+        for player in players:
+            self.play[player] = False
+            self.draw[player] = False
+        self.current_player = players[0]
+        
+        self.playing = True
+    
+    def update_round(self) -> bool:
+        if self.deal and self.community and all(self.play.values()):
+            self.round += 1
+            self.deal = False
+            self.community = False
+            for player in self.players:
+                self.play[player] = False
+                self.draw[player] = False
+            self.current_player = self.players[0]
+            return True
+        else:
+            return False
+    
+    def next_player(self):
+        self.current_player = self.players[(self.players.index(self.current_player) + 1) % len(self.players)]
+
+    def quit(self):
+        self.running = False
+        self.playing = False
+    
+    def quit_play(self):
+        self.playing = False
+
+
 def main_loop():
     """
     The main loop of the program.
     """
-    running = True
-    playing = False
+    controller = Controller()
 
     gui = GUI()
 
     cp = ComputerPlayer()
 
-    while running:
-        if not gui.events(): running = False
+    while controller.running:
+        if not gui.events(): controller.quit()
         gui.display_stage()
         if gui.current_stage == 2:
             config = Config(**gui.config)
-            playing = True
-            round_ = 0
             print(config)
             database = initialization(config)
             database.players = ['player1', 'cp']
+            controller.init_play(database.players)
             print(database)
 
-        while playing:
-            if gui.current_stage != 2: playing = False
-            if not gui.events(): 
-                running = False
-                playing = False
+        while controller.playing:
+            if not gui.events(): controller.quit()
+            if gui.current_stage != 2: 
+                controller.quit_play()
+                break
             gui.display_stage()
 
-            database = update_community(database, round_, config)
+            if not controller.community:
+                database = update_community(database, controller.round, config)
+                controller.community = True
 
-            database = deal_cards(database, round_, config)
+            if not controller.deal:
+                database = deal_cards(database, controller.round, config)
+                controller.deal = True
 
-            for player in database.players:
-                database = draw_card(database, player, round_, config)
-                if player == 'cp':
+            if not controller.draw[controller.current_player]:
+                database = draw_card(database, controller.current_player, controller.round, config)
+                controller.draw[controller.current_player] = True
+
+            match controller.current_player:
+                case 'cp':
                     cp_played_cards = cp.cp_play_card(
-                        round_,
+                        controller.round,
                         database.hands[player],
                         database.community,
                         config.num_cards_played_per_round,
                         database.card_recently_played,
                     )
                     cp_played_cards = [card.identifier for card in cp_played_cards]
-                    database.card_recently_played = cp_played_cards
+                    controller.play['cp'] = True
                     print('cp:',cp_played_cards)
-                    database = play_cards('cp',cp_played_cards, database, round_, config)
-                else:
-                    for card in database.hands[player]:
-                        print(card)
-                    cards = []
-                    while len(cards) < config.num_cards_played_per_round:
-                        ipt = input('Please enter the identifier of the card you want to play: (one at each time)')
-                        if ipt == 'q': break
-                        cards.append(int(ipt))
-                    database.card_recently_played = cards
-                    # player_played_cards = gui.stages[gui.current_stage].get_played_cards()
-                    database = play_cards(player, list(cards), database, round_, config)
+                    database = play_cards('cp',cp_played_cards, database, controller.round, config)
+                case player:
+                    player_played_cards = gui.stages[gui.current_stage].get_played_cards()
+                    if player_played_cards is not None:
+                        controller.play[player] = True
+                        print(player,':',player_played_cards)
+                        database = play_cards(player, player_played_cards, database, controller.round, config)
+                        controller.next_player()
+
             
             if not database.self_check():
                 raise Exception("Database is not consistent.")
             
-            round_ += 1
+            controller.update_round()
 
             if gui.stages[2].is_end():
-                playing = False
+                controller.quit_play()
                 gui.current_stage = 0
 
 
