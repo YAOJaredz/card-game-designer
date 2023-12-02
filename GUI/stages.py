@@ -218,10 +218,14 @@ class Game:
         display_range_width=(num_cards-1)*40+100
         start_x=(self.width-display_range_width)/2
         for card in cards:
+            # display card image
             image=pygame.transform.scale(pygame.image.load(card.image), (100, 150))
             self.screen.blit(image, (start_x, 520))
+            # display card identifier
+            identifier=pygame.font.Font(None, 24).render(str(card.identifier), True, (0, 0, 0))
+            self.screen.blit(identifier, (start_x+10, 500))
             start_x+=40
-
+       
     def update(self, cards: list[Card]):
         self.screen.blit(self.bg, (0, 0))
         self.all_sprites.draw(self.screen)
