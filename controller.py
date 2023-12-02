@@ -90,9 +90,10 @@ def main_loop():
                 database = draw_card(database, controller.current_player, controller.round, config)
                 controller.draw[controller.current_player] = True
 
-                print(controller.current_player,':')
-                for card in database.hands[controller.current_player]:
-                    print(card.identifier)
+                if controller.current_player != 'cp':
+                    print("Cards in hand", controller.current_player,':')
+                    for card in database.hands[controller.current_player]:
+                        print(card)
 
             match controller.current_player:
                 case 'cp':
@@ -104,14 +105,20 @@ def main_loop():
                         database.card_recently_played,
                     )
                     cp_played_cards = [card.identifier for card in cp_played_cards]
+                    cp_played_cards_print = list(map(lambda x:database.find_card(x), cp_played_cards))
                     controller.play['cp'] = True
-                    print('cp:',cp_played_cards)
+                    print("cp played cards:")
+                    for card in cp_played_cards_print:
+                        print(card)
                     database = play_cards('cp',cp_played_cards, database, controller.round, config)
                 case player:
                     player_played_cards = gui.stages[gui.current_stage].get_played_cards()
                     if player_played_cards is not None:
                         controller.play[player] = True
-                        print(player,':',player_played_cards)
+                        print("player played cards:")
+                        player_played_cards_print = list(map(lambda x:database.find_card(x), player_played_cards))
+                        for card in player_played_cards_print:
+                            print(card)
                         database = play_cards(player, player_played_cards, database, controller.round, config)
                         controller.next_player()
 

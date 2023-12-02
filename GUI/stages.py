@@ -206,7 +206,7 @@ class Game:
                 print("Play Card Clicked!")
                 played_cards_str = self.played_card_text_box.get_text().split(",")
                 self.played_cards = [int(card) for card in played_cards_str]
-                print(self.played_cards)
+                # print(self.played_cards)
         return 2
 
     def update(self):
