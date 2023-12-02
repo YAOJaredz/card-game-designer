@@ -94,6 +94,9 @@ def main_loop():
                     print("Cards in hand", controller.current_player,':')
                     for card in database.hands[controller.current_player]:
                         print(card)
+                    # print cards for users
+                    gui.cards=database.hands[controller.current_player]
+                    gui.stages[gui.current_stage].display_cards(gui.cards)
 
             match controller.current_player:
                 case 'cp':

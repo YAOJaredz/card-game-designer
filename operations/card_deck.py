@@ -46,7 +46,6 @@ def create_one_deck(joker: bool, order: int) -> list[Card]:
         index += 1
     return deck
 
-
 def create_multiple_decks(num_decks: int, joker: bool, order: int) -> set[Card]:
     """Create multiple decks of cards.
     This function will create multiple decks of cards based on the input.

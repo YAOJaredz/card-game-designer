@@ -8,7 +8,7 @@ tk.Tk().withdraw()
 
 sys.path.append(".")
 from GUI.components import *
-
+from data_processing.database import Card, CardDatabase
 WIDTH, HEIGHT = 1000, 700
 
 
@@ -208,14 +208,28 @@ class Game:
                 self.played_cards = [int(card) for card in played_cards_str]
                 # print(self.played_cards)
         return 2
+    
+    def display_cards(self, cards: list[Card]):
+        """ Display the cards in the hand.
+        Args:
+            cards (list[cards]): The identifiers of the cards to be displayed.
+        """
+        num_cards=len(cards)
+        display_range_width=(num_cards-1)*40+100
+        start_x=(self.width-display_range_width)/2
+        for card in cards:
+            image=pygame.transform.scale(pygame.image.load(card.image), (100, 150))
+            self.screen.blit(image, (start_x, 520))
+            start_x+=40
 
-    def update(self):
+    def update(self, cards: list[Card]):
         self.screen.blit(self.bg, (0, 0))
         self.all_sprites.draw(self.screen)
         self.all_sprites.update(self.screen, pygame.mouse.get_pos())
         self.screen.blit(self.cp_image, (30, 70))
         self.ui.update(6e-2)
         self.ui.draw_ui(self.screen)
+        self.display_cards(cards)
         pygame.display.flip()
 
     def get_played_cards(self) -> list[int] | None:
