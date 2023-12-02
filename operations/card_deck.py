@@ -35,7 +35,7 @@ def create_one_deck(joker: bool, order: int) -> list[Card]:
     elif order == 1:
         for rank in rank1:
             for suit in suits:
-                deck.append(Card(suit, rank, index, "card_images/{rank}{suit[0]}.png", identifier))
+                deck.append(Card(suit, rank, index, f"card_images/{rank}{suit[0]}.png", identifier))
             index += 1
     else:
         raise ValueError("Invalid order value.")
