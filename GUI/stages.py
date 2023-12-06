@@ -181,7 +181,7 @@ class Game:
         self.bg=pygame.transform.scale(pygame.image.load('card_images/bg.jpg'), (self.width, self.height))
         
         #display the computer player
-        self.cp_image=pygame.transform.scale(pygame.image.load('card_images/cp.png'), (200, 200))
+        self.cp_image=pygame.transform.scale(pygame.image.load('card_images/cp.png'), (150, 150))
         
         #text box for playing cards
         self.played_card_text_box=TextBox(400, 400, 200, 40, ui_manager=self.ui, uid="played_card_text_box")
@@ -196,6 +196,9 @@ class Game:
         self.play_button=Button(460, 450, 80, 40, "Play!")  
         self.all_sprites.add(self.play_button)  
         
+        # add card deck
+        self.deck_image=pygame.transform.scale(pygame.image.load('card_images/deck.png'), (200, 150))
+        
     def handle_events(self, event):
         self.ui.process_events(event)
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -209,11 +212,13 @@ class Game:
                 # print(self.played_cards)
         return 2
     
-    def display_cards(self, cards: list[Card]):
-        """ Display the cards in the hand.
+    def display_player_cards(self, database: CardDatabase):
+        """ Display the cards in player's hand.
         Args:
-            cards (list[cards]): The identifiers of the cards to be displayed.
+            database (CardDatabase): The card database.
+                                    Get the cards in hand. 
         """
+        cards=database.hands["player1"]
         num_cards=len(cards)
         display_range_width=(num_cards-1)*40+100
         start_x=(self.width-display_range_width)/2
@@ -224,16 +229,38 @@ class Game:
             # display card identifier
             identifier=pygame.font.Font(None, 24).render(str(card.identifier), True, (0, 0, 0))
             self.screen.blit(identifier, (start_x+10, 500))
-            start_x+=40
-       
-    def update(self, cards: list[Card]):
+            start_x+=40  
+              
+            
+    def display_cp_cards(self, database: CardDatabase):
+        """ Display the cards in cp's hand.
+        Args:
+            database (CardDatabase): The card database.
+                                    Get the cards in hand. 
+        """
+        cards=database.hands["cp"]
+        num_cards=len(cards)
+        display_range_width=(num_cards-1)*40+100
+        start_x=(self.width-display_range_width)/2
+        image=pygame.transform.scale(pygame.image.load("card_images/back.png"), (100, 150))
+        for card in cards:
+            # display card backs
+            self.screen.blit(image, (start_x, 30))
+            start_x+=40    
+            
+    def update(self, database: CardDatabase): 
         self.screen.blit(self.bg, (0, 0))
         self.all_sprites.draw(self.screen)
         self.all_sprites.update(self.screen, pygame.mouse.get_pos())
-        self.screen.blit(self.cp_image, (30, 70))
+        self.screen.blit(self.cp_image, (70, 30))
+        self.screen.blit(self.deck_image, (30, 300))
         self.ui.update(6e-2)
         self.ui.draw_ui(self.screen)
-        self.display_cards(cards)
+
+        # if users have cards in hand, display them
+        if len(database.hands.keys()) != 0:
+            self.display_player_cards(database)
+            self.display_cp_cards(database)
         pygame.display.flip()
 
     def get_played_cards(self) -> list[int] | None:

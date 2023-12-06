@@ -26,7 +26,7 @@ class GUI:
         self.clock = pygame.time.Clock()
         self.running = True
         self.stages = [Openning(), Setting(), Game()]
-        self.cards = [] # cards in user's hand
+        self.database = CardDatabase()
 
     def events(self):
         """
@@ -68,7 +68,7 @@ class GUI:
         self.clock.tick(self.fps)
         #print cards for users
         if self.current_stage == 2:
-            self.stages[self.current_stage].update(self.cards)
+            self.stages[self.current_stage].update(self.database)
         else: 
             self.stages[self.current_stage].update()
         pygame.display.flip()
