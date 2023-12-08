@@ -186,8 +186,8 @@ class Game:
         #text box for playing cards
         self.played_card_text_box=TextBox(280, 450, 300, 40, ui_manager=self.ui, uid="played_card_text_box")
         
-        #text box label
-        self.played_card_text_box_label=Label_UI(325, 420, 300, 40, "Played Cards: (Separated by ,)", ui_manager=self.ui, uid="played_card_text_box_label")
+        # text box label
+        self.played_card_text_box_label=pygame.font.Font(None, 24).render(str("Please enter identifiers (separated by ,) "), True, (255, 255, 255))
         
         #record played card for this round
         self.played_cards = None
@@ -227,7 +227,7 @@ class Game:
             image=pygame.transform.scale(pygame.image.load(card.image), (100, 150))
             self.screen.blit(image, (start_x, 520))
             # display card identifier
-            identifier=pygame.font.Font(None, 24).render(str(card.identifier), True, (0, 0, 0))
+            identifier=pygame.font.Font(None, 24).render(str(card.identifier), True, (255, 255, 255))
             self.screen.blit(identifier, (start_x+10, 500))
             start_x+=40  
               
@@ -240,7 +240,7 @@ class Game:
         """
         cards=database.hands["cp"]
         num_cards=len(cards)
-        display_range_width=(num_cards-1)*40+60
+        display_range_width=(num_cards-1)*20+60
         start_x=(self.width-display_range_width)/2
         image=pygame.transform.scale(pygame.image.load("card_images/back.png"), (60, 100))
         for card in cards:
@@ -256,13 +256,16 @@ class Game:
         """
         cards=database.community
         num_cards=len(cards)
-        display_range_width=(num_cards-1)*20+60
-        start_x=230
+        display_range_width=num_cards*90
+        start_x=(self.width-display_range_width)/2
+        community_label=pygame.font.Font(None, 24).render(str("Community Cards:"), True, (255, 255, 255))
+        self.screen.blit(community_label, (430, 250))
         for card in cards:
             # display card image
-            image=pygame.transform.scale(pygame.image.load(card.image), (60, 90))
+            image=pygame.transform.scale(pygame.image.load(card.image), (80, 110))
             self.screen.blit(image, (start_x, 270))
-            start_x+=20
+            start_x+=90
+             
             
     def update(self, database: CardDatabase): 
         self.screen.blit(self.bg, (0, 0))
@@ -270,6 +273,7 @@ class Game:
         self.all_sprites.update(self.screen, pygame.mouse.get_pos())
         self.screen.blit(self.cp_image, (100, 20))
         self.screen.blit(self.deck_image, (30, 350))
+        self.screen.blit(self.played_card_text_box_label, (310, 425))
         self.ui.update(6e-2)
         self.ui.draw_ui(self.screen)
 
@@ -277,7 +281,9 @@ class Game:
         if len(database.hands.keys()) != 0:
             self.display_player_cards(database)
             self.display_cp_cards(database)
-            # self.display_community_cards(database)
+        #display community cards
+        if len(database.community) != 0:
+            self.display_community_cards(database)
         pygame.display.flip()
 
     def get_played_cards(self) -> list[int] | None:
