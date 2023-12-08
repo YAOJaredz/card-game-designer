@@ -1,5 +1,6 @@
 import pygame
 import sys
+import random
 
 from data_processing.database import Card, CardDatabase
 from operations import *
@@ -102,6 +103,8 @@ def main_loop():
 
             match controller.current_player:
                 case 'cp':
+                    if random.random() > 0.1:
+                        continue
                     cp_played_cards = cp.cp_play_card(
                         controller.round,
                         gui.database.hands['cp'],
