@@ -126,6 +126,19 @@ class Setting:
                 # Save the config
                 self.get_config()
                 print(self.new_config)
+                save_path = filedialog.asksaveasfile(
+                    initialdir="IOTEDU",
+                    title="Save template as",
+                    mode="w",
+                    defaultextension=json,
+                    filetypes=(("Text files", "*.json"), ("all files", "*.*")),
+                )
+                if save_path is None:
+                    print("No valid file path specified.")
+                else:
+                    json.dump(self.new_config, save_path)
+                    save_path.close()
+                    print("Config saved!")
         elif event.type == pygame.USEREVENT:
             if (
                 event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED
