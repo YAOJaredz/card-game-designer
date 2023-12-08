@@ -318,11 +318,5 @@ class Game:
     
 
 if __name__ == "__main__":
-    from gui import GUI
-
-    gui = GUI()
-    while True:
-        if not gui.events(): break
-        gui.display_stage()
-    pygame.quit()
-    sys.exit()
+    from controller import main_loop
+    main_loop()
