@@ -191,10 +191,10 @@ class Game:
         self.ui=pygame_gui.UIManager((self.width, self.height), "GUI/themes.json")
         
         #display the card table
-        self.bg=pygame.transform.scale(pygame.image.load('card_images/bg.jpg'), (self.width, self.height))
+        self.bg=pygame.transform.smoothscale(pygame.image.load('card_images/bg.jpg'), (self.width, self.height))
         
         #display the computer player
-        self.cp_image=pygame.transform.scale(pygame.image.load('card_images/cp.png'), (100, 120))
+        self.cp_image=pygame.transform.smoothscale(pygame.image.load('card_images/cp.png'), (100, 120))
         
         #text box for playing cards
         self.played_card_text_box=TextBox(280, 450, 300, 40, ui_manager=self.ui, uid="played_card_text_box")
@@ -210,7 +210,7 @@ class Game:
         self.all_sprites.add(self.play_button)  
         
         # add card deck
-        self.deck_image=pygame.transform.scale(pygame.image.load('card_images/deck.png'), (150, 100))
+        self.deck_image=pygame.transform.smoothscale(pygame.image.load('card_images/deck.png'), (150, 100))
         
     def handle_events(self, event):
         self.ui.process_events(event)
@@ -237,7 +237,7 @@ class Game:
         start_x=(self.width-display_range_width)/2
         for card in cards:
             # display card image
-            image=pygame.transform.scale(pygame.image.load(card.image), (100, 150))
+            image=pygame.transform.smoothscale(pygame.image.load(card.image), (100, 150))
             self.screen.blit(image, (start_x, 520))
             # display card identifier
             identifier=pygame.font.Font(None, 24).render(str(card.identifier), True, (255, 255, 255))
@@ -255,7 +255,7 @@ class Game:
         num_cards=len(cards)
         display_range_width=(num_cards-1)*20+60
         start_x=(self.width-display_range_width)/2
-        image=pygame.transform.scale(pygame.image.load("card_images/back.png"), (60, 100))
+        image=pygame.transform.smoothscale(pygame.image.load("card_images/back.png"), (60, 100))
         for card in cards:
             # display card backs
             self.screen.blit(image, (start_x, 30))
@@ -275,7 +275,7 @@ class Game:
         self.screen.blit(community_label, (420, 240))
         for card in cards:
             # display card image
-            image=pygame.transform.scale(pygame.image.load(card.image), (80, 110))
+            image=pygame.transform.smoothscale(pygame.image.load(card.image), (60, 90))
             self.screen.blit(image, (start_x, 270))
             start_x+=90
              
@@ -345,11 +345,5 @@ class Game:
     
 
 if __name__ == "__main__":
-    from gui import GUI
-
-    gui = GUI()
-    while True:
-        if not gui.events(): break
-        gui.display_stage()
-    pygame.quit()
-    sys.exit()
+    from controller import main_loop
+    main_loop()
