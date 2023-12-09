@@ -72,7 +72,7 @@ class CardDatabase():
         self.players: list[str] = list()
         self.snapshots: list[set] = list()
 
-        self.card_recently_played: list[Card] = []
+        self.card_recently_played: dict[str, list[Card]] = dict()
 
     def pop_from_deck(self, num_pop: int) -> list[Card]:
         """

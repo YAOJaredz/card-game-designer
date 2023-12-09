@@ -38,12 +38,13 @@ def play_cards(player: str, play_cards: list[int], database: CardDatabase, round
     elif player not in database.players:
         raise ValueError('Player not in the game.')
     else:
-        database.card_recently_played = [] 
+        database.card_recently_played['player']=player
+        database.card_recently_played['played_cards']=[]
         for card_id in play_cards:
             card=database.find_card(card_id)
             database.discard.add(card)
             database.hands[player].remove(card)
-            database.card_recently_played.append(card)
+            database.card_recently_played['played_cards'].append(card)
     return database
 
 if __name__ == "__main__":

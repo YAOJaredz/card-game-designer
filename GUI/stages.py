@@ -272,13 +272,32 @@ class Game:
         display_range_width=num_cards*90
         start_x=(self.width-display_range_width)/2
         community_label=pygame.font.Font(None, 24).render(str("Community Cards:"), True, (255, 255, 255))
-        self.screen.blit(community_label, (430, 250))
+        self.screen.blit(community_label, (420, 240))
         for card in cards:
             # display card image
             image=pygame.transform.scale(pygame.image.load(card.image), (80, 110))
             self.screen.blit(image, (start_x, 270))
             start_x+=90
              
+    def display_recently_played_cards(self, database: CardDatabase):
+        """ Display the recently played cards.
+        Args:
+            database (CardDatabase): The card database.
+                                    Get the recently played cards.
+        """
+        cards=database.card_recently_played['played_cards']
+        player=database.card_recently_played['player']
+        num_cards=len(cards)
+        display_range_height=num_cards*100
+        start_y=(self.height-display_range_height)/2
+        played_card_label=pygame.font.Font(None, 24).render(player+str(" played:"), True, (255, 255, 255))
+        self.screen.blit(played_card_label, (850, start_y-20))
+        for card in cards:
+            # display card image
+            image=pygame.transform.scale(pygame.image.load(card.image), (80, 100))
+            self.screen.blit(image, (880, start_y))
+            start_y+=100
+        return None
             
     def update(self, database: CardDatabase): 
         self.screen.blit(self.bg, (0, 0))
@@ -297,6 +316,8 @@ class Game:
         #display community cards
         if len(database.community) != 0:
             self.display_community_cards(database)
+        if len(database.card_recently_played) != 0:
+            self.display_recently_played_cards(database)
         pygame.display.flip()
 
     def get_played_cards(self) -> list[int] | None:
