@@ -158,12 +158,16 @@ def main_loop():
                         try:
                             player_played_cards_print = list(map(lambda x:gui.database.find_card(x), player_played_cards))
                         except ValueError:
-                            gui.stages[gui.current_stage].set_alert("Invalid card identifiers.")
+                            gui.stages[gui.current_stage].display_alert("Invalid card identifiers.")
                         for card in player_played_cards_print:
                             print(card)
-                        gui.database = play_cards(player, player_played_cards, gui.database, controller.round, config)
-                        controller.next_player()
-                        gui.stages[gui.current_stage].clear_alert()
+                        # handle situation that the player played cards that are not in the hand
+                        try: 
+                            gui.database = play_cards(player, player_played_cards, gui.database, controller.round, config)
+                            controller.next_player()
+                            gui.stages[gui.current_stage].clear_alert()
+                        except ValueError:
+                            gui.stages[gui.current_stage].display_alert("Invalid card identifiers.")
 
             
             if not gui.database.self_check():
