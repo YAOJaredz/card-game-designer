@@ -99,7 +99,7 @@ if __name__ == "__main__":
     print("Test of empty config (nothing in deck); completed by unit_test function. \n")
     empty_config = json.load(open("save/empty_config.json"))
     empty_config = Config(**empty_config)
-    ut.unit_test(initialization, (empty_config), CardDatabase(), "Initialization")
+    ut.unit_test(initialization, (empty_config), (CardDatabase(),), "Initialization")
 
     # test config: num_decks=3, joker=true, order=1
     print(

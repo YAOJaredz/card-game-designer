@@ -3,6 +3,9 @@ import pygame_gui  # type: ignore
 
 
 class Button(pygame.sprite.Sprite):
+    """
+    The Button class represents a button in the GUI.
+    """
     def __init__(self, x, y, width, height, text):
         super().__init__()
         self.image = pygame.Surface((width, height))
@@ -24,8 +27,10 @@ class Button(pygame.sprite.Sprite):
         surface.blit(self.rendered_text, self.text_rect)
     
 
-
 class Label(pygame.sprite.Sprite):
+    """
+    The Label class represents a label in the GUI.
+    """
     def __init__(self, x, y, text, font_size, color=(0, 0, 0)):
         super().__init__()
         self.font = pygame.font.Font(None, font_size)
@@ -38,6 +43,9 @@ class Label(pygame.sprite.Sprite):
 
 
 class DropDown(pygame_gui.elements.UIDropDownMenu):
+    """
+    The DropDown class represents a drop down menu for choices in the GUI.
+    """
     def __init__(
         self,
         x: int,
@@ -58,6 +66,9 @@ class DropDown(pygame_gui.elements.UIDropDownMenu):
         )
 
 class TextBox(pygame_gui.elements.UITextEntryLine):
+    """
+    The TextBox class represents a text box for entering text in the GUI.
+    """
     def __init__(
         self,
         x: int,
@@ -75,6 +86,9 @@ class TextBox(pygame_gui.elements.UITextEntryLine):
         )
         
 class Label_UI(pygame_gui.elements.UILabel):
+    """
+    The Label_UI class represents a label in the GUI.
+    """
     def __init__(self, 
                  x: int, 
                  y: int, 

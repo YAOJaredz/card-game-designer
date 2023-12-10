@@ -8,11 +8,21 @@ from GUI.gui import GUI
 from cp_strategy import ComputerPlayer
 
 class Controller():
+    """
+    The Controller class manages the game flow and player actions in the card game.
+    """
+
     def __init__(self) -> None:
         self.running = True
         self.playing = False
 
-    def init_play(self, players):
+    def init_play(self, players: list[str]) -> None:
+        """
+        Initializes a new game round with the specified players.
+
+        Args:
+            players (list): A list of player names.
+        """
         self.round = 0
         self.deal = False
         self.community = False
@@ -27,6 +37,12 @@ class Controller():
         self.playing = True
     
     def update_round(self) -> bool:
+        """
+        Updates the game round and checks if the round is complete.
+
+        Returns:
+            bool: True if the round is complete, False otherwise.
+        """
         if self.deal and self.community and all(self.play.values()):
             self.round += 1
             self.deal = False
@@ -39,14 +55,26 @@ class Controller():
         else:
             return False
     
-    def next_player(self):
+    def next_player(self) -> None:
+        """
+        Moves the game to the next player.
+        """
         self.current_player = self.players[(self.players.index(self.current_player) + 1) % len(self.players)]
 
-    def quit(self):
+    def quit(self) -> None:
+        """
+        Quits the game.
+
+        Returns:
+            None
+        """
         self.running = False
         self.playing = False
     
     def quit_play(self):
+        """
+        Quits the current game round.
+        """
         self.playing = False
 
 

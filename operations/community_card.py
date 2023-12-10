@@ -27,7 +27,7 @@ def update_community(database: CardDatabase, round: int, config: Config) -> Card
     return database
 
 if __name__ == '__main__':
-    from card_deck import initialization
+    from card_deck import initialization # type: ignore
 
     config = Config(**json.load(open('save/test_config.json','r')))
 

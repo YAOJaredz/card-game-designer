@@ -9,8 +9,31 @@ from GUI.stages import *
 
 
 class GUI:
+    """
+    The GUI class represents the graphical user interface for the Card Game Designer.
+
+    Attributes:
+        current_stage (int): The current stage of the GUI.
+        width (int): The width of the GUI window.
+        height (int): The height of the GUI window.
+        fps (int): The frames per second for the GUI.
+        screen (pygame.Surface): The surface representing the GUI window.
+        font (pygame.font.Font): The font used for text in the GUI.
+        clock (pygame.time.Clock): The clock used to control the frame rate.
+        running (bool): Flag indicating if the GUI is running.
+        stages (list): List of stages in the GUI.
+        database (CardDatabase): The card database used in the GUI.
+
+    Methods:
+        __init__(): Initializes the GUI object.
+        events(): Process the events in the game.
+        update_stage(stage: int): Update the stage of the GUI.
+        display_stage(): Display the current stage of the GUI.
+    """
     def __init__(self):
         """
+        Initializes the GUI object.
+
         There are 3 stages of the GUI:
             1. Title page
             2. Setting page
@@ -54,7 +77,10 @@ class GUI:
 
     def update_stage(self, stage: int):
         """
-        Update the stage of the gui.
+        Update the stage of the GUI.
+
+        Args:
+            stage (int): The new stage to set.
         """
         if stage == 2:
             self.config = self.stages[self.current_stage].get_config()

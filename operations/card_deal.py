@@ -50,7 +50,7 @@ def draw_card(database: CardDatabase, player: str, round: int, config: Config) -
     return database
 
 if __name__ == '__main__':
-    from card_deck import initialization
+    from card_deck import initialization # type: ignore
 
     test_config_path = 'save/test_config.json'
     config = Config(**json.load(open(test_config_path, 'r')))

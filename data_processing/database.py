@@ -1,6 +1,7 @@
 import random
 
-class Card():
+
+class Card:
     """
     The object that stores the data of a card.
 
@@ -11,7 +12,8 @@ class Card():
         image (str): The image of the card.
         identifier (int): The unique identifier of the card.
     """
-    def __init__(self, suit: str, rank: str, index: int, image:str, identifier:int) -> None:
+
+    def __init__(self, suit: str, rank: str, index: int, image: str, identifier: int) -> None:
         self.suit = suit
         self.rank = rank
         self.index = index
@@ -23,7 +25,7 @@ class Card():
             return (self.suit, self.rank, self.index) == (other.suit, other.rank, other.index)
         else:
             raise TypeError("Cannot compare Card with non-Card object.")
-        
+
     def compare(self, other: object) -> int:
         if isinstance(other, Card):
             if self.index > other.index:
@@ -34,17 +36,15 @@ class Card():
                 return 0
         else:
             raise TypeError("Cannot compare Card with non-Card object.")
-        return None
-    
+
     def __str__(self) -> str:
-        return f'suit = {self.suit}\trank = {self.rank}\tindex = {str(self.index)}\tidentifier = {str(self.identifier)}'
-    
+        return f"suit = {self.suit}\trank = {self.rank}\tindex = {str(self.index)}\tidentifier = {str(self.identifier)}"
+
     def __repr__(self) -> str:
-        return f'Card({self.rank}, {self.suit})'
-    
+        return f"Card({self.rank}, {self.suit})"
+
     def __hash__(self) -> int:
         return hash((self.suit, self.rank, self.index, self.identifier))
-    
 
     def __lt__(self, other: object) -> bool:
         if isinstance(other, Card):
@@ -53,7 +53,7 @@ class Card():
             raise TypeError("Cannot compare Card with non-Card object.")
 
 
-class CardDatabase():
+class CardDatabase:
     """
     The object that stores all the data of cards and players and coordinates the flow for each action.
 
@@ -63,7 +63,10 @@ class CardDatabase():
         community (list): All the cards that are currently on the table.
         hands (dict): All the cards that each player has. The key is the player's name and the value is their hand.
         players (list): All the players in the game.
+        snapshots (list): All the snapshots of the database. This is used to check if the database is valid.
+        card_recently_played (dict): The cards that are recently played.
     """
+
     def __init__(self) -> None:
         self.deck: set[Card] = set()
         self.discard: set[Card] = set()
@@ -72,17 +75,17 @@ class CardDatabase():
         self.players: list[str] = list()
         self.snapshots: list[set] = list()
 
-        self.card_recently_played: dict[str, list[Card]] = dict()
+        self.card_recently_played: dict = {"player": "", "played_cards": []}
 
     def pop_from_deck(self, num_pop: int) -> list[Card]:
         """
         Pop specified number of cards from the deck.
-        
+
         Args:
             num_pop (int): The number of cards to pop from the deck.
 
         Return:
-            list[Card]: The popped cards.        
+            list[Card]: The popped cards.
         """
         popped_cards = random.sample(sorted(self.deck), num_pop)
         for card in popped_cards:
@@ -91,12 +94,24 @@ class CardDatabase():
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, CardDatabase):
-            return (self.deck, self.discard, self.community, self.hands, self.players) == (other.deck, other.discard, other.community, other.hands, other.players)
+            return (
+                self.deck,
+                self.discard,
+                self.community,
+                self.hands,
+                self.players,
+            ) == (
+                other.deck,
+                other.discard,
+                other.community,
+                other.hands,
+                other.players,
+            )
         else:
             raise TypeError("Cannot compare CardDatabase with non-CardDatabase object.")
-        
+
     def __str__(self) -> str:
-        return f'deck = {str(self.deck)}\ndiscard = {str(self.discard)}\ncommunity = {str(self.community)}\nhands = {str(self.hands)}\nplayers = {str(self.players)}'
+        return f"deck = {str(self.deck)}\ndiscard = {str(self.discard)}\ncommunity = {str(self.community)}\nhands = {str(self.hands)}\nplayers = {str(self.players)}"
 
     def find_card(self, identifier: int) -> Card:
         """Find the card by identifier.
@@ -104,7 +119,7 @@ class CardDatabase():
         Args:
             identifier (int): The identifier of the card.
         Return:
-            card (Card): The card with the identifier.
+            Card: The card with the identifier.
         """
         # Search in the deck
         for card in self.deck:
@@ -123,16 +138,22 @@ class CardDatabase():
             for card in hand:
                 if card.identifier == identifier:
                     return card
-        raise ValueError(f'Cannot find the card with identifier {identifier}.')
-    
+        raise ValueError(f"Cannot find the card with identifier {identifier}.")
+
     def self_check(self) -> bool:
         """
         Check if the database is valid.
+        This function will check if the database is valid by comparing the snapshot of the database.
+
+        Return:
+            bool: Whether or not the database is valid.
         """
         hands_set: set[Card] = set()
         for hand in self.hands.values():
             hands_set = hands_set.union(set(hand))
-        snapshot = self.deck.union(self.discard).union(set(self.community)).union(hands_set)
+        snapshot = (
+            self.deck.union(self.discard).union(set(self.community)).union(hands_set)
+        )
         if self.snapshots == []:
             self.snapshots.append(snapshot)
             return True
@@ -142,8 +163,9 @@ class CardDatabase():
                 return True
             else:
                 return False
-        
-if __name__ == '__main__':
+
+
+if __name__ == "__main__":
     print(CardDatabase())
     database = CardDatabase()
     database.self_check()

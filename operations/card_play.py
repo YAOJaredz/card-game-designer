@@ -48,7 +48,7 @@ def play_cards(player: str, play_cards: list[int], database: CardDatabase, round
     return database
 
 if __name__ == "__main__":
-    from card_deck import initialization
+    from card_deck import initialization # type: ignore
     from card_deck import card_print_all
 
     test_config_path = 'save/test_config.json'

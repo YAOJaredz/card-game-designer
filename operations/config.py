@@ -5,6 +5,16 @@ class Config():
     A class representing the configuration settings for a card game.
     """
     def __init__(self, **kwargs) -> None:
+        """
+        Initializes the Config object with the provided keyword arguments.
+
+        Args:
+            **kwargs: Keyword arguments containing the configuration values.
+
+        Raises:
+            KeyError: If a required key is not found in the configuration file.
+            ValueError: If a value is not valid in the configuration file.
+        """
         try:
             self.num_rounds: int = kwargs['num_rounds']
 
@@ -45,7 +55,13 @@ class Config():
     def __str__(self) -> str:
         return str(self.__dict__)
     
-    def save(self, path: str):
+    def save(self, path: str) -> None:
+        """
+        Save the configuration object to a JSON file.
+
+        Args:
+            path (str): The path to the JSON file.
+        """
         json.dump(self.__dict__, open(path, 'w'))
 
 if __name__ == '__main__':
