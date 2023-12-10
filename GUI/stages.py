@@ -81,7 +81,8 @@ class Setting:
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.ui = pygame_gui.UIManager((self.width, self.height), "GUI/themes.json")
 
-        self.ui_config = json.load(open("GUI/setting_config.json", "r"))
+        ui_config = json.load(open("GUI/setting_config_grid.json", "r"))
+        self.ui_config = self.convert_config_grid(ui_config)
 
         self.dropdown = dict()
         for i in self.ui_config["DropDown"]:
@@ -111,6 +112,30 @@ class Setting:
         self.all_sprites.add(
             self.continue_button, self.save_button, self.setting_title, self.back_button
         )
+
+    def convert_config_grid(self, ui_config: set):
+        """
+        Convert the configuration grid coordinates in the UI configuration dictionary
+        from their original string representation to their corresponding integer values.
+
+        Args:
+            ui_config (set): The UI configuration dictionary containing the grid coordinates.
+
+        Returns:
+            set: The updated UI configuration dictionary with converted grid coordinates.
+        """
+        for i in ui_config["DropDown"].keys():
+            ui_config["DropDown"][i][0] = ui_config['Grid']['col'][str(ui_config["DropDown"][i][0])]
+            ui_config["DropDown"][i][1] = ui_config['Grid']['row'][str(ui_config["DropDown"][i][1])]
+        for i in ui_config["TextBox"].keys():
+            ui_config['TextBox'][i][0][0] = ui_config['Grid']['col'][str(ui_config["TextBox"][i][0][0])]
+            ui_config['TextBox'][i][0][1] = ui_config['Grid']['row'][str(ui_config["TextBox"][i][0][1])]
+        for i in ui_config["Labels"].keys():
+            ui_config['Labels'][i][0] = ui_config['Grid']['label_col'][str(ui_config["Labels"][i][0])] + ui_config['Labels'][i][5]
+            ui_config['Labels'][i][1] = ui_config['Grid']['label_row'][str(ui_config["Labels"][i][1])]
+            ui_config['Labels'][i].remove(ui_config['Labels'][i][5])
+        return ui_config
+
 
     def handle_events(self, event):
         self.ui.process_events(event)
