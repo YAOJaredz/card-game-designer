@@ -91,16 +91,6 @@ def main_loop():
                 gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
                 controller.draw[controller.current_player] = True
 
-                # if controller.current_player != 'cp':
-                #     print("Cards in hand", controller.current_player,':')
-                #     for card in gui.database.hands[controller.current_player]:
-                #         print(card)
-                        
-            # gui.cards=gui.database.hands[controller.current_player]
-            # gui.stages[gui.current_stage].display_player_cards(gui.database) 
-            # gui.cards=gui.database.hands["x"]
-            # gui.stages[gui.current_stage].display_cp_cards(gui.database)
-
             match controller.current_player:
                 case 'cp':
                     if random.random() > 0.1:
