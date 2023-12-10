@@ -84,6 +84,7 @@ class GUI:
         """
         if stage == 2:
             self.config = self.stages[self.current_stage].get_config()
+            self.stages[2].config = self.config
         self.current_stage = stage
         pass
 
@@ -100,10 +101,7 @@ class GUI:
         pygame.display.flip()
 
 
+
 if __name__ == "__main__":
-    gui = GUI()
-    while True:
-        if not gui.events(): break
-        gui.display_stage()
-    pygame.quit()
-    sys.exit()
+    from controller import main_loop
+    main_loop()

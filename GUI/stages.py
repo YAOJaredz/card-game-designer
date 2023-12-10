@@ -142,7 +142,7 @@ class Setting:
             self.screen = pygame.display.set_mode((self.width, self.height))
             self.ui = pygame_gui.UIManager((self.width, self.height), "GUI/themes.json")
 
-            ui_config = json.load(open("GUI/setting_config_grid.json", "r"))
+            ui_config = json.load(open("GUI/setting_config.json", "r"))
             self.ui_config = self.convert_config_grid(ui_config)
 
             self.dropdown = dict()
@@ -320,14 +320,17 @@ class Game:
         self.played_card_text_box = TextBox(280, 450, 300, 40, ui_manager=self.ui, uid="played_card_text_box")
 
         # text box label
-        self.played_card_text_box_label = pygame.font.Font(None, 24).render(str("Please enter identifiers (separated by ,) "), True, (255, 255, 255))
+        self.played_card_text_box_label = pygame.font.Font(None, 24).render(str("Please enter identifiers (separated by , ) "), True, (255, 255, 255))
+
+        # alert label
+        self.alert_label = Label(380, 395, "", 24, color=(255,69,69))
 
         # record played card for this round
         self.played_cards = None
 
         # add play card button
         self.play_button = Button(600, 450, 70, 35, "Play!")
-        self.all_sprites.add(self.play_button)
+        self.all_sprites.add(self.play_button, self.alert_label)
 
         # add card deck
         self.deck_image = pygame.transform.smoothscale(pygame.image.load('card_images/deck.png'), (150, 100))
@@ -349,8 +352,16 @@ class Game:
                 return 1
             elif self.play_button.rect.collidepoint(event.pos):
                 print("Play Card Clicked!")
-                played_cards_str = self.played_card_text_box.get_text().split(",")
-                self.played_cards = [int(card) for card in played_cards_str]
+                played_cards = self.played_card_text_box.get_text()
+                try:
+                    played_cards_str = self.check_input(played_cards, self.config)
+                    self.played_cards = [int(card) for card in played_cards_str]
+                except ValueError:
+                    self.display_alert(f"{' '*8}Invalid input !")
+                    print(f"Invalid input!")
+                except ImcompatibleConfigError:
+                    self.display_alert("Too many cards played !")
+                    print("Too many cards played!")
         return 2
     
     def display_player_cards(self, database: CardDatabase, player: str = "player1") -> None:
@@ -434,6 +445,39 @@ class Game:
             self.screen.blit(image, (880, start_y))
             start_y+=100
         return None
+    
+    def check_input(self, input: str, config: Config) -> list[str]:
+            """
+            Checks the validity of the played cards and converts it into a list of integers.
+
+            Args:
+                input (str): The input string to be checked.
+                config (Config): The configuration object containing game settings.
+
+            Returns:
+                list: A list of integers representing the valid input.
+
+            Raises:
+                ValueError: If the input string is empty or contains non-numeric characters.
+                ImcompatibleConfigError: If the number of cards played per round exceeds the configured limit.
+            """
+            input = input.replace(" ", "")
+            inputs = input.split(",")
+            if len(inputs) == 0:
+                raise ValueError
+            for i in inputs:
+                if not i.isnumeric() or len(i) == 0:
+                    raise ValueError
+            if len(inputs) > int(config['num_cards_played_per_round']):
+                raise ImcompatibleConfigError
+            return inputs
+    
+    def display_alert(self, alert: str) -> None:
+        self.alert_label.text = alert
+
+    def clear_alert(self) -> None:
+        self.alert_label.text = ""
+
             
     def update(self, database: CardDatabase) -> None: 
         """

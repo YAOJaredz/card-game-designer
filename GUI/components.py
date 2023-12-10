@@ -39,7 +39,10 @@ class Label(pygame.sprite.Sprite):
         self.image = self.font.render(self.text, True, self.color)
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
-
+    
+    def update(self, surface, mouse_pos):
+        self.image = self.font.render(self.text, True, self.color)
+        surface.blit(self.image, self.rect)
 
 
 class DropDown(pygame_gui.elements.UIDropDownMenu):
@@ -104,3 +107,10 @@ class Label_UI(pygame_gui.elements.UILabel):
                           manager=ui_manager, 
                           object_id=uid
                           )
+
+class ImcompatibleConfigError(Exception):
+    """
+    The ImcompatibleConfigError class represents an error when the configuration is incompatible.
+    """
+    def __init__(self, *args) -> None:
+        super().__init__(*args)

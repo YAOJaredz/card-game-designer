@@ -16,6 +16,8 @@ class Controller():
         self.running = True
         self.playing = False
 
+        self._cp_wait_time = 60
+
     def init_play(self, players: list[str]) -> None:
         """
         Initializes a new game round with the specified players.
@@ -35,6 +37,8 @@ class Controller():
         self.current_player = players[0]
         
         self.playing = True
+
+        self.cp_wait_time = self._cp_wait_time
     
     def update_round(self) -> bool:
         """
@@ -55,6 +59,12 @@ class Controller():
         else:
             return False
     
+    def reset_cp_wait_time(self) -> None:
+        """
+        Resets the wait time for the computer player.
+        """
+        self.cp_wait_time = self._cp_wait_time
+
     def next_player(self) -> None:
         """
         Moves the game to the next player.
@@ -97,6 +107,7 @@ def main_loop():
             gui.database = initialization(config)
             print('database initialized')
             gui.database.players = ['player1', 'cp']
+            controller.reset_cp_wait_time()
             controller.init_play(gui.database.players)
             print(gui.database)
 
@@ -121,8 +132,10 @@ def main_loop():
 
             match controller.current_player:
                 case 'cp':
-                    if random.random() > 0.1:
+                    controller.cp_wait_time -= 1
+                    if random.random() > 0.2 or controller.cp_wait_time > 0:
                         continue
+                    controller.reset_cp_wait_time()
                     cp_played_cards = cp.cp_play_card(
                         controller.round,
                         gui.database.hands['cp'],
@@ -142,11 +155,15 @@ def main_loop():
                     if player_played_cards is not None:
                         controller.play[player] = True
                         print("player played cards:")
-                        player_played_cards_print = list(map(lambda x:gui.database.find_card(x), player_played_cards))
+                        try:
+                            player_played_cards_print = list(map(lambda x:gui.database.find_card(x), player_played_cards))
+                        except ValueError:
+                            gui.stages[gui.current_stage].set_alert("Invalid card identifiers.")
                         for card in player_played_cards_print:
                             print(card)
                         gui.database = play_cards(player, player_played_cards, gui.database, controller.round, config)
                         controller.next_player()
+                        gui.stages[gui.current_stage].clear_alert()
 
             
             if not gui.database.self_check():
