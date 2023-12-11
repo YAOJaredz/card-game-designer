@@ -441,7 +441,7 @@ class Game:
         self.screen.blit(played_card_label, (850, start_y-20))
         for card in cards:
             # display card image
-            image=pygame.transform.scale(pygame.image.load(card.image), (80, 100))
+            image=pygame.transform.smoothscale(pygame.image.load(card.image), (80, 100))
             self.screen.blit(image, (880, start_y))
             start_y+=100
         return None
