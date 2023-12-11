@@ -149,13 +149,13 @@ def main_loop():
                     print("cp played cards:")
                     for card in cp_played_cards_print:
                         print(card)
-                    gui.database = play_cards('cp',cp_played_cards, gui.database, controller.round, config)
+                    gui.database = play_cards('cp',cp_played_cards, gui.database)
                 case player:
                     player_played_cards = gui.stages[gui.current_stage].get_played_cards()
                     if player_played_cards is not None:
                         # handle situation that the player played cards that are not in the hand
                         try: 
-                            gui.database = play_cards(player, player_played_cards, gui.database, controller.round, config)
+                            gui.database = play_cards(player, player_played_cards, gui.database)
                             controller.play[player] = True
                             print("player played cards:")
                             player_played_cards_print = list(map(lambda x:gui.database.find_card(x), player_played_cards))

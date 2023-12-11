@@ -17,7 +17,7 @@ def get_identifier(play_cards:list[Card]) -> set[int]:
         identifiers.add(card.identifier)
     return identifiers
 
-def play_cards(player: str, play_cards: list[int], database: CardDatabase, round: int, config: Config) -> CardDatabase:
+def play_cards(player: str, play_cards: list[int], database: CardDatabase) -> CardDatabase:
     """
     Plays cards from the players for each round.
 
@@ -25,18 +25,12 @@ def play_cards(player: str, play_cards: list[int], database: CardDatabase, round
         player (str): The player who is playing the cards.
         play_cards (list[int]): The identifiers of cards that the player going to play.
         database (CardDatabase): The card database.
-        round (int): The current round.
-        config (Config): The configuration settings.
 
     Return:
         CardDatabase: The updated card database.
     """
-    if len(play_cards) > config.num_cards_played_per_round:
-        raise ValueError('Exceeds the number of cards to be played.')
-    elif set(play_cards).issubset(get_identifier(database.hands[player])) == False:
+    if set(play_cards).issubset(get_identifier(database.hands[player])) == False:
         raise ValueError('Cards not in hand.')
-    elif player not in database.players:
-        raise ValueError('Player not in the game.')
     else:
         database.card_recently_played['player']=player
         database.card_recently_played['played_cards']=[]
@@ -67,7 +61,7 @@ if __name__ == "__main__":
     print("Updated deck: ")
     card_print_all(database.deck)
     print("------ Card Play: A plays card 1 ------")
-    play_cards("A", [160], database, 1, config)
+    play_cards("A", [160], database)
     print("After play, A has cards:")
     card_print_all(database.hands["A"])
     print("Deck:")
