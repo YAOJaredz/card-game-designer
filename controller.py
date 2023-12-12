@@ -102,9 +102,9 @@ def main_loop():
         if not gui.events(): controller.quit()
         gui.display_stage()
         if gui.current_stage == 2:
-            config = Config(**gui.config)
-            print(config)
-            gui.database = initialization(config)
+            controller.config = Config(**gui.config)
+            print(controller.config)
+            gui.database = initialization(controller.config)
             print('database initialized')
             gui.database.players = ['player1', 'cp']
             controller.reset_cp_wait_time()
@@ -119,15 +119,15 @@ def main_loop():
             gui.display_stage()
 
             if not controller.community:
-                gui.database = update_community(gui.database, controller.round, config)
+                gui.database = update_community(gui.database, controller.round, controller.config)
                 controller.community = True
 
             if not controller.deal:
-                gui.database = deal_cards(gui.database, controller.round, config)
+                gui.database = deal_cards(gui.database, controller.round, controller.config)
                 controller.deal = True
 
             if not controller.draw[controller.current_player]:
-                gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
+                gui.database = draw_card(gui.database, controller.current_player, controller.round, controller.config)
                 controller.draw[controller.current_player] = True
 
             match controller.current_player:
@@ -140,7 +140,7 @@ def main_loop():
                         controller.round,
                         gui.database.hands['cp'],
                         gui.database.community,
-                        config.num_cards_played_per_round,
+                        controller.config.num_cards_played_per_round,
                         gui.database.card_recently_played,
                     )
                     cp_played_cards = [card.identifier for card in cp_played_cards]

@@ -48,9 +48,16 @@ class Openning:
         self.quit_button = Button(370, 530, 260, 60, "Quit")
         self.new_button = Button(370, 350, 260, 60, "Create New")
         self.load_button = Button(370, 440, 260, 60, "Load Templates")
+        self.alert_label = Label(390, 300, "", 24, color=(255,69,69))
         self.all_sprites.add(
-            self.quit_button, self.new_button, self.load_button, self.open_label
+            self.quit_button, self.new_button, self.load_button, self.open_label, self.alert_label
         )
+    
+    def display_alert(self, alert: str) -> None:
+        self.alert_label.text = alert
+    
+    def clear_alert(self) -> None:
+        self.alert_label.text = ""
 
     def handle_events(self, event: pygame.event.Event) -> int:
         """
@@ -170,8 +177,9 @@ class Setting:
             self.back_button = Button(170, 600, 200, 40, "Back")
             self.continue_button = Button(630, 600, 200, 40, "Continue")
             self.save_button = Button(400, 600, 200, 40, "Save")
+            self.alert_label = Label(400, 550, "", 24, color=(255,69,69))
             self.all_sprites.add(
-                self.continue_button, self.save_button, self.setting_title, self.back_button
+                self.continue_button, self.save_button, self.setting_title, self.back_button, self.alert_label
             )
 
     def convert_config_grid(self, ui_config: set) -> set:
@@ -196,7 +204,12 @@ class Setting:
             ui_config['Labels'][i][1] = ui_config['Grid']['label_row'][str(ui_config["Labels"][i][1])]
             ui_config['Labels'][i].remove(ui_config['Labels'][i][5])
         return ui_config
+    
+    def display_alert(self, alert: str) -> None:
+        self.alert_label.text = alert
 
+    def clear_alert(self) -> None:
+        self.alert_label.text = ""
 
     def handle_events(self, event: pygame.event.Event) -> int:
         """
@@ -214,6 +227,7 @@ class Setting:
         self.ui.process_events(event)
 
         if event.type == pygame.MOUSEBUTTONDOWN:
+            self.clear_alert()
             if self.continue_button.rect.collidepoint(event.pos):
                 print("Continue Clicked!")
                 return 2
@@ -223,6 +237,11 @@ class Setting:
             elif self.save_button.rect.collidepoint(event.pos):
                 # Save the config
                 self.get_config()
+                try:
+                    Config(**self.new_config)
+                except ValueError:
+                    self.display_alert("Invalid configuration values.")
+                    return 1
                 print(self.new_config)
                 save_path = filedialog.asksaveasfile(
                     initialdir="IOTEDU",
@@ -237,6 +256,7 @@ class Setting:
                     json.dump(self.new_config, save_path)
                     save_path.close()
                     print("Config saved!")
+
         elif event.type == pygame.USEREVENT:
             if (
                 event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED

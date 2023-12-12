@@ -84,9 +84,16 @@ class GUI:
         """
         if stage == 2:
             self.config = self.stages[self.current_stage].get_config()
+            try:
+                Config(**self.config)
+            except ValueError:
+                self.stages[self.current_stage].display_alert("Invalid configuration values.")
+                return None
+            except KeyError:
+                self.stages[self.current_stage].display_alert("Broken configuration values.")
+                return None
             self.stages[2].config = self.config
         self.current_stage = stage
-        pass
 
     def display_stage(self):
         """
