@@ -171,6 +171,7 @@ def main_loop():
                 raise Exception("database is not consistent.")
             
             controller.update_round()
+            gui.stages[gui.current_stage].display_current_player(controller.current_player)
 
             if gui.stages[2].is_end():
                 controller.quit_play()

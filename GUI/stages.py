@@ -54,9 +54,18 @@ class Openning:
         )
     
     def display_alert(self, alert: str) -> None:
+        """
+        Displays an alert message in Openning.
+
+        Args:
+            alert (str): The alert message to be displayed.
+        """
         self.alert_label.text = alert
     
     def clear_alert(self) -> None:
+        """
+        Clears the alert label by setting its text to an empty string.
+        """
         self.alert_label.text = ""
 
     def handle_events(self, event: pygame.event.Event) -> int:
@@ -206,9 +215,18 @@ class Setting:
         return ui_config
     
     def display_alert(self, alert: str) -> None:
+        """
+        Displays an alert message in Setting.
+
+        Args:
+            alert (str): The alert message to be displayed.
+        """
         self.alert_label.text = alert
 
     def clear_alert(self) -> None:
+        """
+        Clears the alert label by setting its text to an empty string.
+        """
         self.alert_label.text = ""
 
     def handle_events(self, event: pygame.event.Event) -> int:
@@ -348,9 +366,12 @@ class Game:
         # record played card for this round
         self.played_cards = None
 
+        # current player label
+        self.current_player_label = Label(380, 200, "", 24, color=(255,255,255))
+
         # add play card button
         self.play_button = Button(600, 450, 70, 35, "Play!")
-        self.all_sprites.add(self.play_button, self.alert_label)
+        self.all_sprites.add(self.play_button, self.alert_label, self.current_player_label)
 
         # add card deck
         self.deck_image = pygame.transform.smoothscale(pygame.image.load('card_images/deck.png'), (150, 100))
@@ -404,7 +425,16 @@ class Game:
             identifier=pygame.font.Font(None, 24).render(str(card.identifier), True, (255, 255, 255))
             self.screen.blit(identifier, (start_x+10, 500))
             start_x+=40  
-              
+    
+    def display_current_player(self, player: str) -> None:
+        """ 
+        Display the current player.
+
+        Args:
+            player (str): The current player.
+        """
+        self.current_player_label.text = f"{player} is playing..."
+
             
     def display_cp_cards(self, database: CardDatabase) -> None:
         """ 
@@ -467,35 +497,44 @@ class Game:
         return None
     
     def check_input(self, input: str, config: Config) -> list[str]:
-            """
-            Checks the validity of the played cards and converts it into a list of integers.
+        """
+        Checks the validity of the played cards and converts it into a list of integers.
 
-            Args:
-                input (str): The input string to be checked.
-                config (Config): The configuration object containing game settings.
+        Args:
+            input (str): The input string to be checked.
+            config (Config): The configuration object containing game settings.
 
-            Returns:
-                list: A list of integers representing the valid input.
+        Returns:
+            list: A list of integers representing the valid input.
 
-            Raises:
-                ValueError: If the input string is empty or contains non-numeric characters.
-                ImcompatibleConfigError: If the number of cards played per round exceeds the configured limit.
-            """
-            input = input.replace(" ", "")
-            inputs = input.split(",")
-            if len(inputs) == 0:
+        Raises:
+            ValueError: If the input string is empty or contains non-numeric characters.
+            ImcompatibleConfigError: If the number of cards played per round exceeds the configured limit.
+        """
+        input = input.replace(" ", "")
+        inputs = input.split(",")
+        if len(inputs) == 0:
+            raise ValueError
+        for i in inputs:
+            if not i.isnumeric() or len(i) == 0:
                 raise ValueError
-            for i in inputs:
-                if not i.isnumeric() or len(i) == 0:
-                    raise ValueError
-            if len(inputs) > int(config['num_cards_played_per_round']):
-                raise ImcompatibleConfigError
-            return inputs
+        if len(inputs) > int(config['num_cards_played_per_round']):
+            raise ImcompatibleConfigError
+        return inputs
     
     def display_alert(self, alert: str) -> None:
+        """
+        Displays an alert message in Game.
+
+        Args:
+            alert (str): The alert message to be displayed.
+        """
         self.alert_label.text = alert
 
     def clear_alert(self) -> None:
+        """
+        Clears the alert label by setting its text to an empty string.
+        """
         self.alert_label.text = ""
 
             
@@ -549,6 +588,12 @@ class Game:
             bool: True if the game has ended. False otherwise.
         """
         return False
+
+    def reset(self):
+        """
+        Resets the game.
+        """
+        self = self.__init__()
     
 
 if __name__ == "__main__":
