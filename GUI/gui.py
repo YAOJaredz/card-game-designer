@@ -33,11 +33,12 @@ class GUI:
     def __init__(self):
         """
         Initializes the GUI object.
-
         There are 3 stages of the GUI:
             1. Title page
             2. Setting page
             3. Game page
+
+    def openning(self):
         """
         self.current_stage = 0
         pygame.init()
