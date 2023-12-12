@@ -317,7 +317,7 @@ class Game:
         self.cp_image = pygame.transform.smoothscale(pygame.image.load('card_images/cp.png'), (100, 120))
 
         # text box for playing cards
-        self.played_card_text_box = TextBox(280, 450, 300, 40, ui_manager=self.ui, uid="played_card_text_box")
+        self.played_card_text_box = TextBox(350, 450, 300, 40, ui_manager=self.ui, uid="played_card_text_box")
 
         # text box label
         self.played_card_text_box_label = pygame.font.Font(None, 24).render(str("Please enter identifiers (separated by , ) "), True, (255, 255, 255))
@@ -329,11 +329,18 @@ class Game:
         self.played_cards = None
 
         # add play card button
-        self.play_button = Button(600, 450, 70, 35, "Play!")
+        self.play_button = Button(670, 450, 70, 35, "Play!")
         self.all_sprites.add(self.play_button, self.alert_label)
 
         # add card deck
         self.deck_image = pygame.transform.smoothscale(pygame.image.load('card_images/deck.png'), (150, 100))
+        
+        # add draw card button
+        self.draw_button = Button(260, 450, 70, 35, "Draw!")
+        self.all_sprites.add(self.draw_button)
+        
+        # drawn flag for this round
+        self.draw_flag = False
 
     def handle_events(self, event: pygame.event.Event) -> int:
         """
@@ -362,6 +369,9 @@ class Game:
                 except ImcompatibleConfigError:
                     self.display_alert("Too many cards played !")
                     print("Too many cards played!")
+            elif self.draw_button.rect.collidepoint(event.pos):
+                print("Draw Card Clicked!")
+                self.draw_flag = True
         return 2
     
     def display_player_cards(self, database: CardDatabase, player: str = "player1") -> None:
@@ -473,10 +483,16 @@ class Game:
             return inputs
     
     def display_alert(self, alert: str) -> None:
+        """ display the corresponding alert message """
         self.alert_label.text = alert
 
     def clear_alert(self) -> None:
+        """ clear the alert message """
         self.alert_label.text = ""
+        
+    def reset_draw_flag(self) -> None:
+        """ reset draw flag to False """
+        self.draw_flag = False
 
             
     def update(self, database: CardDatabase) -> None: 
@@ -491,7 +507,7 @@ class Game:
         self.all_sprites.update(self.screen, pygame.mouse.get_pos())
         self.screen.blit(self.cp_image, (100, 20))
         self.screen.blit(self.deck_image, (30, 350))
-        self.screen.blit(self.played_card_text_box_label, (310, 425))
+        self.screen.blit(self.played_card_text_box_label, (345, 425))
         self.ui.update(6e-2)
         self.ui.draw_ui(self.screen)
 

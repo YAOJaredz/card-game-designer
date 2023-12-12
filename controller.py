@@ -126,9 +126,25 @@ def main_loop():
                 gui.database = deal_cards(gui.database, controller.round, config)
                 controller.deal = True
 
-            if not controller.draw[controller.current_player]:
-                gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
-                controller.draw[controller.current_player] = True
+            # controller.draw[controller.current_player]=gui.stages[gui.current_stage].draw_flag
+            # if controller.draw[controller.current_player] and controller.current_player != 'cp':
+            #     gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
+            #     # controller.draw[controller.current_player] = True
+            #     gui.stages[gui.current_stage].reset_draw_flag()
+            
+            # current player is not cp: draw by clicking the button
+            if controller.current_player != 'cp':
+                controller.draw[controller.current_player]=gui.stages[gui.current_stage].draw_flag
+                if controller.draw[controller.current_player]:
+                    print("player draw")
+                    gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
+                    gui.stages[gui.current_stage].reset_draw_flag()
+            else: # current player is cp: always draw
+                if not controller.draw[controller.current_player] :
+                    print("cp draw")
+                    gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
+                    controller.draw[controller.current_player] = True
+            
 
             match controller.current_player:
                 case 'cp':
@@ -161,7 +177,7 @@ def main_loop():
                             player_played_cards_print = list(map(lambda x:gui.database.find_card(x), player_played_cards))
                             for card in player_played_cards_print:
                                 print(card)
-                            controller.next_player()
+                            controller.next_player()    
                             gui.stages[gui.current_stage].clear_alert()
                         except ValueError:
                             gui.stages[gui.current_stage].display_alert("Invalid card identifiers.")
