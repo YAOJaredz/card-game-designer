@@ -468,7 +468,7 @@ class Game:
             for i in inputs:
                 if not i.isnumeric() or len(i) == 0:
                     raise ValueError
-            if len(inputs) > int(config['num_cards_played_per_round']):
+            if len(inputs) > int(config['num_cards_played_per_round']) and int(config['num_cards_played_per_round']) != -1:
                 raise ImcompatibleConfigError
             return inputs
     
