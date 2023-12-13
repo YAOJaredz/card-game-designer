@@ -369,10 +369,6 @@ class Game:
         # current player label
         self.current_player_label = Label(380, 200, "", 24, color=(255,255,255))
 
-        # add play card button
-        self.play_button = Button(600, 450, 70, 35, "Play!")
-        self.all_sprites.add(self.play_button, self.alert_label, self.current_player_label)
-
         # add card deck
         self.deck_image = pygame.transform.smoothscale(pygame.image.load('card_images/deck.png'), (150, 100))
         
@@ -384,7 +380,9 @@ class Game:
         self.all_sprites.add(self.play_button, self.alert_label, self.end_button)
         
         # add draw card button
-        if draw_flag_config:
+        self.draw_flag_config = draw_flag_config
+        if self.draw_flag_config:
+            print("draw flag is True")
             self.draw_button = Button(260, 450, 70, 35, "Draw!")
             self.all_sprites.add(self.draw_button)
 
@@ -425,7 +423,7 @@ class Game:
                 except ImcompatibleConfigError:
                     self.display_alert("Too many cards played !")
                     print("Too many cards played!")
-            elif self.draw_button.rect.collidepoint(event.pos):
+            elif self.draw_flag_config == True and self.draw_button.rect.collidepoint(event.pos):
                 print("Draw Card Clicked!")
                 self.draw_flag = True
         return 2
@@ -636,11 +634,11 @@ class Game:
             pygame.time.wait(wait)
             return True
 
-    def reset(self):
+    def reset(self, *args):
         """
         Resets the game.
         """
-        self = self.__init__()
+        self = self.__init__(*args)
     
 
 if __name__ == "__main__":

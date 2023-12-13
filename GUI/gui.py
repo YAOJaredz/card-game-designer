@@ -94,8 +94,7 @@ class GUI:
                 self.stages[self.current_stage].display_alert("Broken configuration values.")
                 return None
             self.stages[2].config = self.config
-        elif self.current_stage == 2:
-            self.stages[2].reset()
+            self.stages[2].reset(self.config['draw_flag'])
         self.current_stage = stage
 
     def display_stage(self):

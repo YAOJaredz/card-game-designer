@@ -138,7 +138,7 @@ def main_loop():
                     # cp draw cards
                     if not controller.draw['cp']:
                         print("cp draw")
-                        gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
+                        gui.database = draw_card(gui.database, controller.current_player, controller.round, controller.config)
                         controller.draw['cp'] = True
 
                     controller.cp_wait_time -= 1
@@ -161,9 +161,9 @@ def main_loop():
                     gui.database = play_cards('cp',cp_played_cards, gui.database)
                 case player:
                     # Player draw cards
-                    if not controller.draw[player] or gui.stages[gui.current_stage].draw_flag:
+                    if not controller.draw[player] and gui.stages[gui.current_stage].draw_flag and controller.config.draw_flag:
                         print(f"{player} draw")
-                        gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
+                        gui.database = draw_card(gui.database, controller.current_player, controller.round, controller.config)
                         controller.draw[player] = True
                         gui.stages[gui.current_stage].reset_draw_flag()
 
