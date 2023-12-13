@@ -125,7 +125,7 @@ def main_loop():
             if gui.stages[2].is_end() or (controller.round >= controller.config.num_rounds and controller.config.num_rounds != -1):
                 if controller.countdown > 0:
                     controller.countdown -= 1
-                    gui.display_stage(Database, game_end=True)
+                    gui.display_stage(Database, controller.config, game_end=True)
                     continue
                 else:
                     controller.quit_play()
@@ -135,7 +135,7 @@ def main_loop():
             if gui.current_stage != 2: 
                 controller.quit_play()
                 break
-            gui.display_stage(Database)
+            gui.display_stage(Database, controller.config)
 
             if not controller.community:
                 Database = update_community(Database, controller.round, controller.config)

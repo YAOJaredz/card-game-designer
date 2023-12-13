@@ -95,7 +95,7 @@ class GUI:
             self.stages[2].reset(self.config['draw_flag'])
         self.current_stage = stage
 
-    def display_stage(self, database: CardDatabase = None, game_end: bool = False):
+    def display_stage(self, database: CardDatabase = None, config: Config = None, game_end: bool = False):
         """
         Display the current stage of the game.
         """
@@ -104,9 +104,9 @@ class GUI:
         if self.current_stage != 2:
             self.stages[self.current_stage].update()
         elif game_end:
-            self.stages[2].update(database, game_end=True)
+            self.stages[2].update(database, config, game_end=True)
         else:
-            self.stages[self.current_stage].update(database)
+            self.stages[self.current_stage].update(database, config)
             
         pygame.display.flip()
 

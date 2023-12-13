@@ -366,18 +366,17 @@ class Game:
         # record played card for this round
         self.played_cards = None
 
-        # current player label
-        self.current_player_label = Label(380, 200, "", 24, color=(255,255,255))
-
         # add card deck
         self.deck_image = pygame.transform.smoothscale(pygame.image.load('card_images/deck.png'), (150, 100))
         
+        # current player label
+        self.current_player_label = Label(380, 200, "", 24, color=(255,255,255))
         # add play card button
         self.play_button = Button(670, 450, 70, 35, "Play!")
         # add end button
         self.end_button = Button(10, 60, 80, 40, "End")
 
-        self.all_sprites.add(self.play_button, self.alert_label, self.end_button)
+        self.all_sprites.add(self.play_button, self.alert_label, self.end_button, self.current_player_label)
         
         # add draw card button
         self.draw_flag_config = draw_flag_config
@@ -569,7 +568,7 @@ class Game:
         """ reset draw flag to False """
         self.draw_flag = False
 
-    def update(self, database: CardDatabase, game_end: bool = False) -> None: 
+    def update(self, database: CardDatabase, config: Config, game_end: bool = False) -> None: 
         """
         Updates the game display.
 
@@ -591,8 +590,11 @@ class Game:
             self.display_player_cards(database)
             self.screen.blit(pygame.font.Font(None, 50).render("Game Over", True, (255,69,69)), (400, 300))
         elif len(database.hands.keys()) != 0:
+            if config.display_cp:
+                self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
+            else:
+                self.display_back_cards(database)
             self.display_player_cards(database)
-            self.display_back_cards(database)
         #display community cards
         if len(database.community) != 0:
             self.display_community_cards(database)
