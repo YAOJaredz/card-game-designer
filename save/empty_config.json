@@ -7,7 +7,7 @@
     "num_cards_dealt_per_round": 0,
     "draw_flag": false,
     "num_draw": 1,
-    "reptitive_draw": false,
+    "repetitive_draw": false,
     "comm_flag": false,
     "first_round_of_comm": 0,
     "first_round_num_comm": 0,
