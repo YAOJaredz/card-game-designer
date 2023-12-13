@@ -28,6 +28,7 @@ class Config():
             self.num_cards_dealt_per_round: int = int(kwargs['num_cards_dealt_per_round'])
             self.draw_flag: bool = bool(kwargs['draw_flag'])
             self.num_draw: int = int(kwargs['num_draw'])
+            self.repetitive_draw: bool = bool(kwargs['repetitive_draw'])
             
             # Community cards
             self.comm_flag: bool = bool(kwargs['comm_flag'])
@@ -38,6 +39,8 @@ class Config():
             # Card play
             self.play_flag: bool = bool(kwargs['play_flag'])
             self.num_cards_played_per_round: int = int(kwargs['num_cards_played_per_round'])
+            self.sort_hands: bool = bool(kwargs['sort_hands'])
+            self.display_cp: bool = bool(kwargs['display_cp'])
 
             # Multiuser
             self.multiuser_flag: bool = False
