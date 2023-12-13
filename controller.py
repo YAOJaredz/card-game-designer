@@ -131,23 +131,16 @@ def main_loop():
             #     gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
             #     # controller.draw[controller.current_player] = True
             #     gui.stages[gui.current_stage].reset_draw_flag()
-            
-            # current player is not cp: draw by clicking the button
-            if controller.current_player != 'cp':
-                controller.draw[controller.current_player]=gui.stages[gui.current_stage].draw_flag
-                if controller.draw[controller.current_player]:
-                    print("player draw")
-                    gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
-                    gui.stages[gui.current_stage].reset_draw_flag()
-            else: # current player is cp: always draw
-                if not controller.draw[controller.current_player] :
-                    print("cp draw")
-                    gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
-                    controller.draw[controller.current_player] = True
-            
+             
 
             match controller.current_player:
                 case 'cp':
+                    # cp draw cards
+                    if not controller.draw['cp']:
+                        print("cp draw")
+                        gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
+                        controller.draw['cp'] = True
+
                     controller.cp_wait_time -= 1
                     if random.random() > 0.2 or controller.cp_wait_time > 0:
                         continue
@@ -167,13 +160,20 @@ def main_loop():
                         print(card)
                     gui.database = play_cards('cp',cp_played_cards, gui.database)
                 case player:
+                    # Player draw cards
+                    if not controller.draw[player] or gui.stages[gui.current_stage].draw_flag:
+                        print(f"{player} draw")
+                        gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
+                        controller.draw[player] = True
+                        gui.stages[gui.current_stage].reset_draw_flag()
+
                     player_played_cards = gui.stages[gui.current_stage].get_played_cards()
                     if player_played_cards is not None:
                         # handle situation that the player played cards that are not in the hand
                         try: 
                             gui.database = play_cards(player, player_played_cards, gui.database)
                             controller.play[player] = True
-                            print("player played cards:")
+                            print(f"{player} played cards:")
                             player_played_cards_print = list(map(lambda x:gui.database.find_card(x), player_played_cards))
                             for card in player_played_cards_print:
                                 print(card)
