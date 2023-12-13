@@ -97,9 +97,13 @@ Inputs for Textbox should be only integers. Other inputs are invalid.
 
 ### Game manual: 
 
+User can enter identifiers on the top of cards in the textbox and click `Play!` button to play the card. 
+
+Game starts from the user. The game flow is: deal cards `->` draw cards `->` user play cards `->` next player. 
+
 **Textbox:** 
 
-User should enter identifiers on the top of cards here. Identifiers should be integers and separated by `,`. 
+Identifiers should be integers and separated by `,`. 
 
 Input with letters, other symbols, or identifiers not in hands is considered as invalid input, so cards cannot be played. 
 
