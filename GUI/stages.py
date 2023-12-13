@@ -483,6 +483,9 @@ class Game:
                 ValueError: If the input string is empty or contains non-numeric characters.
                 ImcompatibleConfigError: If the number of cards played per round exceeds the configured limit.
             """
+            # player not play card
+            if config['play_flag']==False and int(config['num_cards_played_per_round']) == 0:
+                return []
             input = input.replace(" ", "")
             inputs = input.split(",")
             if len(inputs) == 0:

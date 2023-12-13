@@ -29,7 +29,10 @@ def play_cards(player: str, play_cards: list[int], database: CardDatabase) -> Ca
     Return:
         CardDatabase: The updated card database.
     """
-    if set(play_cards).issubset(get_identifier(database.hands[player])) == False:
+    # handle the case when the player does not play any card
+    if play_cards==[]:
+        return database
+    elif set(play_cards).issubset(get_identifier(database.hands[player])) == False:
         raise ValueError('Cards not in hand.')
     else:
         database.card_recently_played['player']=player
