@@ -31,7 +31,7 @@ def deal_cards(database: CardDatabase, round: int, config: Config) -> CardDataba
 
     return database
 
-def draw_card(database: CardDatabase, player: str, config: Config, round: int) -> CardDatabase:
+def draw_card(database: CardDatabase, player: str, round: int, config: Config) -> CardDatabase:
     """
     Draw a card from the deck.
 
@@ -50,7 +50,7 @@ def draw_card(database: CardDatabase, player: str, config: Config, round: int) -
     return database
 
 if __name__ == '__main__':
-    from card_deck import initialization
+    from card_deck import initialization # type: ignore
 
     test_config_path = 'save/test_config.json'
     config = Config(**json.load(open(test_config_path, 'r')))
@@ -66,7 +66,7 @@ if __name__ == '__main__':
     database = deal_cards(database, 1, config)
     print(database.hands)
 
-    database = draw_card(database, 'a', config, 0)
+    database = draw_card(database, 'a', 0, config)
     print(database.hands)
 
     print(database.self_check())
