@@ -35,7 +35,7 @@
         "play_flag": [1, 4, 150, 40, ["Yes", "No"]],
         "multiuser_flag": [3, 4, 150, 40, ["No"]],
         "bidding_flag": [4, 4, 150, 40, ["No"]],
-        "reptitive_draw": [1, 5, 150, 40, ["Yes", "No"]],
+        "repetitive_draw": [1, 5, 150, 40, ["Yes", "No"]],
         "sort_hands": [2, 5, 150, 40, ["Yes", "No"]],
         "display_cp": [3, 5, 150, 40, ["Yes", "No"]]
     },
@@ -67,7 +67,7 @@
         "first_round_num_comm": [3, 3, 200, 40, "Num Comm in Its Round", -30],
         "num_added_comm_per_round": [4, 3, 200, 40, "Num Comm Added Per Round", -30],
         "num_cards_played_per_round": [2, 4, 210, 40, "Num Cards Played Per Round", -30],
-        "reptitive_draw": [1, 5, 200, 40, "Reptitive Draw?", -20],
+        "reptitive_draw": [1, 5, 200, 40, "Repetitive Draw?", -20],
         "sort_hands": [2, 5, 150, 40, "Sort Hands?", 0],
         "display_cp": [3, 5, 150, 40, "Display CP?", 0]
     }

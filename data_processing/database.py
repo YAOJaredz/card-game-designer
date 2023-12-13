@@ -163,6 +163,26 @@ class CardDatabase:
                 return True
             else:
                 return False
+    
+    def sort_hand(self, player: str) -> None:
+        """
+        Sort the hand of the player.
+
+        Args:
+            player (str): The name of the player.
+        """
+        self.hands[player].sort()
+    
+    def add_players(self, players: list[str]) -> None:
+        """
+        Add players to the database.
+
+        Args:
+            players (list[str]): The names of the players.
+        """
+        self.players = players
+        for player in players:
+            self.hands[player] = list()
 
 
 if __name__ == "__main__":

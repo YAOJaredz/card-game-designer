@@ -37,8 +37,6 @@ class GUI:
             1. Title page
             2. Setting page
             3. Game page
-
-    def openning(self):
         """
         self.current_stage = 0
         pygame.init()
@@ -97,16 +95,19 @@ class GUI:
             self.stages[2].reset(self.config['draw_flag'])
         self.current_stage = stage
 
-    def display_stage(self):
+    def display_stage(self, database: CardDatabase = None, game_end: bool = False):
         """
         Display the current stage of the game.
         """
         self.clock.tick(self.fps)
         #print cards for users
-        if self.current_stage == 2:
-            self.stages[self.current_stage].update(self.database)
-        else: 
+        if self.current_stage != 2:
             self.stages[self.current_stage].update()
+        elif game_end:
+            self.stages[2].update(database, game_end=True)
+        else:
+            self.stages[self.current_stage].update(database)
+            
         pygame.display.flip()
 
 

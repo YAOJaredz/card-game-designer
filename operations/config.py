@@ -15,6 +15,7 @@ class Config():
             KeyError: If a required key is not found in the configuration file.
             ValueError: If a value is not valid in the configuration file.
         """
+        print(kwargs)
         try:
             self.num_rounds: int = int(kwargs['num_rounds'])
 

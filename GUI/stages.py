@@ -186,7 +186,7 @@ class Setting:
             self.back_button = Button(170, 600, 200, 40, "Back")
             self.continue_button = Button(630, 600, 200, 40, "Continue")
             self.save_button = Button(400, 600, 200, 40, "Save")
-            self.alert_label = Label(400, 550, "", 24, color=(255,69,69))
+            self.alert_label = Label(400, 80, "", 24, color=(255,69,69))
             self.all_sprites.add(
                 self.continue_button, self.save_button, self.setting_title, self.back_button, self.alert_label
             )
@@ -569,8 +569,7 @@ class Game:
         """ reset draw flag to False """
         self.draw_flag = False
 
-            
-    def update(self, database: CardDatabase) -> None: 
+    def update(self, database: CardDatabase, game_end: bool = False) -> None: 
         """
         Updates the game display.
 
@@ -587,16 +586,13 @@ class Game:
         self.ui.draw_ui(self.screen)
 
         # if users have cards in hand, display them
-        if len(database.hands.keys()) != 0:
-            #display cp cards when game ends
-            if self.end_flag:
-                self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
-                self.display_player_cards(database)
-                self.screen.blit(pygame.font.Font(None, 50).render("Game Over", True, (255, 0, 0)),
-                                 (400, 300))
-            else: 
-                self.display_player_cards(database)
-                self.display_back_cards(database)
+        if game_end:
+            self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
+            self.display_player_cards(database)
+            self.screen.blit(pygame.font.Font(None, 50).render("Game Over", True, (255,69,69)), (400, 300))
+        elif len(database.hands.keys()) != 0:
+            self.display_player_cards(database)
+            self.display_back_cards(database)
         #display community cards
         if len(database.community) != 0:
             self.display_community_cards(database)
@@ -628,11 +624,7 @@ class Game:
         Returns:
             bool: True if the game has ended. False otherwise.
         """
-        if self.end_flag==False:
-            return False
-        else:
-            pygame.time.wait(wait)
-            return True
+        return self.end_flag
 
     def reset(self, *args):
         """
