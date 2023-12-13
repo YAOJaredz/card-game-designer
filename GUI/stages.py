@@ -48,9 +48,25 @@ class Openning:
         self.quit_button = Button(370, 530, 260, 60, "Quit")
         self.new_button = Button(370, 350, 260, 60, "Create New")
         self.load_button = Button(370, 440, 260, 60, "Load Templates")
+        self.alert_label = Label(390, 300, "", 24, color=(255,69,69))
         self.all_sprites.add(
-            self.quit_button, self.new_button, self.load_button, self.open_label
+            self.quit_button, self.new_button, self.load_button, self.open_label, self.alert_label
         )
+    
+    def display_alert(self, alert: str) -> None:
+        """
+        Displays an alert message in Openning.
+
+        Args:
+            alert (str): The alert message to be displayed.
+        """
+        self.alert_label.text = alert
+    
+    def clear_alert(self) -> None:
+        """
+        Clears the alert label by setting its text to an empty string.
+        """
+        self.alert_label.text = ""
 
     def handle_events(self, event: pygame.event.Event) -> int:
         """
@@ -170,8 +186,9 @@ class Setting:
             self.back_button = Button(170, 600, 200, 40, "Back")
             self.continue_button = Button(630, 600, 200, 40, "Continue")
             self.save_button = Button(400, 600, 200, 40, "Save")
+            self.alert_label = Label(400, 550, "", 24, color=(255,69,69))
             self.all_sprites.add(
-                self.continue_button, self.save_button, self.setting_title, self.back_button
+                self.continue_button, self.save_button, self.setting_title, self.back_button, self.alert_label
             )
 
     def convert_config_grid(self, ui_config: set) -> set:
@@ -196,7 +213,21 @@ class Setting:
             ui_config['Labels'][i][1] = ui_config['Grid']['label_row'][str(ui_config["Labels"][i][1])]
             ui_config['Labels'][i].remove(ui_config['Labels'][i][5])
         return ui_config
+    
+    def display_alert(self, alert: str) -> None:
+        """
+        Displays an alert message in Setting.
 
+        Args:
+            alert (str): The alert message to be displayed.
+        """
+        self.alert_label.text = alert
+
+    def clear_alert(self) -> None:
+        """
+        Clears the alert label by setting its text to an empty string.
+        """
+        self.alert_label.text = ""
 
     def handle_events(self, event: pygame.event.Event) -> int:
         """
@@ -214,6 +245,7 @@ class Setting:
         self.ui.process_events(event)
 
         if event.type == pygame.MOUSEBUTTONDOWN:
+            self.clear_alert()
             if self.continue_button.rect.collidepoint(event.pos):
                 print("Continue Clicked!")
                 return 2
@@ -223,6 +255,11 @@ class Setting:
             elif self.save_button.rect.collidepoint(event.pos):
                 # Save the config
                 self.get_config()
+                try:
+                    Config(**self.new_config)
+                except ValueError:
+                    self.display_alert("Invalid configuration values.")
+                    return 1
                 print(self.new_config)
                 save_path = filedialog.asksaveasfile(
                     initialdir="IOTEDU",
@@ -237,6 +274,7 @@ class Setting:
                     json.dump(self.new_config, save_path)
                     save_path.close()
                     print("Config saved!")
+
         elif event.type == pygame.USEREVENT:
             if (
                 event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED
@@ -328,6 +366,13 @@ class Game:
         # record played card for this round
         self.played_cards = None
 
+        # current player label
+        self.current_player_label = Label(380, 200, "", 24, color=(255,255,255))
+
+        # add play card button
+        self.play_button = Button(600, 450, 70, 35, "Play!")
+        self.all_sprites.add(self.play_button, self.alert_label, self.current_player_label)
+
         # add card deck
         self.deck_image = pygame.transform.smoothscale(pygame.image.load('card_images/deck.png'), (150, 100))
         
@@ -406,7 +451,16 @@ class Game:
             identifier=pygame.font.Font(None, 24).render(str(card.identifier), True, (255, 255, 255))
             self.screen.blit(identifier, (start_x+10, height))
             start_x+=40  
-              
+                  
+    def display_current_player(self, player: str) -> None:
+        """ 
+        Display the current player.
+
+        Args:
+            player (str): The current player.
+        """
+        self.current_player_label.text = f"{player} is playing..."
+
             
     def display_back_cards(self, database: CardDatabase, player:str="cp", height:int=30, 
                            scale:tuple=(60, 100)) -> None:
@@ -470,40 +524,47 @@ class Game:
         return None
     
     def check_input(self, input: str, config: Config) -> list[str]:
-            """
-            Checks the validity of the played cards and converts it into a list of integers.
+        """
+        Checks the validity of the played cards and converts it into a list of integers.
 
-            Args:
-                input (str): The input string to be checked.
-                config (Config): The configuration object containing game settings.
+        Args:
+            input (str): The input string to be checked.
+            config (Config): The configuration object containing game settings.
 
-            Returns:
-                list: A list of integers representing the valid input.
+        Returns:
+            list: A list of integers representing the valid input.
 
-            Raises:
-                ValueError: If the input string is empty or contains non-numeric characters.
-                ImcompatibleConfigError: If the number of cards played per round exceeds the configured limit.
-            """
-            # player not play card
-            if config['play_flag']==False and int(config['num_cards_played_per_round']) == 0:
-                return []
-            input = input.replace(" ", "")
-            inputs = input.split(",")
-            if len(inputs) == 0:
+        Raises:
+            ValueError: If the input string is empty or contains non-numeric characters.
+            ImcompatibleConfigError: If the number of cards played per round exceeds the configured limit.
+        """
+        # player not play card
+        if config['play_flag']==False and int(config['num_cards_played_per_round']) == 0:
+            return []
+        input = input.replace(" ", "")
+        inputs = input.split(",")
+        if len(inputs) == 0:
+            raise ValueError
+        for i in inputs:
+            if not i.isnumeric() or len(i) == 0:
                 raise ValueError
-            for i in inputs:
-                if not i.isnumeric() or len(i) == 0:
-                    raise ValueError
-            if len(inputs) > int(config['num_cards_played_per_round']) and int(config['num_cards_played_per_round']) != -1:
-                raise ImcompatibleConfigError
-            return inputs
+        if len(inputs) > int(config['num_cards_played_per_round']):
+            raise ImcompatibleConfigError
+        return inputs
     
     def display_alert(self, alert: str) -> None:
-        """ display the corresponding alert message """
+        """
+        Displays an alert message in Game.
+
+        Args:
+            alert (str): The alert message to be displayed.
+        """
         self.alert_label.text = alert
 
     def clear_alert(self) -> None:
-        """ clear the alert message """
+        """
+        Clears the alert label by setting its text to an empty string.
+        """
         self.alert_label.text = ""
         
     def reset_draw_flag(self) -> None:
@@ -574,6 +635,12 @@ class Game:
         else:
             pygame.time.wait(wait)
             return True
+
+    def reset(self):
+        """
+        Resets the game.
+        """
+        self = self.__init__()
     
 
 if __name__ == "__main__":

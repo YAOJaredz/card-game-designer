@@ -16,7 +16,7 @@ class Config():
             ValueError: If a value is not valid in the configuration file.
         """
         try:
-            self.num_rounds: int = kwargs['num_rounds']
+            self.num_rounds: int = int(kwargs['num_rounds'])
 
             # Card deck
             self.num_decks: int = int(kwargs['num_decks'])

@@ -33,11 +33,12 @@ class GUI:
     def __init__(self):
         """
         Initializes the GUI object.
-
         There are 3 stages of the GUI:
             1. Title page
             2. Setting page
             3. Game page
+
+    def openning(self):
         """
         self.current_stage = 0
         pygame.init()
@@ -84,9 +85,18 @@ class GUI:
         """
         if stage == 2:
             self.config = self.stages[self.current_stage].get_config()
+            try:
+                Config(**self.config)
+            except ValueError:
+                self.stages[self.current_stage].display_alert("Invalid configuration values.")
+                return None
+            except KeyError:
+                self.stages[self.current_stage].display_alert("Broken configuration values.")
+                return None
             self.stages[2].config = self.config
+        elif self.current_stage == 2:
+            self.stages[2].reset()
         self.current_stage = stage
-        pass
 
     def display_stage(self):
         """
