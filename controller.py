@@ -16,7 +16,7 @@ class Controller():
         self.running = True
         self.playing = False
 
-        self._cp_wait_time = 60
+        self.CP_WAIT_TIME = 60
 
     def init_play(self, players: list[str]) -> None:
         """
@@ -38,7 +38,7 @@ class Controller():
         
         self.playing = True
 
-        self.cp_wait_time = self._cp_wait_time
+        self.cp_wait_time = self.CP_WAIT_TIME
     
     def update_round(self) -> bool:
         """
@@ -63,7 +63,7 @@ class Controller():
         """
         Resets the wait time for the computer player.
         """
-        self.cp_wait_time = self._cp_wait_time
+        self.cp_wait_time = self.CP_WAIT_TIME
 
     def next_player(self) -> None:
         """
@@ -126,12 +126,21 @@ def main_loop():
                 gui.database = deal_cards(gui.database, controller.round, controller.config)
                 controller.deal = True
 
-            if not controller.draw[controller.current_player]:
-                gui.database = draw_card(gui.database, controller.current_player, controller.round, controller.config)
-                controller.draw[controller.current_player] = True
+            # controller.draw[controller.current_player]=gui.stages[gui.current_stage].draw_flag
+            # if controller.draw[controller.current_player] and controller.current_player != 'cp':
+            #     gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
+            #     # controller.draw[controller.current_player] = True
+            #     gui.stages[gui.current_stage].reset_draw_flag()
+             
 
             match controller.current_player:
                 case 'cp':
+                    # cp draw cards
+                    if not controller.draw['cp']:
+                        print("cp draw")
+                        gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
+                        controller.draw['cp'] = True
+
                     controller.cp_wait_time -= 1
                     if random.random() > 0.2 or controller.cp_wait_time > 0:
                         continue
@@ -151,17 +160,24 @@ def main_loop():
                         print(card)
                     gui.database = play_cards('cp',cp_played_cards, gui.database)
                 case player:
+                    # Player draw cards
+                    if not controller.draw[player] or gui.stages[gui.current_stage].draw_flag:
+                        print(f"{player} draw")
+                        gui.database = draw_card(gui.database, controller.current_player, controller.round, config)
+                        controller.draw[player] = True
+                        gui.stages[gui.current_stage].reset_draw_flag()
+
                     player_played_cards = gui.stages[gui.current_stage].get_played_cards()
                     if player_played_cards is not None:
                         # handle situation that the player played cards that are not in the hand
                         try: 
                             gui.database = play_cards(player, player_played_cards, gui.database)
                             controller.play[player] = True
-                            print("player played cards:")
+                            print(f"{player} played cards:")
                             player_played_cards_print = list(map(lambda x:gui.database.find_card(x), player_played_cards))
                             for card in player_played_cards_print:
                                 print(card)
-                            controller.next_player()
+                            controller.next_player()    
                             gui.stages[gui.current_stage].clear_alert()
                         except ValueError:
                             gui.stages[gui.current_stage].display_alert("Invalid card identifiers.")

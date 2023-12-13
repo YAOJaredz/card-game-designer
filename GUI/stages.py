@@ -336,7 +336,7 @@ class Game:
         deck_image (pygame.Surface): The image of the card deck.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, draw_flag_config: bool = False) -> None:
         """
         Initializes the Game class.
         """
@@ -355,7 +355,7 @@ class Game:
         self.cp_image = pygame.transform.smoothscale(pygame.image.load('card_images/cp.png'), (100, 120))
 
         # text box for playing cards
-        self.played_card_text_box = TextBox(280, 450, 300, 40, ui_manager=self.ui, uid="played_card_text_box")
+        self.played_card_text_box = TextBox(350, 450, 300, 40, ui_manager=self.ui, uid="played_card_text_box")
 
         # text box label
         self.played_card_text_box_label = pygame.font.Font(None, 24).render(str("Please enter identifiers (separated by , ) "), True, (255, 255, 255))
@@ -375,6 +375,25 @@ class Game:
 
         # add card deck
         self.deck_image = pygame.transform.smoothscale(pygame.image.load('card_images/deck.png'), (150, 100))
+        
+        # add play card button
+        self.play_button = Button(670, 450, 70, 35, "Play!")
+        # add end button
+        self.end_button = Button(10, 60, 80, 40, "End")
+
+        self.all_sprites.add(self.play_button, self.alert_label, self.end_button)
+        
+        # add draw card button
+        if draw_flag_config:
+            self.draw_button = Button(260, 450, 70, 35, "Draw!")
+            self.all_sprites.add(self.draw_button)
+
+
+        # drawn flag for this round
+        self.draw_flag = False
+        
+        # add end flag
+        self.end_flag=False
 
     def handle_events(self, event: pygame.event.Event) -> int:
         """
@@ -391,6 +410,9 @@ class Game:
             if self.back_button.rect.collidepoint(event.pos):
                 print("Back Clicked!")
                 return 1
+            elif self.end_button.rect.collidepoint(event.pos):
+                self.end_flag=True
+                print("End Clicked!")      
             elif self.play_button.rect.collidepoint(event.pos):
                 print("Play Card Clicked!")
                 played_cards = self.played_card_text_box.get_text()
@@ -403,9 +425,13 @@ class Game:
                 except ImcompatibleConfigError:
                     self.display_alert("Too many cards played !")
                     print("Too many cards played!")
+            elif self.draw_button.rect.collidepoint(event.pos):
+                print("Draw Card Clicked!")
+                self.draw_flag = True
         return 2
     
-    def display_player_cards(self, database: CardDatabase, player: str = "player1") -> None:
+    def display_player_cards(self, database: CardDatabase, player: str = "player1", height:int=500, 
+                             scale:tuple=(100, 150)) -> None:
         """ 
         Display the cards in player's hand.
 
@@ -419,13 +445,13 @@ class Game:
         start_x=(self.width-display_range_width)/2
         for card in cards:
             # display card image
-            image=pygame.transform.smoothscale(pygame.image.load(card.image), (100, 150))
-            self.screen.blit(image, (start_x, 520))
+            image=pygame.transform.smoothscale(pygame.image.load(card.image), scale)
+            self.screen.blit(image, (start_x, height+20))
             # display card identifier
             identifier=pygame.font.Font(None, 24).render(str(card.identifier), True, (255, 255, 255))
-            self.screen.blit(identifier, (start_x+10, 500))
+            self.screen.blit(identifier, (start_x+10, height))
             start_x+=40  
-    
+                  
     def display_current_player(self, player: str) -> None:
         """ 
         Display the current player.
@@ -436,7 +462,8 @@ class Game:
         self.current_player_label.text = f"{player} is playing..."
 
             
-    def display_cp_cards(self, database: CardDatabase) -> None:
+    def display_back_cards(self, database: CardDatabase, player:str="cp", height:int=30, 
+                           scale:tuple=(60, 100)) -> None:
         """ 
         Display the cards in cp's hand.
 
@@ -444,15 +471,15 @@ class Game:
             database (CardDatabase): The card database.
                                     Get the cards in hand. 
         """
-        cards=database.hands["cp"]
+        cards=database.hands[player]
         num_cards=len(cards)
         display_range_width=(num_cards-1)*20+60
         start_x=(self.width-display_range_width)/2
-        image=pygame.transform.smoothscale(pygame.image.load("card_images/back.png"), (60, 100))
+        image=pygame.transform.smoothscale(pygame.image.load("card_images/back.png"), scale)
         for card in cards:
             # display card backs
-            self.screen.blit(image, (start_x, 30))
-            start_x+=20    
+            self.screen.blit(image, (start_x, height))
+            start_x+=20   
             
     def display_community_cards(self, database: CardDatabase) -> None:
         """ 
@@ -511,6 +538,9 @@ class Game:
             ValueError: If the input string is empty or contains non-numeric characters.
             ImcompatibleConfigError: If the number of cards played per round exceeds the configured limit.
         """
+        # player not play card
+        if config['play_flag']==False and int(config['num_cards_played_per_round']) == 0:
+            return []
         input = input.replace(" ", "")
         inputs = input.split(",")
         if len(inputs) == 0:
@@ -536,6 +566,10 @@ class Game:
         Clears the alert label by setting its text to an empty string.
         """
         self.alert_label.text = ""
+        
+    def reset_draw_flag(self) -> None:
+        """ reset draw flag to False """
+        self.draw_flag = False
 
             
     def update(self, database: CardDatabase) -> None: 
@@ -550,19 +584,27 @@ class Game:
         self.all_sprites.update(self.screen, pygame.mouse.get_pos())
         self.screen.blit(self.cp_image, (100, 20))
         self.screen.blit(self.deck_image, (30, 350))
-        self.screen.blit(self.played_card_text_box_label, (310, 425))
+        self.screen.blit(self.played_card_text_box_label, (345, 425))
         self.ui.update(6e-2)
         self.ui.draw_ui(self.screen)
 
         # if users have cards in hand, display them
         if len(database.hands.keys()) != 0:
-            self.display_player_cards(database)
-            self.display_cp_cards(database)
+            #display cp cards when game ends
+            if self.end_flag:
+                self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
+                self.display_player_cards(database)
+                self.screen.blit(pygame.font.Font(None, 50).render("Game Over", True, (255, 0, 0)),
+                                 (400, 300))
+            else: 
+                self.display_player_cards(database)
+                self.display_back_cards(database)
         #display community cards
         if len(database.community) != 0:
             self.display_community_cards(database)
         if len(database.card_recently_played) != 0:
             self.display_recently_played_cards(database)
+            
         pygame.display.flip()
 
     def get_played_cards(self) -> list[int] | None:
@@ -580,14 +622,19 @@ class Game:
             self.played_card_text_box.set_text("")
             return played_cards
 
-    def is_end(self) -> bool:
+    def is_end(self, wait:int=10000) -> bool:
         """
         Checks if the game has ended.
-
+        Args:
+            wait (int): The waiting time before the game ends.
         Returns:
             bool: True if the game has ended. False otherwise.
         """
-        return False
+        if self.end_flag==False:
+            return False
+        else:
+            pygame.time.wait(wait)
+            return True
 
     def reset(self):
         """

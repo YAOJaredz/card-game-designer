@@ -29,7 +29,12 @@ class ComputerPlayer:
         """
         self.hand = hand
         # print(hand)
-        card_to_play = random.sample(self.hand, min(num_cards_played_per_round, len(self.hand)))
-        # print(card_to_play)
+        # num_cards_played_per_round == -1 means unlimited number of cards to play, then randomly choose a number of cards to play. 
+        if num_cards_played_per_round == -1:
+            num_play=random.randint(0, len(self.hand))
+            card_to_play = random.sample(self.hand, num_play)
+        else: 
+            card_to_play = random.sample(self.hand, min(num_cards_played_per_round, len(self.hand)))
+            # print(card_to_play)
         self.played_cards.extend(card_to_play)
         return card_to_play
