@@ -88,7 +88,7 @@ Inputs for Textbox should be only integers. Other inputs are invalid.
 - Community Cards? : Choices to include community cards or not. Yes as default.
 - First Round of Comm: The first round to have community cards. 0 as default.
 - Num Comm in Its Round: Set the number of cards in community cards in the first round of having community cards. 0 as default.
-- Num Comm Added Per Round: Set the number of cards to add to the community cards later. 1 as default.
+- Num Comm Added Per Round: Set the number of cards to add to the community cards later. 0 as default.
 - Play Cards? : Choices to play cards or not. Yes as default.
 - Num Cards Played Per Round: Set the number of cards to play. 1 as default.
 - Multi-User? (Not implemented yet): Choices to allow multi-user or not. No is the only option for now.
