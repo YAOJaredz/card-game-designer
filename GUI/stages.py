@@ -298,7 +298,7 @@ class Game:
         deck_image (pygame.Surface): The image of the card deck.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, draw_flag_config: bool = False) -> None:
         """
         Initializes the Game class.
         """
@@ -328,23 +328,24 @@ class Game:
         # record played card for this round
         self.played_cards = None
 
-        # add play card button
-        self.play_button = Button(670, 450, 70, 35, "Play!")
-        self.all_sprites.add(self.play_button, self.alert_label)
-
         # add card deck
         self.deck_image = pygame.transform.smoothscale(pygame.image.load('card_images/deck.png'), (150, 100))
         
-        # add draw card button
-        self.draw_button = Button(260, 450, 70, 35, "Draw!")
-        self.all_sprites.add(self.draw_button)
-        
-        # drawn flag for this round
-        self.draw_flag = False
-        
+        # add play card button
+        self.play_button = Button(670, 450, 70, 35, "Play!")
         # add end button
         self.end_button = Button(10, 60, 80, 40, "End")
-        self.all_sprites.add(self.end_button)
+
+        self.all_sprites.add(self.play_button, self.alert_label, self.end_button)
+        
+        # add draw card button
+        if draw_flag_config:
+            self.draw_button = Button(260, 450, 70, 35, "Draw!")
+            self.all_sprites.add(self.draw_button)
+
+
+        # drawn flag for this round
+        self.draw_flag = False
         
         # add end flag
         self.end_flag=False

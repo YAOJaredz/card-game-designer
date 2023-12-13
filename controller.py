@@ -16,7 +16,7 @@ class Controller():
         self.running = True
         self.playing = False
 
-        self._cp_wait_time = 60
+        self.CP_WAIT_TIME = 60
 
     def init_play(self, players: list[str]) -> None:
         """
@@ -38,7 +38,7 @@ class Controller():
         
         self.playing = True
 
-        self.cp_wait_time = self._cp_wait_time
+        self.cp_wait_time = self.CP_WAIT_TIME
     
     def update_round(self) -> bool:
         """
@@ -63,7 +63,7 @@ class Controller():
         """
         Resets the wait time for the computer player.
         """
-        self.cp_wait_time = self._cp_wait_time
+        self.cp_wait_time = self.CP_WAIT_TIME
 
     def next_player(self) -> None:
         """
