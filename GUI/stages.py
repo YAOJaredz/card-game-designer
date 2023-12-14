@@ -460,10 +460,14 @@ class Game:
         self.end_flag=False
 
         if config is not None and 'is_end_path' in config.keys():
-            spec = importlib.util.spec_from_file_location("is_end", config['is_end_path'])
-            custom_end = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(custom_end)
-            self.end_game = custom_end.end_game
+            try:
+                spec = importlib.util.spec_from_file_location("is_end", config['is_end_path'])
+                custom_end = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(custom_end)
+                self.end_game = custom_end.end_game
+            except AttributeError:
+                self.display_alert("Invalid end_game script. Using default.")
+                self.end_game = end_game
         else:
             self.end_game = end_game
 

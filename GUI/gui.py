@@ -119,7 +119,7 @@ class GUI:
             self.stages[2].reset(self.config)
         self.current_stage = stage
 
-    def display_stage(self, database: CardDatabase = None, config: Config = None, game_end: bool = False):
+    def display_stage(self, database: CardDatabase = None, config: Config = None, game_end: bool = False, stage: int = None):
         """
         Display the current stage of the game.
 
@@ -129,6 +129,8 @@ class GUI:
             game_end (bool): Whether or not the game has ended.
         """
         self.clock.tick(self.fps)
+        if stage is not None:
+            self.stages[stage].update(database, config)
         if self.current_stage != 2:
             self.stages[self.current_stage].update()
         elif game_end:

@@ -1,5 +1,6 @@
 import pygame
 import sys
+import os
 import random
 import importlib.util
 
@@ -98,6 +99,27 @@ class Controller:
     def __str__(self) -> str:
         return self.__dict__.__str__()
 
+    def check_user_script(self, config: dict) -> list[str] | None:
+        """
+        Check if the user scripts are valid.
+
+        Args:
+            config (dict): The configuration values.
+
+        Returns:
+            bool: True if the user scripts are valid, False otherwise.
+        """
+        alerts = []
+        if "is_end_path" in config.keys():
+            if not os.path.isfile(config["is_end_path"]):
+                alerts.append("is_end_path")
+        if "cp_strategy_path" in config.keys():
+            if not os.path.isfile(config["cp_strategy_path"]):
+                alerts.append("cp_strategy_path")
+        if alerts != []:
+            return alerts
+        else:
+            return None
 
 def main_loop():
     """
@@ -115,13 +137,20 @@ def main_loop():
             # Initialize the game
             controller.config = Config(**gui.config)
             print(controller.config)
-            if "cp_strategy_path" in gui.config.keys():
-                cp_strategy = importlib.util.spec_from_file_location(
-                    "custom_CP", gui.config["cp_strategy_path"]
-                )
-                custom_CP = importlib.util.module_from_spec(cp_strategy)
-                cp_strategy.loader.exec_module(custom_CP)
-                cp = custom_CP.ComputerPlayer()
+            if controller.check_user_script(gui.config) is not None:
+                gui.stages[0].display_alert("Invalid path to user script(s).")
+                gui.current_stage = 0
+                continue
+            elif "cp_strategy_path" in gui.config.keys():
+                try:
+                    cp_strategy = importlib.util.spec_from_file_location("cp_strategy", gui.config["cp_strategy_path"])
+                    custom_CP = importlib.util.module_from_spec(cp_strategy)
+                    cp_strategy.loader.exec_module(custom_CP)
+                    cp = custom_CP.ComputerPlayer()
+                except AttributeError:
+                    gui.stages[0].display_alert("Invalid cp_strategy script.")
+                    gui.current_stage = 0
+                    continue
 
             # Initialize the database
             Database = initialization(controller.config)
