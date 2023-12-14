@@ -65,7 +65,7 @@ if __name__ == '__main__':
     database = deal_cards(database, 1, config)
     print(database.hands)
 
-    database = draw_card(database, 'a', 0, config)
+    database = draw_card(database, 'a', config)
     print(database.hands)
 
     print(database.self_check())
