@@ -10,6 +10,7 @@ sys.path.append(".")
 from GUI.components import *
 from data_processing.database import Card, CardDatabase
 from operations.config import Config
+from user_scripts.is_end import end_game
 WIDTH, HEIGHT = 1000, 700
 
 
@@ -606,7 +607,8 @@ class Game:
         if game_end:
             self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
             self.display_player_cards(database)
-            self.screen.blit(pygame.font.Font(None, 46).render("Game Over", True, (255,69,69)), (400, 400))
+            self.screen.blit(pygame.font.Font(None, 46).render("Game Over", True, (255,69,69)), (400, 320))
+            self.screen.blit(pygame.font.Font(None, 46).render("Press any key to continue...", True, (255,69,69)), (300, 370))
         elif len(database.hands.keys()) != 0:
             if config.display_cp:
                 self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
@@ -636,13 +638,13 @@ class Game:
             self.played_card_text_box.set_text("")
             return played_cards
 
-    def is_end(self) -> bool:
+    def is_end(self, database: CardDatabase) -> bool:
         """
         Checks if the game has ended.
         Returns:
             bool: True if the game has ended. False otherwise.
         """
-        return self.end_flag
+        return self.end_flag or end_game(database)
 
     def reset(self, *args):
         """

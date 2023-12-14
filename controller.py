@@ -5,7 +5,7 @@ import random
 from data_processing.database import Card, CardDatabase
 from operations import *
 from GUI.gui import GUI
-from cp_strategy import ComputerPlayer
+from user_scripts.cp_strategy import ComputerPlayer
 
 class Controller():
     """
@@ -42,6 +42,8 @@ class Controller():
         self.cp_wait_time = self.CP_WAIT_TIME
 
         self.countdown = self.END_COUNTDOWN
+
+        self.init = True
     
     def update_round(self) -> bool:
         """
@@ -51,6 +53,7 @@ class Controller():
             bool: True if the round is complete, False otherwise.
         """
         if self.deal and self.community and all(self.play.values()) and all(self.draw.values()):
+            self.init = False
             self.round += 1
             self.deal = False
             self.community = False
@@ -84,9 +87,6 @@ class Controller():
     def quit(self) -> None:
         """
         Quits the game.
-
-        Returns:
-            None
         """
         self.running = False
         self.playing = False
@@ -126,11 +126,11 @@ def main_loop():
             gui.display_stage()
 
         while controller.playing:
-            print(controller.round)
             #check if the game should continue or end
-            if gui.stages[2].is_end() or (controller.round >= controller.config.num_rounds and controller.config.num_rounds != -1):
-                if controller.countdown > 0:
-                    controller.countdown -= 1
+            if (gui.stages[2].is_end(Database) or \
+                (controller.round >= controller.config.num_rounds and controller.config.num_rounds != -1))\
+                and not controller.init:
+                if gui.end_events():
                     gui.display_stage(Database, controller.config, game_end=True)
                     continue
                 else:
@@ -216,10 +216,9 @@ def main_loop():
                     Database.sort_hand(player)
             
             if not Database.self_check():
-                raise Exception("database is not consistent.")
+                raise Exception("Database is not consistent.")
             
             controller.update_round()
-            print(controller)
             gui.stages[gui.current_stage].display_current_player(controller.current_player)
 
 
