@@ -5,7 +5,7 @@ import random
 from data_processing.database import Card, CardDatabase
 from operations import *
 from GUI.gui import GUI
-from user_scripts.cp_strategy import ComputerPlayer
+from operations.defaults.cp_strategy import ComputerPlayer
 
 class Controller():
     """
@@ -155,8 +155,25 @@ def main_loop():
                         if controller.cp_wait_time_draw > 0:
                             continue
                         controller.reset_cp_wait_time(0)
+                        if config.repetitive_draw:
+                            while cp.cp_draw_card_repetitive(
+                                controller.round,
+                                Database.hands['cp'],
+                                Database.community,
+                                controller.config.num_draw,
+                            ):
+                                Database = draw_card(Database, controller.current_player, controller.config)
+                        else:
+                            cp_draw_times = cp.cp_draw_card(
+                                controller.round,
+                                Database.hands['cp'],
+                                Database.community,
+                                controller.config.repetitive_draw,
+                                controller.config.num_drawn,
+                            )
+                            for _ in range(cp_draw_times):
+                                Database = draw_card(Database, controller.current_player, controller.config)
                         print("cp draw")
-                        Database = draw_card(Database, controller.current_player, controller.config)
                         controller.draw['cp'] = True
                 case player:
                     if (controller.config.repetitive_draw or not controller.draw[player]) and gui.stages[2].draw_flag and controller.config.draw_flag:

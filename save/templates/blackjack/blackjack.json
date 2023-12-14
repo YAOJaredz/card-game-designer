@@ -17,5 +17,6 @@
     "multiuser_flag": false,
     "bidding_flag": false,
     "sort_hands": false,
-    "display_cp": true
+    "display_cp": true,
+    "cp_strategy_path": "save/templates/blackjack/cp_strategy.py"
 }

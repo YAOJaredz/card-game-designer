@@ -10,7 +10,7 @@ sys.path.append(".")
 from GUI.components import *
 from data_processing.database import Card, CardDatabase
 from operations.config import Config
-from user_scripts.is_end import end_game
+from operations.defaults.is_end import end_game
 WIDTH, HEIGHT = 1000, 700
 
 
@@ -529,8 +529,9 @@ class Game:
         num_cards=len(cards)
         display_range_height=num_cards*100
         start_y=(self.height-display_range_height)/2
-        played_card_label=pygame.font.Font(None, 24).render(player+str(" played:"), True, (255, 255, 255))
-        self.screen.blit(played_card_label, (850, start_y-20))
+        if self.play_flag_config:
+            played_card_label=pygame.font.Font(None, 24).render(player+str(" played:"), True, (255, 255, 255))
+            self.screen.blit(played_card_label, (850, start_y-20))
         for card in cards:
             # display card image
             image=pygame.transform.smoothscale(pygame.image.load(card.image), (80, 100))
