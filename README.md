@@ -45,7 +45,12 @@ The project will implement a tool for people to build their own card games. It w
 
 ### Prerequisite:
 
-- Have `pygame` package installed
+- Have `pygame` and `pygame.gui` packages installed
+  
+  ```
+  pip install pygame
+  pip install pygame.gui
+  ```
 
 ### Installation:
 
@@ -56,22 +61,22 @@ The project will implement a tool for people to build their own card games. It w
 - Switch the current working directory to `card-game-designer-main`
 - Open `controller.py` and run it.
 
-### Opening manual: 
+### Opening page manual: 
 
 **Buttons:**
 
-- Create New: Create a new game configuration. Go to *Setting* stage. 
-- Load Templates: Load existing configurations. Go to *Game* stage. 
-- Quit: Quit the program. 
+- **Create New:** Create a new game configuration. Go to *Setting* stage. 
+- **Load Templates:** Load existing configurations. Go to *Game* stage. 
+- **Quit:** Quit the program. 
 
 
-### Setting manual:
+### Setting page manual:
 
 **Buttons:**
 
-- Back: Go back to the previous stage *Opening*.
-- Save: Save the current configuation as a json file.
-- Continue: Go the the next stage *Game*. 
+- **Back:** Go back to the previous stage *Opening*.
+- **Save:** Save the current configuation as a json file.
+- **Continue:** Go the the next stage *Game*. 
 
 **Configuration:**
 
@@ -83,22 +88,22 @@ Inputs for Textbox should be only integers. Other inputs are invalid.
 - Order: Order of ranks in the game. There are 2 options: 0 means A has the smallest rank, 1 means 3 has the smallest rank. 0 as default.
 - Num Initial Hand: Set the number of initial hand for players. 0 as default.
 - Num Cards Dealt Per Round: Set the number of cards to dealt in a round. 0 as default.
-- Draw Cards? : Choices to allow players to draw cards or not. Yes as default.
+- Draw Cards? : Choices to allow players to draw cards or not. Yes as default. When draw_flag is false, `Draw!` button will not appear in the *Game* page. 
 - Num Cards Drawn: Set the number of cards to draw. 1 as default.
 - Community Cards? : Choices to include community cards or not. Yes as default.
 - First Round of Comm: The first round to have community cards. 0 as default.
 - Num Comm in Its Round: Set the number of cards in community cards in the first round of having community cards. 0 as default.
 - Num Comm Added Per Round: Set the number of cards to add to the community cards later. -1 means unlimited number of cards. 0 as default.
-- Play Cards? : Choices to play cards or not. Yes as default.
+- Play Cards? : Choices to play cards or not. Yes as default. When play_flag is false, `Play!` button will be replaced by `Finish` button in the *Game* page. 
 - Num Cards Played Per Round: Set the number of cards to play. 1 as default.
 - Multi-User? (Not implemented yet): Choices to allow multi-user or not. No is the only option for now.
 - Bidding?  (Not implemented yet): Choices to allow bidding or not. No is the only option for now.
-- Repetitive Draw? : Choices to allow draw cards multiple times in a round or not. Yes as default.
+- Repetitive Draw? : Choices to allow draw cards multiple times in a round or not. Yes as default. 
 - Sort Hands? : Choices to sort cards in hand or not. Yes as default.
 - Display CP? : Choices to display computer player's cards or not. Yes as default.
 
 
-### Game manual: 
+### Game page manual: 
 
 User can draw cards by clicking `Draw!` button and enter identifiers on the top of cards in the textbox, click `Play!` button to play the card. 
 
@@ -106,7 +111,7 @@ Card dealing is automatically done by the program.
 
 Game starts from the user. 
 
-The game flow is: current player: deal cards `->` draw cards `->` user play cards `->` next player. 
+Game flow: current player: deal cards `->` draw cards `->` user play cards `->` next player. 
 
 **Textbox:** 
 
@@ -118,10 +123,17 @@ Empty input is only allowed when `Play Cards? = No` and `Num Cards Played Per Ro
 
 **Buttons:**
 
-- Back: Go back to the previous stage *Setting*.
-- End: End the game. The program will go back to *Opening* stage after ending. 
-- Draw!: Draw cards. The user can draw cards before playing.
-- Play!: Play cards. Play cards mentioned in the textbox. 
+- **Back:** Go back to the previous stage *Setting*.
+- **End:** End the game. The program will go back to *Opening* stage after ending. 
+- **Draw!:** Draw cards. The user can draw cards before playing.
+- **Play!:** Play cards. Play cards mentioned in the textbox.
+- **Finish:** Finish player action in this round. This button appears when play_flag is false. 
+
+## Sample game:
+
+There are 2 sample games: poker and BlackJack. 
+
+###
 
 ## Future directions:
 - Support multiplayer
