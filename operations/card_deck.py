@@ -1,5 +1,6 @@
 import os, sys
 import json
+import random
 
 sys.path.append(".")
 
@@ -32,19 +33,19 @@ def create_one_deck(joker: bool, order: int) -> list[Card]:
     if order == 0:
         for rank in rank0:
             for suit in suits:
-                deck.append(Card(suit, rank, index, f"card_images/{rank}{suit[0]}.png", identifier))
+                deck.append(Card(suit, rank, index, f"resources/{rank}{suit[0]}.png", identifier))
             index += 1
     elif order == 1:
         for rank in rank1:
             for suit in suits:
-                deck.append(Card(suit, rank, index, f"card_images/{rank}{suit[0]}.png", identifier))
+                deck.append(Card(suit, rank, index, f"resources/{rank}{suit[0]}.png", identifier))
             index += 1
     else:
         raise ValueError("Invalid order value.")
     if joker:
-        deck.append(Card("Joker", "Black", index, "card_images/14.png", identifier))
+        deck.append(Card("Joker", "Black", index, "resources/14.png", identifier))
         index += 1
-        deck.append(Card("Joker", "Red", index, "card_images/15.png", identifier))
+        deck.append(Card("Joker", "Red", index, "resources/15.png", identifier))
         index += 1
     return deck
 
@@ -66,7 +67,8 @@ def create_multiple_decks(num_decks: int, joker: bool, order: int) -> set[Card]:
     deck = []
     for i in range(num_decks):
         deck += create_one_deck(joker, order)
-    identifiers = set(range(len(deck)))
+    identifiers = list(range(len(deck)))
+    random.shuffle(identifiers)
     for i in range(len(deck)):
         deck[i].identifier = identifiers.pop()
     return set(deck)

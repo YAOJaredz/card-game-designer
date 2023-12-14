@@ -410,13 +410,13 @@ class Game:
             self.play_flag_config = True
 
         # display the card table
-        self.bg = pygame.transform.smoothscale(pygame.image.load('card_images/bg.jpg'), (self.width, self.height))
+        self.bg = pygame.transform.smoothscale(pygame.image.load('resources/bg.jpg'), (self.width, self.height))
 
         # display the computer player
-        self.cp_image = pygame.transform.smoothscale(pygame.image.load('card_images/cp.png'), (100, 120))
+        self.cp_image = pygame.transform.smoothscale(pygame.image.load('resources/cp.png'), (100, 120))
 
         # add card deck
-        self.deck_image = pygame.transform.smoothscale(pygame.image.load('card_images/deck.png'), (150, 100))
+        self.deck_image = pygame.transform.smoothscale(pygame.image.load('resources/deck.png'), (150, 100))
 
         if self.play_flag_config:
             # text box for playing cards
@@ -557,7 +557,7 @@ class Game:
         num_cards=len(cards)
         display_range_width=(num_cards-1)*20+60
         start_x=(self.width-display_range_width)/2
-        image=pygame.transform.smoothscale(pygame.image.load("card_images/back.png"), scale)
+        image=pygame.transform.smoothscale(pygame.image.load("resources/back.png"), scale)
         for card in cards:
             # display card backs
             self.screen.blit(image, (start_x, height))

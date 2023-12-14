@@ -19,7 +19,7 @@ class Controller:
         self.running = True
         self.playing = False
 
-        self.CP_WAIT_TIME_PLAY = 40
+        self.CP_WAIT_TIME_PLAY = 20
         self.CP_WAIT_TIME_DRAW = 10
 
     def init_play(self, players: list[str]) -> None:
@@ -70,9 +70,9 @@ class Controller:
         """
         Resets the wait time for the computer player.
         """
-        if "1" in args:
+        if 1 in args:
             self.cp_wait_time_play = self.CP_WAIT_TIME_PLAY
-        if "0" in args:
+        if 0 in args:
             self.cp_wait_time_draw = self.CP_WAIT_TIME_DRAW
 
     def next_player(self) -> None:
@@ -188,6 +188,7 @@ def main_loop():
                                 controller.config.num_draw,
                             ):
                                 Database = draw_card(Database, controller.current_player, controller.config)
+                            print("cp draw")
                         else:
                             # If repetitive draw is not allowed, the computer player will draw cards based on strategy.
                             cp_draw_times = cp.cp_draw_card(
@@ -198,7 +199,7 @@ def main_loop():
                             )
                             for _ in range(cp_draw_times):
                                 Database = draw_card(Database, controller.current_player, controller.config)
-                        print("cp draw")
+                            print("cp draw")
                         controller.draw["cp"] = True
 
                 case player if controller.config.draw_flag:
@@ -215,7 +216,7 @@ def main_loop():
                 case "cp":
                     if controller.config.play_flag:
                         controller.cp_wait_time_play -= 1
-                        if random.random() > 0.2 or controller.cp_wait_time_play > 0:
+                        if random.random() > 0.4 or controller.cp_wait_time_play > 0:
                             continue
                         controller.reset_cp_wait_time(1)
 

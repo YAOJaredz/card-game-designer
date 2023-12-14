@@ -62,7 +62,7 @@
         "num_decks": [2, 1, 150, 40, "Num Decks", 0],
         "num_initial_hand": [1, 2, 200, 40, "Num Initial Hand", -20],
         "num_cards_dealt_per_round": [2, 2, 250, 40, "Num Cards Dealt Per Round", -40],
-        "num_draw": [4, 2, 150, 40, "Num Cards Drawn", 0],
+        "num_draw": [4, 2, 150, 40, "Num Cards Draw", 0],
         "first_round_of_comm": [2, 3, 200, 40, "First Round of Comm", -20],
         "first_round_num_comm": [3, 3, 200, 40, "Num Comm in Its Round", -30],
         "num_added_comm_per_round": [4, 3, 200, 40, "Num Comm Added Per Round", -30],
