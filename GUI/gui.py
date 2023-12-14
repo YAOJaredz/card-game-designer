@@ -127,5 +127,5 @@ class GUI:
 
 
 if __name__ == "__main__":
-    from controller import main_loop
+    from operations.controller import main_loop
     main_loop()

@@ -3,7 +3,7 @@
     "num_decks": 2,
     "joker": true,
     "order": 1,
-    "num_initial_hand": 16,
+    "num_initial_hand": 17,
     "num_cards_dealt_per_round": 1,
     "draw_flag": false,
     "num_draw": 1,
