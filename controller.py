@@ -1,11 +1,12 @@
 import pygame
 import sys
 import random
+import importlib.util
 
 from data_processing.database import Card, CardDatabase
 from operations import *
 from GUI.gui import GUI
-from operations.defaults.cp_strategy import ComputerPlayer
+from operations.defaults.cp_strategy import ComputerPlayer as default_ComputerPlayer
 
 class Controller():
     """
@@ -51,8 +52,7 @@ class Controller():
         Returns:
             bool: True if the round is complete, False otherwise.
         """
-        if self.deal and self.community and all(self.play.values()) and all(self.draw.values()):
-            self.init = False
+        if self.deal and self.community and all(self.play.values()):
             self.round += 1
             self.deal = False
             self.community = False
@@ -105,16 +105,23 @@ def main_loop():
 
     gui = GUI()
 
-    cp = ComputerPlayer()
+    cp = default_ComputerPlayer()
 
     while controller.running:
         if not gui.events(): controller.quit()
         if gui.current_stage == 2:
             controller.config = Config(**gui.config)
             print(controller.config)
+            if 'cp_strategy_path' in gui.config.keys():
+                cp_strategy = importlib.util.spec_from_file_location("custom_CP", gui.config['cp_strategy_path'])
+                custom_CP = importlib.util.module_from_spec(cp_strategy)
+                cp_strategy.loader.exec_module(custom_CP)
+                cp = custom_CP.ComputerPlayer()
+
             Database = initialization(controller.config)
             print('database initialized')
             Database.add_players(['player1', 'cp'])
+
             controller.reset_cp_wait_time(0, 1)
             controller.init_play(Database.players)
             print(Database)
@@ -155,7 +162,7 @@ def main_loop():
                         if controller.cp_wait_time_draw > 0:
                             continue
                         controller.reset_cp_wait_time(0)
-                        if config.repetitive_draw:
+                        if controller.config.repetitive_draw:
                             while cp.cp_draw_card_repetitive(
                                 controller.round,
                                 Database.hands['cp'],
@@ -236,6 +243,7 @@ def main_loop():
                 raise Exception("Database is not consistent.")
             
             controller.update_round()
+            controller.init = False
             gui.stages[gui.current_stage].display_current_player(controller.current_player)
 
 

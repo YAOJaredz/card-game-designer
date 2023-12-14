@@ -3,6 +3,7 @@ import sys
 import json
 import tkinter as tk
 from tkinter import filedialog
+import importlib.util
 
 tk.Tk().withdraw()
 
@@ -407,6 +408,15 @@ class Game:
         # add end flag
         self.end_flag=False
 
+        if config is not None and 'is_end_path' in config.keys():
+            spec = importlib.util.spec_from_file_location("is_end", config['is_end_path'])
+            custom_end = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(custom_end)
+            self.end_game = custom_end.end_game
+        else:
+            self.end_game = end_game
+
+
     def handle_events(self, event: pygame.event.Event) -> int:
         """
         Handles the events in the game.
@@ -645,7 +655,7 @@ class Game:
         Returns:
             bool: True if the game has ended. False otherwise.
         """
-        return self.end_flag or end_game(database)
+        return self.end_flag or self.end_game(database)
 
     def reset(self, *args):
         """
