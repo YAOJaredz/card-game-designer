@@ -18,6 +18,8 @@ class ComputerPlayer:
     ) -> list[Card]:
         """
         The strategy of the computer player.
+        User can use round, community, cards_recently_played to develop their own computer player strategy. 
+        As a default in the program, the computer player will randomly choose cards to play.
         Args:
             round (int): The current round.
             hand (list[Card]): The cards in the hand.
@@ -28,13 +30,11 @@ class ComputerPlayer:
             list[Card]: The cards to be played.
         """
         self.hand = hand
-        # print(hand)
         # num_cards_played_per_round == -1 means unlimited number of cards to play, then randomly choose a number of cards to play. 
         if num_cards_played_per_round == -1:
             num_play=random.randint(0, len(self.hand))
             card_to_play = random.sample(self.hand, num_play)
         else: 
             card_to_play = random.sample(self.hand, min(num_cards_played_per_round, len(self.hand)))
-            # print(card_to_play)
         self.played_cards.extend(card_to_play)
         return card_to_play

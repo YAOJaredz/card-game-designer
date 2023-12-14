@@ -98,9 +98,9 @@ class GUI:
     def display_stage(self, database: CardDatabase = None, config: Config = None, game_end: bool = False):
         """
         Display the current stage of the game.
+        database, config, and game_end will be passed in the main_loop.
         """
         self.clock.tick(self.fps)
-        #print cards for users
         if self.current_stage != 2:
             self.stages[self.current_stage].update()
         elif game_end:

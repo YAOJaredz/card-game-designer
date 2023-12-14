@@ -385,7 +385,6 @@ class Game:
             self.draw_button = Button(260, 450, 70, 35, "Draw!")
             self.all_sprites.add(self.draw_button)
 
-
         # drawn flag for this round
         self.draw_flag = False
         
@@ -545,7 +544,7 @@ class Game:
         for i in inputs:
             if not i.isnumeric() or len(i) == 0:
                 raise ValueError
-        if len(inputs) > int(config['num_cards_played_per_round']):
+        if len(inputs) > int(config['num_cards_played_per_round']) and int(config['num_cards_played_per_round']) != -1:
             raise ImcompatibleConfigError
         return inputs
     
@@ -565,7 +564,7 @@ class Game:
         self.alert_label.text = ""
         
     def reset_draw_flag(self) -> None:
-        """ reset draw flag to False """
+        """ Reset draw flag to False """
         self.draw_flag = False
 
     def update(self, database: CardDatabase, config: Config, game_end: bool = False) -> None: 
@@ -588,7 +587,7 @@ class Game:
         if game_end:
             self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
             self.display_player_cards(database)
-            self.screen.blit(pygame.font.Font(None, 50).render("Game Over", True, (255,69,69)), (400, 300))
+            self.screen.blit(pygame.font.Font(None, 46).render("Game Over", True, (255,69,69)), (400, 400))
         elif len(database.hands.keys()) != 0:
             if config.display_cp:
                 self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
@@ -618,11 +617,9 @@ class Game:
             self.played_card_text_box.set_text("")
             return played_cards
 
-    def is_end(self, wait:int=10000) -> bool:
+    def is_end(self) -> bool:
         """
         Checks if the game has ended.
-        Args:
-            wait (int): The waiting time before the game ends.
         Returns:
             bool: True if the game has ended. False otherwise.
         """

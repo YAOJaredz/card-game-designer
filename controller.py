@@ -122,6 +122,7 @@ def main_loop():
             gui.display_stage()
 
         while controller.playing:
+            #check if the game should continue or end
             if gui.stages[2].is_end() or (controller.round >= controller.config.num_rounds and controller.config.num_rounds != -1):
                 if controller.countdown > 0:
                     controller.countdown -= 1
@@ -144,26 +145,20 @@ def main_loop():
             if not controller.deal:
                 Database = deal_cards(Database, controller.round, controller.config)
                 controller.deal = True
-
-            # controller.draw[controller.current_player]=gui.stages[gui.current_stage].draw_flag
-            # if controller.draw[controller.current_player] and controller.current_player != 'cp':
-            #     Database = draw_card(Database, controller.current_player, controller.round, config)
-            #     # controller.draw[controller.current_player] = True
-            #     gui.stages[gui.current_stage].reset_draw_flag()
              
-
             match controller.current_player:
                 case 'cp':
                     # cp draw cards
                     if not controller.draw['cp']:
                         print("cp draw")
-                        Database = draw_card(Database, controller.current_player, controller.round, controller.config)
+                        Database = draw_card(Database, controller.current_player, controller.config)
                         controller.draw['cp'] = True
 
                     controller.cp_wait_time -= 1
                     if random.random() > 0.2 or controller.cp_wait_time > 0:
                         continue
                     controller.reset_cp_wait_time()
+                    # cp play cards
                     cp_played_cards = cp.cp_play_card(
                         controller.round,
                         Database.hands['cp'],
@@ -182,10 +177,10 @@ def main_loop():
                     # Player draw cards
                     if (controller.config.repetitive_draw or not controller.draw[player]) and gui.stages[2].draw_flag and controller.config.draw_flag:
                         print(f"{player} draw")
-                        Database = draw_card(Database, controller.current_player, controller.round, controller.config)
+                        Database = draw_card(Database, controller.current_player, controller.config)
                         controller.draw[player] = True
                         gui.stages[gui.current_stage].reset_draw_flag()
-
+                    # Player play cards
                     player_played_cards = gui.stages[2].get_played_cards()
                     if player_played_cards is not None:
                         # handle situation that the player played cards that are not in the hand
