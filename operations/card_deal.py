@@ -31,7 +31,7 @@ def deal_cards(database: CardDatabase, round: int, config: Config) -> CardDataba
 
     return database
 
-def draw_card(database: CardDatabase, player: str, round: int, config: Config) -> CardDatabase:
+def draw_card(database: CardDatabase, player: str, config: Config) -> CardDatabase:
     """
     Draw a card from the deck.
 
@@ -39,7 +39,6 @@ def draw_card(database: CardDatabase, player: str, round: int, config: Config) -
         database (CardDatabase): The card database.
         player (str): The player who draws the card.
         config (Config): The configuration settings.
-        round (int): The current round.
     Return:
         CardDatabase: The updated card database.
     """

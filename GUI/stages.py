@@ -3,6 +3,7 @@ import sys
 import json
 import tkinter as tk
 from tkinter import filedialog
+import importlib.util
 
 tk.Tk().withdraw()
 
@@ -10,6 +11,7 @@ sys.path.append(".")
 from GUI.components import *
 from data_processing.database import Card, CardDatabase
 from operations.config import Config
+from operations.defaults.is_end import end_game
 WIDTH, HEIGHT = 1000, 700
 
 
@@ -336,7 +338,7 @@ class Game:
         deck_image (pygame.Surface): The image of the card deck.
     """
 
-    def __init__(self, draw_flag_config: bool = False) -> None:
+    def __init__(self, config: dict = None) -> None:
         """
         Initializes the Game class.
         """
@@ -345,8 +347,16 @@ class Game:
 
         self.all_sprites = pygame.sprite.Group()
         self.back_button = Button(10, 10, 80, 40, "Back")
-        self.all_sprites.add(self.back_button)
         self.ui = pygame_gui.UIManager((self.width, self.height), "GUI/themes.json")
+
+        sprites = []
+
+        if config is not None:
+            self.draw_flag_config = config['draw_flag']
+            self.play_flag_config = config['play_flag']
+        else:
+            self.draw_flag_config = False
+            self.play_flag_config = True
 
         # display the card table
         self.bg = pygame.transform.smoothscale(pygame.image.load('card_images/bg.jpg'), (self.width, self.height))
@@ -354,43 +364,58 @@ class Game:
         # display the computer player
         self.cp_image = pygame.transform.smoothscale(pygame.image.load('card_images/cp.png'), (100, 120))
 
-        # text box for playing cards
-        self.played_card_text_box = TextBox(350, 450, 300, 40, ui_manager=self.ui, uid="played_card_text_box")
+        # add card deck
+        self.deck_image = pygame.transform.smoothscale(pygame.image.load('card_images/deck.png'), (150, 100))
 
-        # text box label
-        self.played_card_text_box_label = pygame.font.Font(None, 24).render(str("Please enter identifiers (separated by , ) "), True, (255, 255, 255))
+        if self.play_flag_config:
+            # text box for playing cards
+            self.played_card_text_box = TextBox(350, 450, 300, 40, ui_manager=self.ui, uid="played_card_text_box")
 
-        # alert label
-        self.alert_label = Label(380, 395, "", 24, color=(255,69,69))
+            # text box label
+            self.played_card_text_box_label = pygame.font.Font(None, 24).render(str("Please enter identifiers (separated by , ) "), True, (255, 255, 255))
 
         # record played card for this round
         self.played_cards = None
 
-        # add card deck
-        self.deck_image = pygame.transform.smoothscale(pygame.image.load('card_images/deck.png'), (150, 100))
-        
+        # alert label
+        self.alert_label = Label(380, 395, "", 24, color=(255,69,69))
         # current player label
-        self.current_player_label = Label(380, 200, "", 24, color=(255,255,255))
-        # add play card button
-        self.play_button = Button(670, 450, 70, 35, "Play!")
+        self.current_player_label = Label(370, 200, "", 24, color=(255,255,255))
         # add end button
         self.end_button = Button(10, 60, 80, 40, "End")
 
-        self.all_sprites.add(self.play_button, self.alert_label, self.end_button, self.current_player_label)
+        sprites.extend([self.alert_label, self.back_button, self.current_player_label, self.end_button])
+
+        if self.play_flag_config:
+            # add play card button
+            self.play_button = Button(670, 450, 70, 35, "Play!")
+            sprites.append(self.play_button)
+        else:
+            self.fini_button = Button(670, 450, 70, 35, "Finish")
+            sprites.append(self.fini_button)
         
         # add draw card button
-        self.draw_flag_config = draw_flag_config
         if self.draw_flag_config:
             print("draw flag is True")
             self.draw_button = Button(260, 450, 70, 35, "Draw!")
-            self.all_sprites.add(self.draw_button)
-
+            sprites.append(self.draw_button)
+        
+        self.all_sprites.add(*sprites)
 
         # drawn flag for this round
         self.draw_flag = False
         
         # add end flag
         self.end_flag=False
+
+        if config is not None and 'is_end_path' in config.keys():
+            spec = importlib.util.spec_from_file_location("is_end", config['is_end_path'])
+            custom_end = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(custom_end)
+            self.end_game = custom_end.end_game
+        else:
+            self.end_game = end_game
+
 
     def handle_events(self, event: pygame.event.Event) -> int:
         """
@@ -410,7 +435,7 @@ class Game:
             elif self.end_button.rect.collidepoint(event.pos):
                 self.end_flag=True
                 print("End Clicked!")      
-            elif self.play_button.rect.collidepoint(event.pos):
+            elif self.play_flag_config and self.play_button.rect.collidepoint(event.pos):
                 print("Play Card Clicked!")
                 played_cards = self.played_card_text_box.get_text()
                 try:
@@ -422,6 +447,9 @@ class Game:
                 except ImcompatibleConfigError:
                     self.display_alert("Too many cards played !")
                     print("Too many cards played!")
+            elif not self.play_flag_config and self.fini_button.rect.collidepoint(event.pos):
+                print("Finish Clicked!")
+                self.played_cards = []
             elif self.draw_flag_config == True and self.draw_button.rect.collidepoint(event.pos):
                 print("Draw Card Clicked!")
                 self.draw_flag = True
@@ -456,7 +484,7 @@ class Game:
         Args:
             player (str): The current player.
         """
-        self.current_player_label.text = f"{player} is playing..."
+        self.current_player_label.text = f"Waiting for {player} to take action..."
 
             
     def display_back_cards(self, database: CardDatabase, player:str="cp", height:int=30, 
@@ -511,8 +539,9 @@ class Game:
         num_cards=len(cards)
         display_range_height=num_cards*100
         start_y=(self.height-display_range_height)/2
-        played_card_label=pygame.font.Font(None, 24).render(player+str(" played:"), True, (255, 255, 255))
-        self.screen.blit(played_card_label, (850, start_y-20))
+        if self.play_flag_config:
+            played_card_label=pygame.font.Font(None, 24).render(player+str(" played:"), True, (255, 255, 255))
+            self.screen.blit(played_card_label, (850, start_y-20))
         for card in cards:
             # display card image
             image=pygame.transform.smoothscale(pygame.image.load(card.image), (80, 100))
@@ -545,7 +574,7 @@ class Game:
         for i in inputs:
             if not i.isnumeric() or len(i) == 0:
                 raise ValueError
-        if len(inputs) > int(config['num_cards_played_per_round']):
+        if len(inputs) > int(config['num_cards_played_per_round']) and int(config['num_cards_played_per_round']) != -1:
             raise ImcompatibleConfigError
         return inputs
     
@@ -565,7 +594,7 @@ class Game:
         self.alert_label.text = ""
         
     def reset_draw_flag(self) -> None:
-        """ reset draw flag to False """
+        """ Reset draw flag to False """
         self.draw_flag = False
 
     def update(self, database: CardDatabase, config: Config, game_end: bool = False) -> None: 
@@ -580,7 +609,8 @@ class Game:
         self.all_sprites.update(self.screen, pygame.mouse.get_pos())
         self.screen.blit(self.cp_image, (100, 20))
         self.screen.blit(self.deck_image, (30, 350))
-        self.screen.blit(self.played_card_text_box_label, (345, 425))
+        if config.play_flag:
+            self.screen.blit(self.played_card_text_box_label, (345, 425))
         self.ui.update(6e-2)
         self.ui.draw_ui(self.screen)
 
@@ -588,7 +618,8 @@ class Game:
         if game_end:
             self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
             self.display_player_cards(database)
-            self.screen.blit(pygame.font.Font(None, 50).render("Game Over", True, (255,69,69)), (400, 300))
+            self.screen.blit(pygame.font.Font(None, 46).render("Game Over", True, (255,69,69)), (400, 320))
+            self.screen.blit(pygame.font.Font(None, 46).render("Press any key to continue...", True, (255,69,69)), (300, 370))
         elif len(database.hands.keys()) != 0:
             if config.display_cp:
                 self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
@@ -618,15 +649,13 @@ class Game:
             self.played_card_text_box.set_text("")
             return played_cards
 
-    def is_end(self, wait:int=10000) -> bool:
+    def is_end(self, database: CardDatabase) -> bool:
         """
         Checks if the game has ended.
-        Args:
-            wait (int): The waiting time before the game ends.
         Returns:
             bool: True if the game has ended. False otherwise.
         """
-        return self.end_flag
+        return self.end_flag or self.end_game(database)
 
     def reset(self, *args):
         """

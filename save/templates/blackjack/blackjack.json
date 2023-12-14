@@ -1,7 +1,7 @@
 {
-    "num_rounds": "-1",
+    "num_rounds": "1",
     "num_decks": "1",
-    "joker": true,
+    "joker": false,
     "order": "0",
     "num_initial_hand": "2",
     "num_cards_dealt_per_round": "0",
@@ -17,5 +17,6 @@
     "multiuser_flag": false,
     "bidding_flag": false,
     "sort_hands": false,
-    "display_cp": true
+    "display_cp": true,
+    "cp_strategy_path": "save/templates/blackjack/cp_strategy.py"
 }

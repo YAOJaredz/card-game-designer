@@ -73,6 +73,18 @@ class GUI:
             elif next_stage != self.current_stage:
                 self.update_stage(next_stage)
         return True
+    
+    def end_events(self):
+        if self.current_stage !=2:
+            raise ValueError("end_events() can only be called in the game stage.")
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+            elif event.type == pygame.KEYDOWN:
+                return False
+            else:
+                self.stages[self.current_stage].handle_events(event)
+        return True
 
     def update_stage(self, stage: int):
         """
@@ -92,15 +104,15 @@ class GUI:
                 self.stages[self.current_stage].display_alert("Broken configuration values.")
                 return None
             self.stages[2].config = self.config
-            self.stages[2].reset(self.config['draw_flag'])
+            self.stages[2].reset(self.config)
         self.current_stage = stage
 
     def display_stage(self, database: CardDatabase = None, config: Config = None, game_end: bool = False):
         """
         Display the current stage of the game.
+        database, config, and game_end will be passed in the main_loop.
         """
         self.clock.tick(self.fps)
-        #print cards for users
         if self.current_stage != 2:
             self.stages[self.current_stage].update()
         elif game_end:

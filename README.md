@@ -88,18 +88,25 @@ Inputs for Textbox should be only integers. Other inputs are invalid.
 - Community Cards? : Choices to include community cards or not. Yes as default.
 - First Round of Comm: The first round to have community cards. 0 as default.
 - Num Comm in Its Round: Set the number of cards in community cards in the first round of having community cards. 0 as default.
-- Num Comm Added Per Round: Set the number of cards to add to the community cards later. 0 as default.
+- Num Comm Added Per Round: Set the number of cards to add to the community cards later. -1 means unlimited number of cards. 0 as default.
 - Play Cards? : Choices to play cards or not. Yes as default.
 - Num Cards Played Per Round: Set the number of cards to play. 1 as default.
 - Multi-User? (Not implemented yet): Choices to allow multi-user or not. No is the only option for now.
 - Bidding?  (Not implemented yet): Choices to allow bidding or not. No is the only option for now.
+- Repetitive Draw? : Choices to allow draw cards multiple times in a round or not. Yes as default.
+- Sort Hands? : Choices to sort cards in hand or not. Yes as default.
+- Display CP? : Choices to display computer player's cards or not. Yes as default.
 
 
 ### Game manual: 
 
-User can enter identifiers on the top of cards in the textbox and click `Play!` button to play the card. 
+User can draw cards by clicking `Draw!` button and enter identifiers on the top of cards in the textbox, click `Play!` button to play the card. 
 
-Game starts from the user. The game flow is: deal cards `->` draw cards `->` user play cards `->` next player. 
+Card dealing is automatically done by the program. 
+
+Game starts from the user. 
+
+The game flow is: current player: deal cards `->` draw cards `->` user play cards `->` next player. 
 
 **Textbox:** 
 
@@ -112,8 +119,8 @@ Empty input is only allowed when `Play Cards? = No` and `Num Cards Played Per Ro
 **Buttons:**
 
 - Back: Go back to the previous stage *Setting*.
-- End: End the game, and display computer player's cards. After 10 seconds, the program will go back to *Opening* stage.
-- Draw!: Draw cards. The user should only draw cards once before playing.
+- End: End the game. The program will go back to *Opening* stage after ending. 
+- Draw!: Draw cards. The user can draw cards before playing.
 - Play!: Play cards. Play cards mentioned in the textbox. 
 
 ## Future directions:
