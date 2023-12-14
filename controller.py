@@ -17,8 +17,8 @@ class Controller():
         self.running = True
         self.playing = False
 
-        self.CP_WAIT_TIME_PLAY = 60
-        self.CP_WAIT_TIME_DRAW = 30
+        self.CP_WAIT_TIME_PLAY = 40
+        self.CP_WAIT_TIME_DRAW = 10
 
     def init_play(self, players: list[str]) -> None:
         """
@@ -133,14 +133,17 @@ def main_loop():
             if (gui.stages[2].is_end(Database) or \
                 (controller.round >= controller.config.num_rounds and controller.config.num_rounds != -1))\
                 and not controller.init:
-                if gui.end_events():
+                next_stage = gui.end_events()
+                if next_stage == -1:
+                    controller.quit()
+                elif next_stage == 0:
+                    controller.quit_play()
+                    gui.update_stage(next_stage)
+                else:
                     gui.display_stage(Database, controller.config, game_end=True)
                     continue
-                else:
-                    controller.quit_play()
-                    gui.current_stage = 0
             
-            if not gui.events(): controller.quit()
+            if gui.events() == -1: controller.quit()
             if gui.current_stage != 2: 
                 controller.quit_play()
                 break
@@ -156,7 +159,7 @@ def main_loop():
             
             # Draw cards
             match controller.current_player:
-                case 'cp':
+                case 'cp' if controller.config.draw_flag:
                     if not controller.draw['cp']:
                         controller.cp_wait_time_draw -= 1
                         if controller.cp_wait_time_draw > 0:
@@ -175,15 +178,14 @@ def main_loop():
                                 controller.round,
                                 Database.hands['cp'],
                                 Database.community,
-                                controller.config.repetitive_draw,
-                                controller.config.num_drawn,
+                                controller.config.num_draw,
                             )
                             for _ in range(cp_draw_times):
                                 Database = draw_card(Database, controller.current_player, controller.config)
                         print("cp draw")
                         controller.draw['cp'] = True
-                case player:
-                    if (controller.config.repetitive_draw or not controller.draw[player]) and gui.stages[2].draw_flag and controller.config.draw_flag:
+                case player if controller.config.draw_flag:
+                    if (controller.config.repetitive_draw or not controller.draw[player]) and gui.stages[2].draw_flag:
                         print(f"{player} draw")
                         Database = draw_card(Database, controller.current_player, controller.config)
                         controller.draw[player] = True
