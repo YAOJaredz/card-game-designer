@@ -474,7 +474,7 @@ class Game:
         Args:
             player (str): The current player.
         """
-        self.current_player_label.text = f"Waiting for {player} to take action.'"
+        self.current_player_label.text = f"Waiting for {player} to take action..."
 
             
     def display_back_cards(self, database: CardDatabase, player:str="cp", height:int=30, 

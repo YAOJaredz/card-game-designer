@@ -16,8 +16,8 @@ class Controller():
         self.running = True
         self.playing = False
 
-        self.CP_WAIT_TIME = 60
-        self.END_COUNTDOWN = 60
+        self.CP_WAIT_TIME_PLAY = 60
+        self.CP_WAIT_TIME_DRAW = 30
 
     def init_play(self, players: list[str]) -> None:
         """
@@ -39,9 +39,8 @@ class Controller():
         
         self.playing = True
 
-        self.cp_wait_time = self.CP_WAIT_TIME
-
-        self.countdown = self.END_COUNTDOWN
+        self.cp_wait_time_play = self.CP_WAIT_TIME_PLAY
+        self.cp_wait_time_draw = self.CP_WAIT_TIME_DRAW
 
         self.init = True
     
@@ -64,18 +63,15 @@ class Controller():
             return True
         else:
             return False
-        
-    def init_end(self) -> None:
-        """
-        Initializes the end of the game.
-        """
-        self.countdown = self.END_COUNTDOWN
     
-    def reset_cp_wait_time(self) -> None:
+    def reset_cp_wait_time(self, *args) -> None:
         """
         Resets the wait time for the computer player.
         """
-        self.cp_wait_time = self.CP_WAIT_TIME
+        if '1' in args:
+            self.cp_wait_time_play = self.CP_WAIT_TIME_PLAY
+        if '0' in args:
+            self.cp_wait_time_draw = self.CP_WAIT_TIME_DRAW
 
     def next_player(self) -> None:
         """
@@ -119,7 +115,7 @@ def main_loop():
             Database = initialization(controller.config)
             print('database initialized')
             Database.add_players(['player1', 'cp'])
-            controller.reset_cp_wait_time()
+            controller.reset_cp_wait_time(0, 1)
             controller.init_play(Database.players)
             print(Database)
         else:
@@ -155,6 +151,10 @@ def main_loop():
             match controller.current_player:
                 case 'cp':
                     if not controller.draw['cp']:
+                        controller.cp_wait_time_draw -= 1
+                        if controller.cp_wait_time_draw > 0:
+                            continue
+                        controller.reset_cp_wait_time(0)
                         print("cp draw")
                         Database = draw_card(Database, controller.current_player, controller.config)
                         controller.draw['cp'] = True
@@ -168,12 +168,12 @@ def main_loop():
             # Play cards
             match controller.current_player:
                 case 'cp':
-                    controller.cp_wait_time -= 1
-                    if random.random() > 0.2 or controller.cp_wait_time > 0:
-                        continue
-                    controller.reset_cp_wait_time()
-
                     if controller.config.play_flag:
+                        controller.cp_wait_time_play -= 1
+                        if random.random() > 0.2 or controller.cp_wait_time_play > 0:
+                            continue
+                        controller.reset_cp_wait_time(1)
+
                         # cp play cards
                         cp_played_cards = cp.cp_play_card(
                             controller.round,

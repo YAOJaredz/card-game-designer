@@ -1,5 +1,6 @@
 import os, sys
 import json
+import random
 
 sys.path.append(".")
 
@@ -61,7 +62,9 @@ def create_multiple_decks(num_decks: int, joker: bool, order: int) -> set[Card]:
     deck = []
     for i in range(num_decks):
         deck += create_one_deck(joker, order)
-    for i in range(len(deck)):
+    identifiers = list(range(len(deck)))
+    random.shuffle(identifiers)
+    for i in identifiers:
         deck[i].identifier = i + 1
     return set(deck)
 
