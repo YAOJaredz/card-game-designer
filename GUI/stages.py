@@ -614,6 +614,11 @@ class Game:
         self.ui.update(6e-2)
         self.ui.draw_ui(self.screen)
 
+        #display community cards
+        if len(database.community) != 0:
+            self.display_community_cards(database)
+        if len(database.card_recently_played) != 0:
+            self.display_recently_played_cards(database)
         # if users have cards in hand, display them
         if game_end:
             self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
@@ -626,11 +631,6 @@ class Game:
             else:
                 self.display_back_cards(database)
             self.display_player_cards(database)
-        #display community cards
-        if len(database.community) != 0:
-            self.display_community_cards(database)
-        if len(database.card_recently_played) != 0:
-            self.display_recently_played_cards(database)
             
         pygame.display.flip()
 

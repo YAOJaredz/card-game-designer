@@ -64,7 +64,7 @@ class GUI:
         next_stage = self.current_stage
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return False
+                return -1
             else:
                 next_stage = self.stages[self.current_stage].handle_events(event)
 
@@ -74,17 +74,19 @@ class GUI:
                 self.update_stage(next_stage)
         return True
     
-    def end_events(self):
-        if self.current_stage !=2:
+    def end_events(self) -> int | bool:
+        if self.current_stage != 2:
             raise ValueError("end_events() can only be called in the game stage.")
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return False
-            elif event.type == pygame.KEYDOWN:
-                return False
+                return -1
+            if event.type == pygame.KEYDOWN:
+                return 0
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                return 0
             else:
                 self.stages[self.current_stage].handle_events(event)
-        return True
+        return 2
 
     def update_stage(self, stage: int):
         """

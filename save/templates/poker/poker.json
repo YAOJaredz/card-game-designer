@@ -1,0 +1,22 @@
+{
+    "num_rounds": -1,
+    "num_decks": 2,
+    "joker": true,
+    "order": 1,
+    "num_initial_hand": 16,
+    "num_cards_dealt_per_round": 1,
+    "draw_flag": false,
+    "num_draw": 1,
+    "repetitive_draw": false,
+    "comm_flag": true,
+    "first_round_of_comm": 0,
+    "first_round_num_comm": 3,
+    "num_added_comm_per_round": 0,
+    "play_flag": true,
+    "num_cards_played_per_round": -1,
+    "multiuser_flag": false,
+    "bidding_flag": false,
+    "sort_hands": true,
+    "display_cp": false,
+    "is_end_path": "save/templates/poker/is_end.py"
+}
