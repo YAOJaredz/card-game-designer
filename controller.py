@@ -50,7 +50,7 @@ class Controller():
         Returns:
             bool: True if the round is complete, False otherwise.
         """
-        if self.deal and self.community and all(self.play.values()):
+        if self.deal and self.community and all(self.play.values()) and all(self.draw.values()):
             self.round += 1
             self.deal = False
             self.community = False
@@ -78,6 +78,7 @@ class Controller():
         """
         Moves the game to the next player.
         """
+        self.play[self.current_player] = True
         self.current_player = self.players[(self.players.index(self.current_player) + 1) % len(self.players)]
 
     def quit(self) -> None:
@@ -95,6 +96,9 @@ class Controller():
         Quits the current game round.
         """
         self.playing = False
+    
+    def __str__(self) -> str:
+        return self.__dict__.__str__()
 
 
 def main_loop():
@@ -122,6 +126,7 @@ def main_loop():
             gui.display_stage()
 
         while controller.playing:
+            print(controller.round)
             #check if the game should continue or end
             if gui.stages[2].is_end() or (controller.round >= controller.config.num_rounds and controller.config.num_rounds != -1):
                 if controller.countdown > 0:
@@ -145,56 +150,66 @@ def main_loop():
             if not controller.deal:
                 Database = deal_cards(Database, controller.round, controller.config)
                 controller.deal = True
-             
+            
+            # Draw cards
             match controller.current_player:
                 case 'cp':
-                    # cp draw cards
                     if not controller.draw['cp']:
                         print("cp draw")
                         Database = draw_card(Database, controller.current_player, controller.config)
                         controller.draw['cp'] = True
-
-                    controller.cp_wait_time -= 1
-                    if random.random() > 0.2 or controller.cp_wait_time > 0:
-                        continue
-                    controller.reset_cp_wait_time()
-                    # cp play cards
-                    cp_played_cards = cp.cp_play_card(
-                        controller.round,
-                        Database.hands['cp'],
-                        Database.community,
-                        controller.config.num_cards_played_per_round,
-                        Database.card_recently_played,
-                    )
-                    cp_played_cards = [card.identifier for card in cp_played_cards]
-                    cp_played_cards_print = list(map(lambda x:Database.find_card(x), cp_played_cards))
-                    controller.play['cp'] = True
-                    print("cp played cards:")
-                    for card in cp_played_cards_print:
-                        print(card)
-                    Database = play_cards('cp',cp_played_cards, Database)
                 case player:
-                    # Player draw cards
                     if (controller.config.repetitive_draw or not controller.draw[player]) and gui.stages[2].draw_flag and controller.config.draw_flag:
                         print(f"{player} draw")
                         Database = draw_card(Database, controller.current_player, controller.config)
                         controller.draw[player] = True
-                        gui.stages[gui.current_stage].reset_draw_flag()
+                        gui.stages[2].reset_draw_flag()
+
+            # Play cards
+            match controller.current_player:
+                case 'cp':
+                    controller.cp_wait_time -= 1
+                    if random.random() > 0.2 or controller.cp_wait_time > 0:
+                        continue
+                    controller.reset_cp_wait_time()
+
+                    if controller.config.play_flag:
+                        # cp play cards
+                        cp_played_cards = cp.cp_play_card(
+                            controller.round,
+                            Database.hands['cp'],
+                            Database.community,
+                            controller.config.num_cards_played_per_round,
+                            Database.card_recently_played,
+                        )
+                        cp_played_cards = [card.identifier for card in cp_played_cards]
+                        cp_played_cards_print = list(map(lambda x:Database.find_card(x), cp_played_cards))
+                        print("cp played cards:")
+                        for card in cp_played_cards_print:
+                            print(card)
+                        Database = play_cards('cp',cp_played_cards, Database)
+                        
+                    controller.next_player()
+                case player:
                     # Player play cards
                     player_played_cards = gui.stages[2].get_played_cards()
                     if player_played_cards is not None:
                         # handle situation that the player played cards that are not in the hand
-                        try: 
-                            Database = play_cards(player, player_played_cards, Database)
-                            controller.play[player] = True
-                            print(f"{player} played cards:")
-                            player_played_cards_print = list(map(lambda x:Database.find_card(x), player_played_cards))
-                            for card in player_played_cards_print:
-                                print(card)
-                            controller.next_player()    
-                            gui.stages[gui.current_stage].clear_alert()
-                        except ValueError:
-                            gui.stages[gui.current_stage].display_alert("Invalid card identifiers.")
+                        if controller.config.play_flag:
+                            try: 
+                                Database = play_cards(player, player_played_cards, Database)
+                                controller.play[player] = True
+                                print(f"{player} played cards:")
+                                player_played_cards_print = list(map(lambda x:Database.find_card(x), player_played_cards))
+                                for card in player_played_cards_print:
+                                    print(card)
+                                controller.next_player()    
+                                gui.stages[gui.current_stage].clear_alert()
+                            except ValueError:
+                                gui.stages[gui.current_stage].display_alert("Invalid card identifiers.")
+                        else:
+                            if player_played_cards == []:
+                                controller.next_player()
 
             if controller.config.sort_hands:
                 for player in Database.players:
@@ -204,6 +219,7 @@ def main_loop():
                 raise Exception("database is not consistent.")
             
             controller.update_round()
+            print(controller)
             gui.stages[gui.current_stage].display_current_player(controller.current_player)
 
 

@@ -92,7 +92,7 @@ class GUI:
                 self.stages[self.current_stage].display_alert("Broken configuration values.")
                 return None
             self.stages[2].config = self.config
-            self.stages[2].reset(self.config['draw_flag'])
+            self.stages[2].reset(self.config)
         self.current_stage = stage
 
     def display_stage(self, database: CardDatabase = None, config: Config = None, game_end: bool = False):
