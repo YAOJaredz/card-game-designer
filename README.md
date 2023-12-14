@@ -154,7 +154,7 @@ The databse has 4 major components:
 
 _More information please refer to its definitions [here](data_processing/database.py)._
 
-If you want to use these customizations, please add one attribute in the template file. Please include the path to the computer strategy file uner "cp_strategy_path". It is the same for game ending under "is_end_path". You can find template customization files with more detailed information in `user_scripts` and we are working on opening more APIs!
+If you want to use these customizations, please add one attribute in the template file. Please include the path to the computer strategy file uner "cp_strategy_path". It is the same for game ending under "is_end_path". You can find template customization files with more detailed information in [`user_scripts`](user_scripts) and we are working on opening more APIs!
 
 ## Sample Games
 
