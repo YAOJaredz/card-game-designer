@@ -18,5 +18,5 @@
     "bidding_flag": false,
     "sort_hands": true,
     "display_cp": false,
-    "is_end_path": "save/templates/poker/is_end.py"
+    "is_end_path": "save/sample_games/poker/is_end.py"
 }

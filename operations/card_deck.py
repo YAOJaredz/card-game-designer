@@ -1,6 +1,5 @@
 import os, sys
 import json
-import random
 
 sys.path.append(".")
 
@@ -9,13 +8,16 @@ from operations.config import Config
 
 
 def create_one_deck(joker: bool, order: int) -> list[Card]:
-    """Create one deck of cards.
+    """
+    Create one deck of cards.
     This function will create a deck of cards based on the input.
+
     Args:
         joker (bool): Whether or not to include jokers.
         order (int): The order of the cards.
                     0: A is the smallest
                     1: 3 is the smallest
+
     Return:
         list[Card]: The deck of cards.
     """
@@ -47,14 +49,17 @@ def create_one_deck(joker: bool, order: int) -> list[Card]:
     return deck
 
 def create_multiple_decks(num_decks: int, joker: bool, order: int) -> set[Card]:
-    """Create multiple decks of cards.
+    """
+    Create multiple decks of cards.
     This function will create multiple decks of cards based on the input.
+
     Args:
         num_decks (int): The number of decks to be created.
         joker (bool): Whether or not to include jokers.
         order (int): The order of the cards.
                     0: A is the smallest
                     1: 3 is the smallest
+
     Return:
         list[Card]: The deck of cards.
     """
@@ -68,13 +73,13 @@ def create_multiple_decks(num_decks: int, joker: bool, order: int) -> set[Card]:
 
 
 def card_print_all(deck: set[Card]) -> None:
-    """Print all the cards in the deck.
+    """
+    Print all the cards in the deck.
     This function helps to print all the content of cards in the deck.
     Serve as a test function.
+
     Args:
         deck (list[Card]): A deck of cards
-    Return:
-        None
     """
     for card in deck:
         print(card)
@@ -82,10 +87,13 @@ def card_print_all(deck: set[Card]) -> None:
 
 
 def initialization(config: Config) -> CardDatabase:
-    """Initialize the card deck and initial hand
+    """
+    Initialize the card deck and initial hand
     The users are able to specify the number of decks, whether or not to include jokers, and the order of the cards.
+
     Args:
         config (Config): The configuration of the game, which contains all of the configurations for the game.
+
     Return:
         CardDatabase: The card deck, and users will have their initial hands.
     """
@@ -100,6 +108,7 @@ if __name__ == "__main__":
     print("Test of empty config (nothing in deck); completed by unit_test function. \n")
     empty_config = json.load(open("save/empty_config.json"))
     empty_config = Config(**empty_config)
+    print(initialization(empty_config).deck)
 
     # test config: num_decks=3, joker=true, order=1
     print(
