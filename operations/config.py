@@ -55,6 +55,12 @@ class Config():
             print(f"Value {e} is not valid in the configuration file.")
             raise e
         
+        # handle negative values: 
+        non_negative_keys = self.__dict__.keys() - {'num_cards_played_per_round', 'num_rounds'}
+        for key in non_negative_keys:
+            if self.__dict__[key] < 0:
+                raise ValueError(f"{key} cannot be negative.")
+        
 
     def __str__(self) -> str:
         return str(self.__dict__)

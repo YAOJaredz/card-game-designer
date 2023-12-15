@@ -490,7 +490,7 @@ class Game:
     def display_back_cards(self, database: CardDatabase, player:str="cp", height:int=30, 
                            scale:tuple=(60, 100)) -> None:
         """ 
-        Display the cards in cp's hand.
+        Display the card backs. Usually used when display_cp is False.
 
         Args:
             database (CardDatabase): The card database.

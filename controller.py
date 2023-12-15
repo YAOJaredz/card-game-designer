@@ -109,7 +109,7 @@ def main_loop():
 
     while controller.running:
         if not gui.events(): controller.quit()
-        if gui.current_stage == 2:
+        if gui.current_stage == 2: 
             controller.config = Config(**gui.config)
             print(controller.config)
             if 'cp_strategy_path' in gui.config.keys():
