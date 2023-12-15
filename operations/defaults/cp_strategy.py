@@ -46,7 +46,7 @@ class ComputerPlayer:
         self.hand = hand
         # num_cards_played_per_round == -1 means unlimited number of cards to play, then randomly choose a number of cards to play.
         if num_cards_played_per_round == -1:
-            num_play = random.randint(0, len(self.hand))
+            num_play = random.randint(1, min(len(self.hand),5))
             card_to_play = random.sample(self.hand, num_play)
         else:
             card_to_play = random.sample(

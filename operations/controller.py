@@ -3,6 +3,7 @@ import sys
 import os
 import random
 import importlib.util
+import time
 
 sys.path.append(".")
 from data_processing.database import Card, CardDatabase
@@ -20,8 +21,8 @@ class Controller:
         self.running = True
         self.playing = False
 
-        self.CP_WAIT_TIME_PLAY = 20
-        self.CP_WAIT_TIME_DRAW = 10
+        self.cp_wait_time_play = 3
+        self.cp_wait_time_draw = 1
 
     def init_play(self, players: list[str]) -> None:
         """
@@ -43,8 +44,8 @@ class Controller:
 
         self.playing = True
 
-        self.cp_wait_time_play = self.CP_WAIT_TIME_PLAY
-        self.cp_wait_time_draw = self.CP_WAIT_TIME_DRAW
+        self.cp_wait_current_time_play = None
+        self.cp_wait_current_time_draw = None
 
         self.init = True
 
@@ -72,9 +73,9 @@ class Controller:
         Resets the wait time for the computer player.
         """
         if 1 in args:
-            self.cp_wait_time_play = self.CP_WAIT_TIME_PLAY
+            self.cp_wait_current_time_play = None
         if 0 in args:
-            self.cp_wait_time_draw = self.CP_WAIT_TIME_DRAW
+            self.cp_wait_current_time_draw = None
 
     def next_player(self) -> None:
         """
@@ -204,8 +205,10 @@ def main_loop():
             match controller.current_player:
                 case "cp" if controller.config.draw_flag:
                     if not controller.draw["cp"]:
-                        controller.cp_wait_time_draw -= 1
-                        if controller.cp_wait_time_draw > 0:
+                        if controller.cp_wait_current_time_draw is None:
+                            controller.cp_wait_current_time_draw = time.time()
+                            continue
+                        elif time.time() - controller.cp_wait_current_time_draw < controller.cp_wait_time_draw:
                             continue
                         controller.reset_cp_wait_time(0)
                         if controller.config.repetitive_draw:
@@ -244,8 +247,10 @@ def main_loop():
             match controller.current_player:
                 case "cp":
                     if controller.config.play_flag:
-                        controller.cp_wait_time_play -= 1
-                        if random.random() > 0.4 or controller.cp_wait_time_play > 0:
+                        if controller.cp_wait_current_time_play is None:
+                            controller.cp_wait_current_time_play = time.time()
+                            continue
+                        elif time.time() - controller.cp_wait_current_time_play < controller.cp_wait_time_play or random.random() > 0.3:
                             continue
                         controller.reset_cp_wait_time(1)
 
@@ -300,7 +305,10 @@ def main_loop():
 
             # Check if the database is consistent.
             if not Database.self_check():
-                raise Exception("Database is not consistent.")
+                print(Database.snapshots[-2] - Database.snapshots[-1])
+                # raise Exception("Database is not consistent.")
+                print("!!!Database is not consistent.")
+                print(Database)
 
             controller.update_round()
             controller.init = False

@@ -70,7 +70,7 @@ def create_multiple_decks(num_decks: int, joker: bool, order: int) -> set[Card]:
     identifiers = list(range(len(deck)))
     random.shuffle(identifiers)
     for i in range(len(deck)):
-        deck[i].identifier = identifiers.pop()
+        deck[i].identifier = identifiers.pop() + 1
     return set(deck)
 
 
