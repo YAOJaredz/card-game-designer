@@ -3,7 +3,7 @@
     "num_decks": 2,
     "joker": true,
     "order": 1,
-    "num_initial_hand": 16,
+    "num_initial_hand": 17,
     "num_cards_dealt_per_round": 1,
     "draw_flag": false,
     "num_draw": 1,
@@ -18,5 +18,5 @@
     "bidding_flag": false,
     "sort_hands": true,
     "display_cp": false,
-    "is_end_path": "save/templates/poker/is_end.py"
+    "is_end_path": "save/sample_games/poker/is_end.py"
 }

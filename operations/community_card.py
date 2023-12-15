@@ -2,7 +2,7 @@ import os, sys
 import json
 sys.path.append('.')
 
-from data_processing.database import Card, CardDatabase
+from data_processing.database import CardDatabase
 from operations.config import Config
 
 def update_community(database: CardDatabase, round: int, config: Config) -> CardDatabase:
@@ -33,6 +33,7 @@ if __name__ == '__main__':
 
     print(config.first_round_of_comm)
 
+    # For each round, check if the community cards are updated as configured
     database = initialization(config)
     print(database.community)
     database = update_community(database, 1, config)
