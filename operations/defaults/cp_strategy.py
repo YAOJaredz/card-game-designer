@@ -73,7 +73,7 @@ class ComputerPlayer:
             repetitive_draw_flag (bool): Whether or not to allow repetitive draw.
             num_cards_drawn_per_time (int): The number of cards to be drawn per round.
         Return:
-            list[Card]: The number of times to draw cards.
+            int: The number of times to draw cards.
         """
         return 1
 
@@ -95,7 +95,7 @@ class ComputerPlayer:
             repetitive_draw_flag (bool): Whether or not to allow repetitive draw.
             num_cards_drawn_per_time (int): The number of cards to be drawn per round.
         Return:
-            list[Card]: The number of times to draw cards.
+            bool: Whether or not to draw card.
         """
         if random.random() > 0.5:
             return True
