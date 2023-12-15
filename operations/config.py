@@ -6,25 +6,25 @@ class Config:
     A class representing the configuration settings for a card game.
 
     Attributes:
-        `num_rounds` (int): The number of rounds in the game.\n
-        `num_decks` (int): The number of decks of cards to be used.\n
-        `joker` (bool): Indicates whether jokers are included in the deck.\n
-        `order` (int): The order in which the cards are arranged.\n
-        `num_initial_hand` (int): The number of cards each player receives initially.\n
-        `num_cards_dealt_per_round` (int): The number of cards dealt to each player per round.\n
-        `draw_flag` (bool): Indicates whether drawing cards is allowed.\n
-        `num_draw` (int): The number of cards a player can draw.\n
-        `repetitive_draw` (bool): Indicates whether drawing cards can be repeated per round.\n
-        `comm_flag` (bool): Indicates whether community cards are used.\n
-        `first_round_of_comm` (int): The round number when community cards are first introduced.\n
-        `first_round_num_comm` (int): The number of community cards in the first round.\n
-        `num_added_comm_per_round` (int): The number of additional community cards added per round.\n
-        `play_flag` (bool): Indicates whether playing cards is allowed.\n
-        `num_cards_played_per_round` (int): The number of cards played by each player per round.\n
-        `sort_hands` (bool): Indicates whether player hands should be sorted.\n
-        `display_cp` (bool): Indicates whether the current player's hand should be displayed.\n
-        `multiuser_flag` (bool): Indicates whether the game supports multiple users.\n
-        `bidding_flag` (bool): Indicates whether bidding is enabled.\n
+        num_rounds (int): The number of rounds in the game.
+        num_decks (int): The number of decks of cards to be used.
+        joker (bool): Indicates whether jokers are included in the deck.
+        order (int): The order in which the cards are arranged.
+        num_initial_hand (int): The number of cards each player receives initially.
+        num_cards_dealt_per_round (int): The number of cards dealt to each player per round.
+        draw_flag (bool): Indicates whether drawing cards is allowed.
+        num_draw (int): The number of cards a player can draw.
+        repetitive_draw (bool): Indicates whether drawing cards can be repeated per round.
+        comm_flag (bool): Indicates whether community cards are used.
+        first_round_of_comm (int): The round number when community cards are first introduced.
+        first_round_num_comm (int): The number of community cards in the first round.
+        num_added_comm_per_round (int): The number of additional community cards added per round.
+        play_flag (bool): Indicates whether playing cards is allowed.
+        num_cards_played_per_round (int): The number of cards played by each player per round.
+        sort_hands (bool): Indicates whether player hands should be sorted.
+        display_cp (bool): Indicates whether the current player's hand should be displayed.
+        multiuser_flag (bool): Indicates whether the game supports multiple users.
+        bidding_flag (bool): Indicates whether bidding is enabled.
     """
 
     def __init__(self, **kwargs) -> None:
