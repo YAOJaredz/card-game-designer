@@ -88,6 +88,9 @@ class Config:
             if self.__dict__[key] < 0:
                 raise ValueError(f"{key} cannot be negative.")
         
+        # num of deck must be positive
+        if self.num_decks <= 0:
+            raise ValueError("Number of decks must be positive.")
 
     def __str__(self) -> str:
         return str(self.__dict__)
