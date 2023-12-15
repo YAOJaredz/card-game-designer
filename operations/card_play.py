@@ -46,7 +46,10 @@ def play_cards(player: str, play_cards: list[int], database: CardDatabase) -> Ca
         for card_id in play_cards:
             card = database.find_card(card_id)
             database.discard.add(card)
-            database.hands[player].remove(card)
+            for hand_card in database.hands[player]:
+                if hand_card.identifier == card_id:
+                    database.hands[player].remove(hand_card)
+                    break
             database.card_recently_played["played_cards"].append(card)
     return database
 

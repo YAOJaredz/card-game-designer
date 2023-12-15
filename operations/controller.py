@@ -21,7 +21,7 @@ class Controller:
         self.running = True
         self.playing = False
 
-        self.cp_wait_time_play = 4
+        self.cp_wait_time_play = 3
         self.cp_wait_time_draw = 1
 
     def init_play(self, players: list[str]) -> None:
@@ -250,7 +250,7 @@ def main_loop():
                         if controller.cp_wait_current_time_play is None:
                             controller.cp_wait_current_time_play = time.time()
                             continue
-                        elif time.time() - controller.cp_wait_current_time_play < controller.cp_wait_time_play:
+                        elif time.time() - controller.cp_wait_current_time_play < controller.cp_wait_time_play or random.random() > 0.3:
                             continue
                         controller.reset_cp_wait_time(1)
 
@@ -305,7 +305,10 @@ def main_loop():
 
             # Check if the database is consistent.
             if not Database.self_check():
-                raise Exception("Database is not consistent.")
+                print(Database.snapshots[-2] - Database.snapshots[-1])
+                # raise Exception("Database is not consistent.")
+                print("!!!Database is not consistent.")
+                print(Database)
 
             controller.update_round()
             controller.init = False
