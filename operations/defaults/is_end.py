@@ -19,7 +19,4 @@ def end_game(database: CardDatabase) -> bool:
     Returns:
         bool: True if the game should end, False otherwise.
     """
-    for hand in database.hands.values():
-        if len(hand) == 0:
-            return True
     return False
