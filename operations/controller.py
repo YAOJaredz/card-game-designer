@@ -310,7 +310,7 @@ def main_loop():
                 print(Database)
             
             # check if deck is empty
-            if Database.deck == set():
+            if len(Database.deck) == 0:
                 controller.config.draw_flag = False
                 controller.config.deal_flag = False
                 #display alert
