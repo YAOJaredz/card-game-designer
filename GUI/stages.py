@@ -55,7 +55,7 @@ class Openning:
         self.quit_button = Button(370, 530, 260, 60, "Quit")
         self.new_button = Button(370, 350, 260, 60, "Create New")
         self.load_button = Button(370, 440, 260, 60, "Load Templates")
-        self.alert_label = Label(390, 300, "", 24, color=(255,69,69))
+        self.alert_label = Label(390, 310, "", 24, color=(255,69,69))
         self.all_sprites.add(
             self.quit_button, self.new_button, self.load_button, self.open_label, self.alert_label
         )
@@ -420,7 +420,7 @@ class Game:
 
         if self.play_flag_config:
             # text box for playing cards
-            self.played_card_text_box = TextBox(350, 450, 300, 40, ui_manager=self.ui, uid="played_card_text_box")
+            self.played_card_text_box = TextBox(350, 470, 300, 40, ui_manager=self.ui, uid="played_card_text_box")
 
             # text box label
             self.played_card_text_box_label = pygame.font.Font(None, 24).render(str("Please enter identifiers (separated by , ) "), True, (255, 255, 255))
@@ -429,7 +429,7 @@ class Game:
         self.played_cards = None
 
         # alert label
-        self.alert_label = Label(380, 395, "", 24, color=(255,69,69))
+        self.alert_label = Label(380, 405, "", 24, color=(255,69,69))
         # current player label
         self.current_player_label = Label(370, 200, "", 24, color=(255,255,255))
         # add end button
@@ -439,16 +439,16 @@ class Game:
 
         if self.play_flag_config:
             # add play card button
-            self.play_button = Button(670, 450, 70, 35, "Play!")
+            self.play_button = Button(670, 470, 70, 35, "Play!")
             sprites.append(self.play_button)
         else:
-            self.fini_button = Button(670, 450, 70, 35, "Finish")
+            self.fini_button = Button(670, 470, 70, 35, "Finish")
             sprites.append(self.fini_button)
         
         # add draw card button
         if self.draw_flag_config:
             print("draw flag is True")
-            self.draw_button = Button(260, 450, 70, 35, "Draw!")
+            self.draw_button = Button(260, 470, 70, 35, "Draw!")
             sprites.append(self.draw_button)
         
         self.all_sprites.add(*sprites)
@@ -510,7 +510,7 @@ class Game:
                 self.draw_flag = True
         return 2
     
-    def display_player_cards(self, database: CardDatabase, player: str = "player1", height:int=500, 
+    def display_player_cards(self, database: CardDatabase, player: str = "player1", height:int=520, 
                              scale:tuple=(100, 150)) -> None:
         """ 
         Display the cards in player's hand.
@@ -673,7 +673,7 @@ class Game:
         self.screen.blit(self.cp_image, (100, 20))
         self.screen.blit(self.deck_image, (30, 350))
         if config.play_flag:
-            self.screen.blit(self.played_card_text_box_label, (345, 425))
+            self.screen.blit(self.played_card_text_box_label, (345, 445))
         self.ui.update(6e-2)
         self.ui.draw_ui(self.screen)
 
@@ -687,7 +687,7 @@ class Game:
             self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
             self.display_player_cards(database)
             self.screen.blit(pygame.font.Font(None, 46).render("Game Over", True, (255,69,69)), (400, 320))
-            self.screen.blit(pygame.font.Font(None, 46).render("Press any key to continue...", True, (255,69,69)), (300, 370))
+            self.screen.blit(pygame.font.Font(None, 46).render("Press any key to continue...", True, (255,69,69)), (300, 365))
         elif len(database.hands.keys()) != 0:
             if config.display_cp:
                 self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
@@ -723,6 +723,7 @@ class Game:
         Returns:
             bool: True if the game has ended. False otherwise.
         """
+        
         return self.end_flag or self.end_game(database)
 
     def reset(self, *args):

@@ -306,13 +306,22 @@ def main_loop():
             # Check if the database is consistent.
             if not Database.self_check():
                 print(Database.snapshots[-2] - Database.snapshots[-1])
-                # raise Exception("Database is not consistent.")
                 print("!!!Database is not consistent.")
                 print(Database)
+            
+            # check if deck is empty
+            if Database.deck == set():
+                controller.config.draw_flag = False
+                controller.config.deal_flag = False
+                #display alert
+                gui.stages[2].display_alert("Deck is empty.\nDealing and drawing are disabled.")
 
             controller.update_round()
             controller.init = False
             gui.stages[gui.current_stage].display_current_player(controller.current_player)
+            
+            
+                
 
     pygame.quit()
     sys.exit()
