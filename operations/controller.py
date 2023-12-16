@@ -313,8 +313,7 @@ def main_loop():
             if Database.deck == set():
                 controller.config.draw_flag = False
                 controller.config.deal_flag = False
-                #display alert
-                gui.stages[2].display_alert("Deck is empty.\nDealing and drawing are disabled.")
+                gui.stages[2].empty_deck_message()
 
             controller.update_round()
             controller.init = False

@@ -362,6 +362,7 @@ class Game:
         config (Config): The configuration object containing game settings.
         draw_flag_config (bool): The flag indicating whether drawing cards is allowed.
         play_flag_config (bool): The flag indicating whether playing cards is allowed.
+        empty_deck (Label): The label for displaying the empty deck message.
 
     Methods:
         __init__(self, config: dict = None) -> None:
@@ -384,6 +385,8 @@ class Game:
             Checks the validity of the played cards and converts it into a list of integers.
         display_alert(self, alert: str) -> None:
             Displays an alert message in Game.
+        display_empty_deck(self) -> None:
+            Display the message when the deck is empty.
     """
 
     def __init__(self, config: dict = None) -> None:
@@ -429,13 +432,15 @@ class Game:
         self.played_cards = None
 
         # alert label
-        self.alert_label = Label(380, 405, "", 24, color=(255,69,69))
+        self.alert_label = Label(395, 425, "", 24, color=(255,69,69))
+        # empty deck label
+        self.empty_deck = Label(340, 400, "", 24, color=(255,69,69))
         # current player label
-        self.current_player_label = Label(370, 200, "", 24, color=(255,255,255))
+        self.current_player_label = Label(370, 170, "", 24, color=(255,255,255))
         # add end button
         self.end_button = Button(10, 60, 80, 40, "End")
 
-        sprites.extend([self.alert_label, self.back_button, self.current_player_label, self.end_button])
+        sprites.extend([self.alert_label, self.back_button, self.current_player_label, self.end_button, self.empty_deck])
 
         if self.play_flag_config:
             # add play card button
@@ -543,7 +548,12 @@ class Game:
             player (str): The current player.
         """
         self.current_player_label.text = f"Waiting for {player} to take action..."
-
+        
+    def empty_deck_message(self) -> None:
+        """ 
+        Display the message when the deck is empty.
+        """
+        self.empty_deck.text = "Deck is empty. No more dealing or drawing."
             
     def display_back_cards(self, database: CardDatabase, player:str="cp", height:int=30, 
                            scale:tuple=(60, 100)) -> None:
@@ -605,8 +615,8 @@ class Game:
             self.screen.blit(played_card_label, (850, start_y-20))
         for card in cards:
             # display card image
-            image=pygame.transform.smoothscale(pygame.image.load(card.image), (80, 100))
-            self.screen.blit(image, (880, start_y))
+            image=pygame.transform.smoothscale(pygame.image.load(card.image), (70, 100))
+            self.screen.blit(image, (900, start_y))
             start_y+=100
         return None
     
@@ -686,8 +696,8 @@ class Game:
         if game_end:
             self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
             self.display_player_cards(database)
-            self.screen.blit(pygame.font.Font(None, 46).render("Game Over", True, (255,69,69)), (400, 320))
-            self.screen.blit(pygame.font.Font(None, 46).render("Press any key to continue...", True, (255,69,69)), (300, 365))
+            self.screen.blit(pygame.font.Font(None, 46).render("Game Over", True, (0,0,0)), (400, 320))
+            self.screen.blit(pygame.font.Font(None, 46).render("Press any key to continue...", True, (0,0,0)), (300, 365))
         elif len(database.hands.keys()) != 0:
             if config.display_cp:
                 self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
