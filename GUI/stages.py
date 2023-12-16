@@ -696,8 +696,8 @@ class Game:
         if game_end:
             self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
             self.display_player_cards(database)
-            self.screen.blit(pygame.font.Font(None, 46).render("Game Over", True, (0,0,0)), (400, 320))
-            self.screen.blit(pygame.font.Font(None, 46).render("Press any key to continue...", True, (0,0,0)), (300, 365))
+            self.screen.blit(pygame.font.Font(None, 46).render("Game Over", True, (20, 20, 20)), (400, 320))
+            self.screen.blit(pygame.font.Font(None, 46).render("Press any key to continue...", True, (20, 20, 20)), (300, 365))
         elif len(database.hands.keys()) != 0:
             if config.display_cp:
                 self.display_player_cards(database, player="cp", height=30, scale=(60, 100))
